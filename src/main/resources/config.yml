@@ -1,0 +1,5 @@
+#MongoDB
+URI: 'mongodb://cryslix:Mu4jAnBvuF9aUh69@cryslix-shard-00-00-gljke.mongodb.net:27017,cryslix-shard-00-01-gljke.mongodb.net:27017,cryslix-shard-00-02-gljke.mongodb.net:27017/admin?replicaSet=Cryslix-shard-0&ssl=true'
+
+#ServerName
+UID: ''

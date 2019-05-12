@@ -1,0 +1,58 @@
+name: Core
+version: 1.0
+author: Nyarrth
+main: Core
+commands:
+  Coins:
+    description: Check how many Coins you have!
+    aliases: [xp, gems, points, myxp, mygems, mytokens, mypoints, score, myscore, token, tokens, coin]
+  CrateKeys:
+    description: Check how many keys you have!
+    aliases: [ck, keys, llaves, daskeys, eulabreaker]
+  Teleport:
+    description: Teleport to a player
+    aliases: [tp]
+  TeleportHere:
+    description: Teleport to a player to you
+    aliases: [tphere, summon]
+  RankManagement:
+    description: Manage user's coins
+    aliases: [rm]
+  CoinManagement:
+    description: Manage user's coins
+    aliases: [cm]
+  Fly:
+    description: Toggle fly mode
+    aliases: [f]
+  TogglePhysics:
+    description: Turn physics on or off!
+    aliases: [tphysics]
+  List:
+    description: List the online players
+    aliases: [who, online, players]
+  GameMode:
+    description: Set your GameMode
+    aliases: [gm]
+  MultiplierManagement:
+    description: Manage multiplier settings
+    aliases: [mm]
+  Reboot:
+    description: Reboot the server.
+    aliases: [rb]
+  Update:
+    description: Update a plugin.
+    aliases: [ud]
+  Perk:
+    description: Adds a perk to a player.
+  Ban:
+    description: Bans a player.
+  UnBan:
+    description: UnBans a banned player.
+  Mute:
+    description: Mutes a player.
+  UnMute:
+    description: Unmutes a muted player.
+  Chat:
+    description: Child or Mature chat.
+  Discord:
+    description: Link your Discord.
