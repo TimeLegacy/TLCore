@@ -5,11 +5,6 @@ before_script:
   - curl -fL https://getcli.jfrog.io | sh
   # Configure Artifactory instance with JFrog CLI
   - ./jfrog rt config --url=$ARTIFACTORY_URL --user=$ARTIFACTORY_USER --password=$ARTIFACTORY_PASS
-  - ./jfrog rt c show
-  # Set the M2_HOME environment variable
-  - export M2_HOME=/usr/share/maven
-  # Replace the repository name in the configuration.yml to the correct one.
-  - sed -i 's,MAVEN_REPO_KEY,'"$MAVEN_REPO_KEY"',g' configuration.yml
 build:
   script:
     # Run the MVN command
