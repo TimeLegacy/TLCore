@@ -22,12 +22,6 @@
       <id>inventive-repo</id>
       <url>https://repo.inventivetalent.org/content/groups/public/</url>
     </repository>
-
-    <repository>
-      <id>snapshots</id>
-      <name>Snapshots</name>
-      <url>${env.NEXUS_REPO_URL}snapshots/</url>
-    </repository>
   </repositories>
 
   <dependencies>
@@ -45,4 +39,11 @@
       <version>3.10.1</version>
     </dependency>
   </dependencies>
+  
+  <distributionManagement>
+   <snapshotRepository>
+      <id>dec0de-snapshots</id>
+      <url>${env.NEXUS_REPO_URL}snapshots/</url>
+   </snapshotRepository>
+</distributionManagement>
 </project>
