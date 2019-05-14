@@ -1,7 +1,7 @@
 name: Core
 version: 1.0
 author: Nyarrth
-main: Core
+main: net.timelegacy.tlcore.TLCore
 commands:
   Coins:
     description: Check how many Coins you have!
