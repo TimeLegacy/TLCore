@@ -6,7 +6,7 @@ variables:
 build:
   script:
     # Run the MVN command
-    - mvn $MAVEN_CLI_OPTS package
+    - mvn clean $MAVEN_CLI_OPTS package deploy
   only:
     - master
   artifacts:
