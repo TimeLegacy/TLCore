@@ -24,15 +24,10 @@
     </repository>
 
     <repository>
-      <id>central</id>
-      <name>Central</name>
-      <url>${env.NEXUS_REPO_URL}central/</url>
-    </repository>
-    <snapshotRepository>
       <id>snapshots</id>
       <name>Snapshots</name>
       <url>${env.NEXUS_REPO_URL}snapshots/</url>
-    </snapshotRepository>
+    </repository>
   </repositories>
 
   <dependencies>
