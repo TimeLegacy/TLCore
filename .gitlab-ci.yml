@@ -11,24 +11,15 @@ cache:
 
 stages:
   - build
-  - test
-  - package 
+  - package
   - deploy
 
 build:
   tags:
-    - build      
-  stage: build
-  script: 
-    - mvn compile
-
-test:
-  tags:
     - build
-  stage: test
+  stage: build
   script:
-    - mvn $MAVEN_CLI_OPTS test
-    - echo "The code has been tested!"
+    - mvn compile
 
 package:
   tags:
@@ -36,7 +27,6 @@ package:
   stage: package
   script:
     - mvn $MAVEN_CLI_OPTS package -Dmaven.test.skip=true
-    - echo "Packaging the code!"
   artifacts:
     name: "TLCore"
     paths:
@@ -50,6 +40,5 @@ deploy:
   stage: deploy
   script:
     - mvn $MAVEN_CLI_OPTS deploy -Dmaven.test.skip=true
-    - echo "Installing the package in local repository!"
   only:
     - master
