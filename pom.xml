@@ -22,6 +22,17 @@
       <id>inventive-repo</id>
       <url>https://repo.inventivetalent.org/content/groups/public/</url>
     </repository>
+
+    <repository>
+      <id>central</id>
+      <name>Central</name>
+      <url>${env.NEXUS_REPO_URL}central/</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>Snapshots</name>
+      <url>${env.NEXUS_REPO_URL}snapshots/</url>
+    </snapshotRepository>
   </repositories>
 
   <dependencies>
