@@ -1,15 +1,55 @@
 image: maven:3-jdk-8
-# This file is a template, and might need editing before it works on your project.
+
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+
+stages:
+  - build
+  - test
+  - package 
+  - deploy
 
 build:
+  tags:
+    - build      
+  stage: build
+  script: 
+    - mvn compile
+
+test:
+  tags:
+    - build
+  stage: test
   script:
-    # Run the MVN command
-    - mvn clean $MAVEN_CLI_OPTS package deploy
-  only:
-    - master
+    - mvn $MAVEN_CLI_OPTS test
+    - echo "The code has been tested!"
+
+package:
+  tags:
+    - build
+  stage: package
+  script:
+    - mvn $MAVEN_CLI_OPTS package -Dmaven.test.skip=true
+    - echo "Packaging the code!"
   artifacts:
     name: "TLCore"
     paths:
-      - "target/*.jar"
+      - target/*.jar
+  only:
+    - master
+
+deploy:
+  tags:
+    - build
+  stage: deploy
+  script:
+    - mvn $MAVEN_CLI_OPTS deploy -Dmaven.test.skip=true
+    - echo "Installing the package in local repository!"
+  only:
+    - master
