@@ -20,7 +20,7 @@ package:
     - package
   stage: package
   script:
-    - mvn $MAVEN_CLI_OPTS package -Dmaven.test.skip=true
+    - mvn $MAVEN_CLI_OPTS clean package -Dmaven.test.skip=true
   artifacts:
     name: "TLCore"
     paths:
