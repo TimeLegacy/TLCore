@@ -44,7 +44,6 @@ import net.timelegacy.tlcore.utils.EntityUtils;
 import net.timelegacy.tlcore.utils.FireworkUtils;
 import net.timelegacy.tlcore.utils.HologramUtils;
 import net.timelegacy.tlcore.utils.ItemUtils;
-import net.timelegacy.tlcore.utils.JarUtils;
 import net.timelegacy.tlcore.utils.MessageUtils;
 import net.timelegacy.tlcore.utils.ParticleUtils;
 import net.timelegacy.tlcore.utils.PotionUtils;
@@ -88,7 +87,6 @@ public class TLCore extends JavaPlugin {
   public WorldUtils worldUtils;
   public ItemUtils itemUtils;
   public ParticleUtils particleUtils;
-  public JarUtils jarUtils;
   public WorldDownloaderUtils worldDownloader;
 
   // MongoDB
@@ -145,8 +143,6 @@ public class TLCore extends JavaPlugin {
     log = plugin.getLogger();
 
     Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
-
-    jarUtils = new JarUtils();
 
     init();
 
