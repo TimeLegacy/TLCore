@@ -1,4 +1,4 @@
-name: Core
+name: TLCore
 version: 1.0
 author: Nyarrth
 main: net.timelegacy.tlcore.TLCore
