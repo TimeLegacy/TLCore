@@ -79,7 +79,7 @@ public class ParticleUtils {
                 radius += 1 / 50f;
             }
         };
-        runnable.runTaskTimer(Core.getInstance(), 0, 1);
+        runnable.runTaskTimer(TLCore.getInstance(), 0, 1);
     }
 
     public static void display(Particle effect, Location loc, int amount, int speed) {
