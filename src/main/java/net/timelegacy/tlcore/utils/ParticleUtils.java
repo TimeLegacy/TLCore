@@ -1,4 +1,4 @@
-package core.utils;
+package net.timelegacy.tlcore.utils;
 
 import core.Core;
 import org.bukkit.Location;
