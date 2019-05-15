@@ -42,7 +42,7 @@
   
   <distributionManagement>
    <snapshotRepository>
-      <id>dec0de-snapshots</id>
+     <id>snapshots</id>
       <url>${env.NEXUS_REPO_URL}snapshots/</url>
    </snapshotRepository>
 </distributionManagement>
