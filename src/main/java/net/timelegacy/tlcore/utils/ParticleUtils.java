@@ -1,6 +1,6 @@
 package net.timelegacy.tlcore.utils;
 
-import core.Core;
+import net.timelegacy.tlcore.TLCore;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.scheduler.BukkitRunnable;
