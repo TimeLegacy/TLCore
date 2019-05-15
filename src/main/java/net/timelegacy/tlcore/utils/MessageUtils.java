@@ -8,9 +8,9 @@ public class MessageUtils {
 
   private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   private static final int CENTER_PX = 154;
-  public String messagePrefix = "&b&lMineAqua&8:&r ";
+  public String messagePrefix = "&c&lTimeLegacy&8:&r ";
   public String MAIN_COLOR = "&f";
-  public String SECOND_COLOR = "&b";
+  public String SECOND_COLOR = "&7";
   public String SUCCESS_COLOR = "&a";
   public String noPermission =
       messagePrefix + "&cYou do not have permission to perform this action!";
