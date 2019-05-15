@@ -17,7 +17,7 @@ build:
 
 package:
   tags:
-    - build
+    - package
   stage: package
   script:
     - mvn $MAVEN_CLI_OPTS package -Dmaven.test.skip=true
@@ -30,7 +30,7 @@ package:
 
 deploy:
   tags:
-    - build
+    - deploy
   stage: deploy
   script:
     - mvn $MAVEN_CLI_OPTS deploy -Dmaven.test.skip=true
