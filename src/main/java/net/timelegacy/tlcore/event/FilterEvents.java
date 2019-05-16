@@ -130,6 +130,8 @@ public class FilterEvents implements Listener {
 
     try {
 
+      //TODO fix
+
       String response =
           WebRequestUtils.executePost(
               "https://dec0de.xyz/api/swearfilter/?message=" + message.replace(" ", "%20"),
