@@ -18,10 +18,6 @@
       <id>spigotmc-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
-    <repository>
-      <id>skullcreator-repo</id>
-      <url>https://dl.bintray.com/deanveloper/SkullCreator</url>
-    </repository>
   </repositories>
 
   <dependencies>
