@@ -75,8 +75,6 @@ public class FilterEvents implements Listener {
                 .replace("%arrows%", "\u00BB")
                 + " &r");
 
-    String cleanMessage = filteredChat(message);
-
     System.out.println("[CHAT] " + p.getName() + " > " + message);
 
     if (!core.muteHandler.isMuted(p.getName())) {
@@ -104,8 +102,10 @@ public class FilterEvents implements Listener {
             .then();
         msg.send(sp);*/
 
-        sp.sendMessage(
-            core.perkHandler.getPerks(sp).contains("CHAT.MATURE") ? message : cleanMessage);
+        //TODO fix the swear filter
+        /*sp.sendMessage(
+            core.perkHandler.getPerks(sp).contains("CHAT.MATURE") ? message : cleanMessage);*/
+        sp.sendMessage(format + message);
       }
     } else {
       if (!(core.muteHandler.getMuteExpire(p.getName()).equalsIgnoreCase("false")
