@@ -13,8 +13,8 @@ import java.util.Base64;
 import java.util.UUID;
 
 /**
- * A library for the Bukkit API to create player skulls from names, base64 strings, and texture
- * URLs.
+ * A library for the Bukkit API to create player skulls
+ * from names, base64 strings, and texture URLs.
  *
  * Does not use any NMS code, and should work across all versions.
  *
@@ -27,6 +27,7 @@ public class SkullCreator {
    *
    * @param name The Player's name
    * @return The head of the Player
+   *
    * @deprecated names don't make for good identifiers
    */
   @Deprecated
@@ -42,6 +43,7 @@ public class SkullCreator {
    * @param item The item to apply the name to
    * @param name The Player's name
    * @return The head of the Player
+   *
    * @deprecated names don't make for good identifiers
    */
   @Deprecated
@@ -50,7 +52,7 @@ public class SkullCreator {
     notNull(name, "name");
 
     return Bukkit.getUnsafe().modifyItemStack(item,
-        "{SkullOwner:\"" + name + "\"}"
+        "{\"SkullOwner\":\"" + name + "\"}"
     );
   }
 
@@ -135,7 +137,8 @@ public class SkullCreator {
 
     UUID hashAsId = new UUID(base64.hashCode(), base64.hashCode());
     return Bukkit.getUnsafe().modifyItemStack(item,
-        "{SkullOwner:{Id:\"" + hashAsId + "\",Properties:{textures:[{Value:\"" + base64 + "\"}]}}}"
+        "{\"SkullOwner\":{\"Id\":\"" + hashAsId + "\",\"Properties\":{\"textures\":[{\"Value\":\""
+            + base64 + "\"}]}}}"
     );
   }
 
@@ -144,6 +147,7 @@ public class SkullCreator {
    *
    * @param block The block to set
    * @param name The player to set it to
+   *
    * @deprecated names don't make for good identifiers
    */
   @Deprecated
@@ -199,7 +203,8 @@ public class SkullCreator {
         block.getX(),
         block.getY(),
         block.getZ(),
-        "{Owner:{Id:\"" + hashAsId + "\",Properties:{textures:[{Value:\"" + base64 + "\"}]}}}"
+        "{\"Owner\":{\"Id\":\"" + hashAsId + "\",\"Properties\":{\"textures\":[{\"Value\":\""
+            + base64 + "\"}]}}}"
     );
 
     if (newerApi()) {
