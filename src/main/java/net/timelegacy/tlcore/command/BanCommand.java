@@ -73,11 +73,6 @@ public class BanCommand implements CommandExecutor {
                     + "Usage: /ban [player] [HACKING/PROFANITY/OTHER] [time #d/#m/#y (blank for permenent)]",
                 true);
           }
-        } else {
-          core.messageUtils.sendMessage(
-              p,
-              core.messageUtils.ERROR_COLOR + "You must have the correct punishment type.",
-              true);
         }
       } else {
         core.messageUtils.noPerm(p);
