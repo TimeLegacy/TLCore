@@ -1,6 +1,5 @@
 package net.timelegacy.tlcore.event;
 
-import mkremins.fanciful.FancyMessage;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.Rank;
 import net.timelegacy.tlcore.utils.WebRequestUtils;
@@ -83,8 +82,9 @@ public class FilterEvents implements Listener {
     if (!core.muteHandler.isMuted(p.getName())) {
 
       for (Player sp : Bukkit.getOnlinePlayers()) {
-        FancyMessage msg = new FancyMessage();
-        msg.text(format)
+        //TextComponent textComponent = new TextComponent(core.perkHandler.getPerks(sp).contains("CHAT.MATURE") ? message : cleanMessage);
+        //textComponent.setHoverEvent(new HoverEvent( HoverEvent.Action., new ComponentBuilder( "Visit the Spigot website!" ).create() ) );
+        /*msg.text(format)
             .tooltip(
                 core.messageUtils.c(
                     core.messageUtils.MAIN_COLOR
@@ -101,8 +101,11 @@ public class FilterEvents implements Listener {
                         + "&oWins: "
                         + core.messageUtils.SECOND_COLOR
                         + core.statsHandler.getWins(p)))
-            .then(core.perkHandler.getPerks(sp).contains("CHAT.MATURE") ? message : cleanMessage);
-        msg.send(sp);
+            .then();
+        msg.send(sp);*/
+
+        sp.sendMessage(
+            core.perkHandler.getPerks(sp).contains("CHAT.MATURE") ? message : cleanMessage);
       }
     } else {
       if (!(core.muteHandler.getMuteExpire(p.getName()).equalsIgnoreCase("false")
