@@ -134,7 +134,7 @@ public class FilterEvents implements Listener {
 
       String response =
           WebRequestUtils.executePost(
-              "https://dec0de.xyz/api/swearfilter/?message=" + message.replace(" ", "%20"),
+              "http://nossl.dec0de.xyz/api/swearfilter/?message=" + message.replace(" ", "%20"),
               "");
       return response;
 
