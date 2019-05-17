@@ -31,16 +31,7 @@ public class ParticleUtils {
             loc.add(v);
 
             if (effect == Particle.REDSTONE) {
-                loc.getWorld()
-                    .spawnParticle(
-                        Particle.REDSTONE,
-                        loc,
-                        14,
-                        0.1f,
-                        0.1f,
-                        0.1f,
-                        1,
-                        new Particle.DustOptions(Color.fromRGB(r, g, b), 1));
+                display(r, g, b, location);
             } else {
                 display(effect, loc);
             }
@@ -109,7 +100,7 @@ public class ParticleUtils {
     }
 
     public void display(Particle effect, Location loc) {
-        loc.getWorld().spawnParticle(effect, loc, 10, 0.1f, 0.1f, 0.1f, 1);
+        loc.getWorld().spawnParticle(effect, loc, 1, 0.1f, 0.1f, 0.1f, 0);
     }
 
     public void display(int red, int green, int blue, Location loc) {
@@ -117,11 +108,11 @@ public class ParticleUtils {
             .spawnParticle(
                 Particle.REDSTONE,
                 loc,
-                14,
+                1,
                 0.1f,
                 0.1f,
                 0.1f,
                 0,
-                new Particle.DustOptions(Color.fromRGB(red, green, blue), 1));
+                new Particle.DustOptions(Color.fromRGB(red, green, blue), 0.8f));
     }
 }
