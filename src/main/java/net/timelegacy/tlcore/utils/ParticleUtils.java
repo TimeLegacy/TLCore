@@ -96,11 +96,11 @@ public class ParticleUtils {
    */
 
     public void display(Particle effect, Location loc, int amount, int speed) {
-        loc.getWorld().spawnParticle(effect, loc, amount, 0.1f, 0.1f, 0.1f, speed);
+      loc.getWorld().spawnParticle(effect, loc, amount, 0f, 0f, 0f, speed);
     }
 
     public void display(Particle effect, Location loc) {
-        loc.getWorld().spawnParticle(effect, loc, 1, 0.1f, 0.1f, 0.1f, 0);
+      loc.getWorld().spawnParticle(effect, loc, 1, 0f, 0f, 0f, 0);
     }
 
     public void display(int red, int green, int blue, Location loc) {
@@ -109,9 +109,9 @@ public class ParticleUtils {
                 Particle.REDSTONE,
                 loc,
                 1,
-                0.1f,
-                0.1f,
-                0.1f,
+                0f,
+                0f,
+                0f,
                 0,
                 new Particle.DustOptions(Color.fromRGB(red, green, blue), 0.8f));
     }
