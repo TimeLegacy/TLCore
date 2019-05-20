@@ -21,7 +21,7 @@ public class MongoDB {
     return true;
   }
 
-  public boolean disconnect() {
+  public static boolean disconnect() {
 
     mongoClient.close();
 
