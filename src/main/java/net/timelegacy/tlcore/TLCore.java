@@ -37,10 +37,7 @@ public class TLCore extends JavaPlugin {
   public FileConfiguration config;
   public Logger log = Bukkit.getLogger();
   public ArrayList<String> flySpeed = new ArrayList<>();
-  public boolean physics = true;
-
-  // MongoDB
-  public MongoDB mongoDB;
+  public boolean physics = false;
 
   public static TLCore getPlugin() {
     return plugin;
@@ -59,7 +56,7 @@ public class TLCore extends JavaPlugin {
 
     Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
 
-    mongoDB.connect(config.getString("URI"));
+    MongoDB.connect(config.getString("URI"));
 
     ServerHandler.createServer();
 
@@ -92,10 +89,8 @@ public class TLCore extends JavaPlugin {
 
   @Override
   public void onDisable() {
-
     PermissionHandler.clearPermissions();
-
-    mongoDB.disconnect();
+    MongoDB.disconnect();
   }
 
   public void log(String msg, Level level) {
