@@ -45,10 +45,10 @@ public class PlayerEvents implements Listener {
     p.setFlySpeed(0.1f);
     p.setAllowFlight(false);
 
+    PlayerHandler.updateUsername(p);
+
     PlayerHandler.createPlayer(p);
     RankHandler.setTabColors(p);
-
-    PlayerHandler.updateUsername(p);
 
     PlayerHandler.updateIP(p);
     PlayerHandler.updateLastConnection(p);
