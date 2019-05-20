@@ -3,7 +3,6 @@ package net.timelegacy.tlcore.handler;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
-import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bson.Document;
 import org.bukkit.entity.Player;
@@ -75,12 +74,18 @@ public class PlayerHandler {
           new Document(
               "$set", new Document("last_ip", player.getAddress().getAddress().getHostAddress())));
 
-      players.updateOne(
-          Filters.eq("uuid", player.getUniqueId().toString()),
-          new Document(
-              "$set", new Document("previous_ips",
-              getPreviousIPs(player.getName()) + "," + player.getAddress().getAddress()
-                  .getHostAddress())));
+      String previousIPs = getPreviousIPs(player.getName());
+      if (!previousIPs.contains(player.getAddress().getHostName())) {
+        players.updateOne(
+            Filters.eq("uuid", player.getUniqueId().toString()),
+            new Document(
+                "$set",
+                new Document(
+                    "previous_ips",
+                    getPreviousIPs(player.getName())
+                        + player.getAddress().getAddress().getHostAddress()
+                        + ",")));
+      }
     }
   }
 
