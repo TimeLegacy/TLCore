@@ -1,8 +1,10 @@
 package net.timelegacy.tlcore.handler;
 
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -10,105 +12,55 @@ import org.bukkit.event.Listener;
 
 public class CoinHandler implements Listener {
 
-  private TLCore core = TLCore.getInstance();
+  private static MongoCollection<Document> players = MongoDB.mongoDatabase.getCollection("players");
 
-  /**
-   * Check if player has enough coins
-   */
-  public boolean checkTransaction(String p, Integer amount) {
-    return getBalance(p) >= amount;
+  public static boolean checkTransaction(String playerName, Integer amount) {
+    return getBalance(playerName) >= amount;
   }
 
-  /**
-   * Get the players balance
-   */
-  public int getBalance(String playerName) {
-    int retval = 0;
-    if (core.playerHandler.playerExistsName(playerName)) {
-      FindIterable<Document> doc = core.mongoDB.players.find(Filters.eq("username", playerName));
+  public static int getBalance(String playerName) {
+    int balance = 0;
+    if (PlayerHandler.playerExistsName(playerName)) {
+      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
 
-      retval = doc.first().getInteger("coins");
+      balance = doc.first().getInteger("coins");
     } else {
-      core.playerHandler.createPlayer(Bukkit.getPlayer(playerName));
+      PlayerHandler.createPlayer(Bukkit.getPlayer(playerName));
       getBalance(playerName);
     }
-    return retval;
+    return balance;
   }
 
-  /**
-   * Add coins to a player
-   */
-  public void addCoins(String playerName, Integer amount) {
+  public static void addCoins(String playerName, Integer amount) {
     int am = amount;
-    if (core.playerHandler.playerExistsName(playerName)) {
-
-      Player player = Bukkit.getPlayer(playerName);
-
-      if (core.multiplierHandler.isMultiplierEnabled()) {
-        am = core.multiplierHandler.getMultiplier() * amount;
+    if (PlayerHandler.playerExistsName(playerName)) {
+      if (MultiplierHandler.isMultiplierEnabled()) {
+        am = MultiplierHandler.getMultiplier() * amount;
       }
-
       setBalance(playerName, getBalance(playerName) + am);
-
-      core.messageUtils.sendMessage(
-          player,
-          core.messageUtils.MAIN_COLOR
-              + "You have received "
-              + core.messageUtils.SECOND_COLOR
-              + am
-              + core.messageUtils.MAIN_COLOR
-              + " coins.",
-          true);
     } else {
-      core.playerHandler.createPlayer(Bukkit.getPlayer(playerName));
+      PlayerHandler.createPlayer(Bukkit.getPlayer(playerName));
       addCoins(playerName, amount);
     }
   }
 
-  /**
-   * Set the balance of a players coins
-   */
-  public void setBalance(String p, Integer amount) {
-
-    if (core.playerHandler.playerExistsName(p)) {
-      core.mongoDB.players.updateOne(
-          Filters.eq("username", p), new Document("$set", new Document("coins", amount)));
+  public static void setBalance(String playerName, Integer amount) {
+    if (PlayerHandler.playerExistsName(playerName)) {
+      players.updateOne(
+          Filters.eq("username", playerName), new Document("$set", new Document("coins", amount)));
     } else {
-      core.playerHandler.createPlayer(Bukkit.getPlayer(p));
-      setBalance(p, amount);
+      PlayerHandler.createPlayer(Bukkit.getPlayer(playerName));
+      setBalance(playerName, amount);
     }
   }
 
-  /**
-   * Figure out how many coins to add depending on the players rank
-   */
-  public Integer coinsToAdd(String playerName, Integer amount) {
-    int am = amount;
-    if (core.playerHandler.playerExistsName(playerName)) {
-
-      if (core.multiplierHandler.isMultiplierEnabled()) {
-        am = core.multiplierHandler.getMultiplier() * amount;
-      }
-
-    } else {
-      core.playerHandler.createPlayer(Bukkit.getPlayer(playerName));
-
-      am = amount;
-    }
-
-    return am;
-  }
-
-  /**
-   * Subtract coins from a player
-   */
-  public void removeCoins(String playerName, Integer amount) {
-    if (core.playerHandler.playerExistsName(playerName)) {
+  public static void removeCoins(String playerName, Integer amount) {
+    if (PlayerHandler.playerExistsName(playerName)) {
       if (checkTransaction(playerName, amount)) {
         setBalance(playerName, getBalance(playerName) - amount);
       }
     } else {
-      core.playerHandler.createPlayer(Bukkit.getPlayer(playerName));
+      PlayerHandler.createPlayer(Bukkit.getPlayer(playerName));
     }
   }
 }

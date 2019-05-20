@@ -1,6 +1,10 @@
 package net.timelegacy.tlcore.event;
 
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.handler.BanHandler;
+import net.timelegacy.tlcore.handler.PlayerHandler;
+import net.timelegacy.tlcore.handler.RankHandler;
+import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +19,7 @@ import org.bukkit.potion.PotionEffect;
 @SuppressWarnings("deprecation")
 public class PlayerEvents implements Listener {
 
-  private TLCore core = TLCore.getInstance();
+  private TLCore plugin = TLCore.getPlugin();
 
   @EventHandler
   public void PlayerJoinEvent(PlayerJoinEvent event) {
@@ -35,20 +39,20 @@ public class PlayerEvents implements Listener {
 
     event.setJoinMessage(null);
 
-    core.flySpeed.remove(p.getName());
+    plugin.flySpeed.remove(p.getName());
 
     p.setFlying(false);
     p.setFlySpeed(0.1f);
     p.setAllowFlight(false);
 
-    core.playerHandler.createPlayer(p);
-    core.rankHandler.setTabColors(p);
+    PlayerHandler.createPlayer(p);
+    RankHandler.setTabColors(p);
 
-    core.playerHandler.updateUsername(p);
+    PlayerHandler.updateUsername(p);
 
-    core.playerHandler.updateIP(p);
-    core.playerHandler.updateLastConnection(p);
-    core.playerHandler.updateOnline(p, true);
+    PlayerHandler.updateIP(p);
+    PlayerHandler.updateLastConnection(p);
+    PlayerHandler.updateOnline(p, true);
   }
 
   @EventHandler
@@ -67,8 +71,7 @@ public class PlayerEvents implements Listener {
 
     event.setQuitMessage(null);
 
-    core.rankHandler.playerCache.remove(p.getName());
-    core.playerHandler.updateOnline(p, false);
+    PlayerHandler.updateOnline(p, false);
   }
 
   @EventHandler
@@ -76,12 +79,12 @@ public class PlayerEvents implements Listener {
     Player p = e.getPlayer();
 
     if (e.getStatus() == PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED) {
-      core.messageUtils.sendMessage(
-          p, core.messageUtils.SUCCESS_COLOR + "Successful loaded the resource pack.", false);
+      MessageUtils.sendMessage(
+          p, MessageUtils.SUCCESS_COLOR + "Successful loaded the resource pack.", false);
     } else if (e.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD) {
 
-      core.messageUtils.sendMessage(
-          p, core.messageUtils.ERROR_COLOR + "Error. Failed download resource pack.", false);
+      MessageUtils.sendMessage(
+          p, MessageUtils.ERROR_COLOR + "Error. Failed download resource pack.", false);
     }
   }
 
@@ -89,26 +92,26 @@ public class PlayerEvents implements Listener {
   public void onPreJoin(PlayerPreLoginEvent e) {
     String p = e.getName();
 
-    if (core.playerHandler.playerExistsName(p)) {
-      if (core.banHandler.isBanned(p)) {
-        if (!core.banHandler.getBanExpire(p).equalsIgnoreCase("false")) {
+    if (PlayerHandler.playerExistsName(p)) {
+      if (BanHandler.isBanned(p)) {
+        if (!BanHandler.getBanExpire(p).equalsIgnoreCase("false")) {
           e.disallow(
               Result.KICK_BANNED,
               ChatColor.translateAlternateColorCodes(
                   '&',
-                  core.messageUtils.messagePrefix
+                  MessageUtils.messagePrefix
                       + "&4You have been banned. &cReason: &f&o"
-                      + core.banHandler.getBanReason(p)
+                      + BanHandler.getBanReason(p)
                       + " &cExpires: &f&o"
-                      + core.banHandler.getBanExpire(p)));
+                      + BanHandler.getBanExpire(p)));
         } else {
           e.disallow(
               Result.KICK_BANNED,
               ChatColor.translateAlternateColorCodes(
                   '&',
-                  core.messageUtils.messagePrefix
+                  MessageUtils.messagePrefix
                       + "&4You have been banned. &cReason: &f&o"
-                      + core.banHandler.getBanReason(p)));
+                      + BanHandler.getBanReason(p)));
         }
       }
     }

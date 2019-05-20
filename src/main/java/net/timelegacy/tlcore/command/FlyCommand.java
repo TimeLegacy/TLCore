@@ -2,6 +2,8 @@ package net.timelegacy.tlcore.command;
 
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.Rank;
+import net.timelegacy.tlcore.handler.RankHandler;
+import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,30 +12,30 @@ import org.bukkit.event.EventHandler;
 
 public class FlyCommand implements CommandExecutor {
 
-  private TLCore core = TLCore.getInstance();
+  private static TLCore plugin = TLCore.getPlugin();
 
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
     if (sender instanceof Player) {
       final Player p = (Player) sender;
-      Rank r = core.rankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getName());
       if (r.getPriority() >= 9) {
 
-        if (core.flySpeed.contains(p.getName())) {
-          core.flySpeed.remove(p.getName());
+        if (plugin.flySpeed.contains(p.getName())) {
+          plugin.flySpeed.remove(p.getName());
           p.setFlying(false);
           p.setFlySpeed(0.1f);
           p.setAllowFlight(false);
-          core.messageUtils.sendMessage(
-              p, core.messageUtils.ERROR_COLOR + "Flymode disabled.", true);
+          MessageUtils.sendMessage(
+              p, MessageUtils.ERROR_COLOR + "Flymode disabled.", true);
         } else {
           if (args.length == 0) {
-            core.messageUtils.sendMessage(
-                p, core.messageUtils.SUCCESS_COLOR + "Flymode enabled at default speed.", true);
+            MessageUtils.sendMessage(
+                p, MessageUtils.SUCCESS_COLOR + "Flymode enabled at default speed.", true);
             p.setAllowFlight(true);
             p.setFlying(true);
             p.setAllowFlight(true);
-            core.flySpeed.add(p.getName());
+            plugin.flySpeed.add(p.getName());
           } else {
             String posnum = args[0];
 
@@ -43,8 +45,8 @@ public class FlyCommand implements CommandExecutor {
               speed = Integer.parseInt(posnum);
 
               if (speed < 1 || speed > 10) {
-                core.messageUtils.sendMessage(
-                    p, core.messageUtils.ERROR_COLOR + "Usage: /fly [speed (1-10)]", true);
+                MessageUtils.sendMessage(
+                    p, MessageUtils.ERROR_COLOR + "Usage: /fly [speed (1-10)]", true);
               } else {
                 if (speed == 1) {
                   p.setFlySpeed(0.1f);
@@ -77,29 +79,29 @@ public class FlyCommand implements CommandExecutor {
                   p.setFlySpeed(1.0f);
                 }
 
-                core.messageUtils.sendMessage(
+                MessageUtils.sendMessage(
                     p,
-                    core.messageUtils.MAIN_COLOR
+                    MessageUtils.MAIN_COLOR
                         + "Flymode enabled at speed "
-                        + core.messageUtils.SECOND_COLOR
+                        + MessageUtils.SECOND_COLOR
                         + speed
-                        + core.messageUtils.MAIN_COLOR
+                        + MessageUtils.MAIN_COLOR
                         + ".",
                     true);
                 p.setAllowFlight(true);
                 p.setFlying(true);
                 p.setAllowFlight(true);
-                core.flySpeed.add(p.getName());
+                plugin.flySpeed.add(p.getName());
               }
             } catch (NumberFormatException ex) {
-              core.messageUtils.sendMessage(
-                  p, core.messageUtils.ERROR_COLOR + "Usage: /fly [speed (1-10)]", true);
+              MessageUtils.sendMessage(
+                  p, MessageUtils.ERROR_COLOR + "Usage: /fly [speed (1-10)]", true);
               return true;
             }
           }
         }
       } else {
-        core.messageUtils.noPerm(p);
+        MessageUtils.noPerm(p);
       }
     }
 

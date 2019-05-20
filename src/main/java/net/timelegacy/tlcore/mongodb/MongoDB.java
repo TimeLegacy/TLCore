@@ -1,55 +1,29 @@
 package net.timelegacy.tlcore.mongodb;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
 
 public class MongoDB {
 
-  public MongoCollection<Document> players;
-  public MongoCollection<Document> servers;
-  public MongoCollection<Document> settings;
-  public MongoCollection<Document> anticheat;
-  public MongoCollection<Document> punishments;
-  public MongoCollection<Document> ranks;
+  public static MongoDatabase mongoDatabase;
+  private static MongoClient mongoClient;
 
-  private MongoDatabase mongoDatabase;
-  private MongoClientURI clientURI;
-  private MongoClient client;
+  /**
+   * Connect to MongoDB using URI
+   */
 
-  public boolean connect(String uri) {
-    // Connect to the specified ip and port
-    // Default is localhost, 27017
-    try {
-      clientURI = new MongoClientURI(uri);
-      client = new MongoClient(clientURI);
-    } catch (Exception e) {
-      // When you end up here, the server the db is running on could not be found!
-      System.out.println("Could not connect to database!");
-      e.printStackTrace();
-      return false;
-    }
-    // Get the database called "cryslix"
-    // If it does not exist it will be created automatically
-    // once you save something in it
-    mongoDatabase = client.getDatabase("mineaqua");
-    // Get the collection called "players" in the database "cryslix"
-    // Equivalent to the table in MySQL, you can store objects in here
-    players = mongoDatabase.getCollection("players");
-    servers = mongoDatabase.getCollection("servers");
-    settings = mongoDatabase.getCollection("settings");
-    anticheat = mongoDatabase.getCollection("anticheat");
-    punishments = mongoDatabase.getCollection("punishments");
-    ranks = mongoDatabase.getCollection("ranks");
+  public static boolean connect(String uri) {
+
+    mongoClient = MongoClients.create(uri);
+    mongoDatabase = mongoClient.getDatabase("mineaqua");
 
     return true;
   }
 
   public boolean disconnect() {
 
-    client.close();
+    mongoClient.close();
 
     return true;
   }

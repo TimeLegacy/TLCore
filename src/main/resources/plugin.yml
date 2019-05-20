@@ -54,5 +54,3 @@ commands:
     description: Unmutes a muted player.
   Chat:
     description: Child or Mature chat.
-  Discord:
-    description: Link your Discord.

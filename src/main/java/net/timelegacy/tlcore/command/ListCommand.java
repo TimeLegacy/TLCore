@@ -1,6 +1,7 @@
 package net.timelegacy.tlcore.command;
 
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,13 +11,11 @@ import org.bukkit.event.EventHandler;
 
 public class ListCommand implements CommandExecutor {
 
-  private TLCore core = TLCore.getInstance();
-
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
     if (Bukkit.getOnlinePlayers().size() == 0) {
-      core.messageUtils.sendMessage(
-          sender, core.messageUtils.ERROR_COLOR + "There are no players online.", true);
+      MessageUtils.sendMessage(
+          sender, MessageUtils.ERROR_COLOR + "There are no players online.", true);
     } else {
       StringBuilder sb = new StringBuilder();
 
@@ -31,15 +30,15 @@ public class ListCommand implements CommandExecutor {
         }
       }
 
-      core.messageUtils.sendMessage(
+      MessageUtils.sendMessage(
           sender,
-          core.messageUtils.MAIN_COLOR
+          MessageUtils.MAIN_COLOR
               + "Online Players ("
-              + core.messageUtils.SECOND_COLOR
+              + MessageUtils.SECOND_COLOR
               + Bukkit.getOnlinePlayers().size()
-              + core.messageUtils.MAIN_COLOR
+              + MessageUtils.MAIN_COLOR
               + ") "
-              + core.messageUtils.SECOND_COLOR
+              + MessageUtils.SECOND_COLOR
               + sb.toString(),
           true);
     }

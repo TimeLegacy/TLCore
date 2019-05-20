@@ -5,17 +5,18 @@ public class Rank {
   private String name;
   private int priority;
   private String chat;
-  private String mainColor;
-  private String coColor;
+  private String primaryColor;
+  private String secondaryColor;
   private String tab;
 
   public Rank(
-      String name, int priority, String chat, String mainColor, String coColor, String tab) {
+      String name, int priority, String chat, String primaryColor, String secondaryColor,
+      String tab) {
     this.name = name;
     this.priority = priority;
     this.chat = chat;
-    this.mainColor = mainColor;
-    this.coColor = coColor;
+    this.primaryColor = primaryColor;
+    this.secondaryColor = secondaryColor;
     this.tab = tab;
   }
 
@@ -31,12 +32,12 @@ public class Rank {
     return priority;
   }
 
-  public String getCoColor() {
-    return coColor;
+  public String getPrimaryColor() {
+    return primaryColor;
   }
 
-  public String getMainColor() {
-    return mainColor;
+  public String getSecondaryColor() {
+    return secondaryColor;
   }
 
   public String getTab() {

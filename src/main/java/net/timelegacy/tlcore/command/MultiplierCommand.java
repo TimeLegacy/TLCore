@@ -1,7 +1,10 @@
 package net.timelegacy.tlcore.command;
 
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.handler.MultiplierHandler;
 import net.timelegacy.tlcore.handler.Rank;
+import net.timelegacy.tlcore.handler.RankHandler;
+import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,21 +13,19 @@ import org.bukkit.event.EventHandler;
 
 public class MultiplierCommand implements CommandExecutor {
 
-  private TLCore core = TLCore.getInstance();
-
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
     Player p = (Player) sender;
-    Rank r = core.rankHandler.getRank(p.getName());
+    Rank r = RankHandler.getRank(p.getName());
     if (r.getPriority() >= 9) {
 
       if (args.length < 1 || args.length > 2) {
-        core.messageUtils.sendMessage(
-            sender, core.messageUtils.MAIN_COLOR + "&lMultiplier Management help menu", false);
-        core.messageUtils.helpMenu(sender, "/mm check", "Check the current multiplier status");
-        core.messageUtils.helpMenu(sender, "/mm enable", "Enable the multipler");
-        core.messageUtils.helpMenu(sender, "/mm disable", "Disable the multipler");
-        core.messageUtils.helpMenu(sender, "/mm set <amount>", "Set the multipler");
+        MessageUtils.sendMessage(
+            sender, MessageUtils.MAIN_COLOR + "&lMultiplier Management help menu", false);
+        MessageUtils.helpMenu(sender, "/mm check", "Check the current multiplier status");
+        MessageUtils.helpMenu(sender, "/mm enable", "Enable the multipler");
+        MessageUtils.helpMenu(sender, "/mm disable", "Disable the multipler");
+        MessageUtils.helpMenu(sender, "/mm set <amount>", "Set the multipler");
       }
 
       if (args.length == 1) {
@@ -32,23 +33,23 @@ public class MultiplierCommand implements CommandExecutor {
 
           String status = null;
 
-          if (core.multiplierHandler.isMultiplierEnabled()) {
+          if (MultiplierHandler.isMultiplierEnabled()) {
             status = "Enabled";
           } else {
             status = "Disabled";
           }
 
-          core.messageUtils.sendMessage(
+          MessageUtils.sendMessage(
               sender,
-              core.messageUtils.MAIN_COLOR
+              MessageUtils.MAIN_COLOR
                   + "Multiplier is currently"
                   + " "
-                  + core.messageUtils.SECOND_COLOR
+                  + MessageUtils.SECOND_COLOR
                   + status
-                  + core.messageUtils.MAIN_COLOR
+                  + MessageUtils.MAIN_COLOR
                   + " and the multiplier amount is "
-                  + core.messageUtils.SECOND_COLOR
-                  + core.multiplierHandler.getMultiplier(),
+                  + MessageUtils.SECOND_COLOR
+                  + MultiplierHandler.getMultiplier(),
               true);
 
           return true;
@@ -56,14 +57,14 @@ public class MultiplierCommand implements CommandExecutor {
 
         if (args[0].equalsIgnoreCase("enable")) {
 
-          if (core.multiplierHandler.isMultiplierEnabled()) {
-            core.messageUtils.sendMessage(
-                sender, core.messageUtils.ERROR_COLOR + "Multiplier is already enabled.", true);
+          if (MultiplierHandler.isMultiplierEnabled()) {
+            MessageUtils.sendMessage(
+                sender, MessageUtils.ERROR_COLOR + "Multiplier is already enabled.", true);
           } else {
-            core.messageUtils.sendMessage(
-                sender, core.messageUtils.SUCCESS_COLOR + "Multiplier is now enabled.", true);
+            MessageUtils.sendMessage(
+                sender, MessageUtils.SUCCESS_COLOR + "Multiplier is now enabled.", true);
 
-            core.multiplierHandler.enableMultiplier(true);
+            MultiplierHandler.toggleMultiplier(true);
           }
 
           return true;
@@ -71,14 +72,14 @@ public class MultiplierCommand implements CommandExecutor {
 
         if (args[0].equalsIgnoreCase("disable")) {
 
-          if (core.multiplierHandler.isMultiplierEnabled()) {
-            core.messageUtils.sendMessage(
-                sender, core.messageUtils.SUCCESS_COLOR + "Multiplier is now disabled.", true);
+          if (MultiplierHandler.isMultiplierEnabled()) {
+            MessageUtils.sendMessage(
+                sender, MessageUtils.SUCCESS_COLOR + "Multiplier is now disabled.", true);
 
-            core.multiplierHandler.enableMultiplier(false);
+            MultiplierHandler.toggleMultiplier(false);
           } else {
-            core.messageUtils.sendMessage(
-                sender, core.messageUtils.ERROR_COLOR + "Multiplier is already disabled.", true);
+            MessageUtils.sendMessage(
+                sender, MessageUtils.ERROR_COLOR + "Multiplier is already disabled.", true);
           }
 
           return true;
@@ -95,17 +96,17 @@ public class MultiplierCommand implements CommandExecutor {
           try {
             am = Integer.parseInt(amount);
           } catch (NumberFormatException ex) {
-            core.messageUtils.sendMessage(
-                sender, core.messageUtils.ERROR_COLOR + "Invalid amount.", true);
+            MessageUtils.sendMessage(
+                sender, MessageUtils.ERROR_COLOR + "Invalid amount.", true);
             return true;
           }
 
-          core.multiplierHandler.setMultiplier(am);
-          core.messageUtils.sendMessage(
+          MultiplierHandler.setMultiplier(am);
+          MessageUtils.sendMessage(
               sender,
-              core.messageUtils.MAIN_COLOR
+              MessageUtils.MAIN_COLOR
                   + "Multiplier amount set to "
-                  + core.messageUtils.SECOND_COLOR
+                  + MessageUtils.SECOND_COLOR
                   + am
                   + "x",
               true);
@@ -114,11 +115,11 @@ public class MultiplierCommand implements CommandExecutor {
         }
       }
 
-      core.messageUtils.sendMessage(
-          sender, core.messageUtils.ERROR_COLOR + "Type /mm for command help", true);
+      MessageUtils.sendMessage(
+          sender, MessageUtils.ERROR_COLOR + "Type /mm for command help", true);
       return true;
     } else {
-      core.messageUtils.noPerm((Player) sender);
+      MessageUtils.noPerm((Player) sender);
     }
 
     return true;

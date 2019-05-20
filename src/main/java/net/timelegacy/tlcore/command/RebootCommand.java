@@ -2,6 +2,8 @@ package net.timelegacy.tlcore.command;
 
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.Rank;
+import net.timelegacy.tlcore.handler.RankHandler;
+import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,21 +13,19 @@ import org.bukkit.event.EventHandler;
 
 public class RebootCommand implements CommandExecutor {
 
-  private TLCore core = TLCore.getInstance();
-
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
     Player p = (Player) sender;
 
-    Rank r = core.rankHandler.getRank(p.getName());
+    Rank r = RankHandler.getRank(p.getName());
     if (r.getPriority() >= 9) {
 
       for (Player on : Bukkit.getOnlinePlayers()) {
-        on.kickPlayer(core.messageUtils.c("&cRebooting server..."));
+        on.kickPlayer(MessageUtils.colorize("&cRebooting server..."));
       }
 
-      core.messageUtils.sendMessage(p, "&cRebooting server...", true);
+      MessageUtils.sendMessage(p, "&cRebooting server...", true);
 
       Bukkit.shutdown();
     }

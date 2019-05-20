@@ -1,26 +1,23 @@
 package net.timelegacy.tlcore.handler;
 
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bson.Document;
 
 public class BanHandler {
 
-  private TLCore core = TLCore.getInstance();
+  private static MongoCollection<Document> players = MongoDB.mongoDatabase.getCollection("players");
 
-  /**
-   * Check if player is banned
-   *
-   * @param playerName the player who is being checked if they are banned or not
-   * @return true, false
-   */
-  public boolean isBanned(String playerName) {
-    if (core.playerHandler.playerExistsName(playerName)) {
-      FindIterable<Document> doc = core.mongoDB.players.find(Filters.eq("username", playerName));
+  public static boolean isBanned(String playerName) {
+    if (PlayerHandler.playerExistsName(playerName)) {
+
+      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
       String banned = doc.first().getString("banned");
       if (banned.equalsIgnoreCase("true")) {
         return true;
@@ -34,9 +31,9 @@ public class BanHandler {
     return false;
   }
 
-  public String getBanExpire(String playerName) {
+  public static String getBanExpire(String playerName) {
     if (isBanned(playerName)) {
-      FindIterable<Document> doc = core.mongoDB.players.find(Filters.eq("username", playerName));
+      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
       String banned = doc.first().getString("banned");
 
       if (!banned.equalsIgnoreCase("false") && !banned.equalsIgnoreCase("true")) {
@@ -54,7 +51,7 @@ public class BanHandler {
     return "false";
   }
 
-  private long parse(String input) {
+  private static long parse(String input) {
     long result = 0;
     StringBuilder number = new StringBuilder();
     for (int i = 0; i < input.length(); i++) {
@@ -69,7 +66,7 @@ public class BanHandler {
     return result;
   }
 
-  private long convert(int value, char unit) {
+  private static long convert(int value, char unit) {
     switch (unit) {
       case 'd':
         return value * 1000 * 60 * 60 * 24;
@@ -83,14 +80,7 @@ public class BanHandler {
     return 0;
   }
 
-  /**
-   * Set player banned to true or false
-   *
-   * @param playerName the player is to be banned or unbanned
-   * @param isBanned Time format, true for perm, false for unmute, time is #d or #m or #y
-   * @param reason the reason for being banned
-   */
-  public void setBanned(
+  public static void setBanned(
       String playerName, String isBanned, Punishment reason, String punisherName) {
     String banReason = "OTHER";
 
@@ -100,54 +90,48 @@ public class BanHandler {
     }
 
     if (!isBanned.equalsIgnoreCase("false")) {
-      core.mongoDB.players.updateOne(
+      players.updateOne(
           Filters.eq("username", playerName),
           new Document("$set", new Document("banned", isBanned)));
 
       if (reason != null) {
-        core.mongoDB.players.updateOne(
+        players.updateOne(
             Filters.eq("username", playerName),
-            new Document("$set", new Document("banreason", reason.toString())));
+            new Document("$set", new Document("ban_reason", reason.toString())));
       } else {
-        core.mongoDB.players.updateOne(
+        players.updateOne(
             Filters.eq("username", playerName),
-            new Document("$set", new Document("banreason", banReason)));
+            new Document("$set", new Document("ban_reason", banReason)));
       }
 
-      core.punishmentHandler.addPunishmentLog(
+      PunishmentHandler.addPunishmentLog(
           Punishment.Type.BAN,
-          core.punishmentHandler.comparePunishments(reason != null ? reason.toString() : banReason),
+          PunishmentHandler.comparePunishments(reason != null ? reason.toString() : banReason),
           isBanned.equalsIgnoreCase("true") ? 0 : Long.parseLong(isBanned),
-          UUID.fromString(core.playerHandler.getUUID(playerName)),
-          UUID.fromString(core.playerHandler.getUUID(punisherName)));
+          UUID.fromString(PlayerHandler.getUUID(playerName)),
+          UUID.fromString(PlayerHandler.getUUID(punisherName)));
     } else {
-      core.mongoDB.players.updateOne(
+      players.updateOne(
           Filters.eq("username", playerName),
           new Document("$set", new Document("banned", "false")));
-      core.mongoDB.players.updateOne(
-          Filters.eq("username", playerName), new Document("$set", new Document("banreason", "")));
+      players.updateOne(
+          Filters.eq("username", playerName), new Document("$set", new Document("ban_reason", "")));
 
-      core.punishmentHandler.addPunishmentLog(
+      PunishmentHandler.addPunishmentLog(
           Punishment.Type.UNBAN,
           Punishment.OTHER,
           0,
-          UUID.fromString(core.playerHandler.getUUID(playerName)),
-          UUID.fromString(core.playerHandler.getUUID(punisherName)));
+          UUID.fromString(PlayerHandler.getUUID(playerName)),
+          UUID.fromString(PlayerHandler.getUUID(punisherName)));
     }
   }
 
-  /**
-   * Get the ban reason
-   *
-   * @param playerName player that you're getting the reason for them being banned
-   * @return the reason for being banned
-   */
-  public String getBanReason(String playerName) {
+  public static String getBanReason(String playerName) {
     if (isBanned(playerName)) {
 
-      FindIterable<Document> doc = core.mongoDB.players.find(Filters.eq("username", playerName));
+      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
 
-      return doc.first().getString("banreason");
+      return doc.first().getString("ban_reason");
 
     } else {
       return "Player not banned.";

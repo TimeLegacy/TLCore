@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
 
 public class WorldDownloaderUtils {
 
-  private static TLCore core = TLCore.getInstance();
+  private static TLCore plugin = TLCore.getPlugin();
 
   public void loadWorld(final String world) {
     if (Bukkit.getWorld(world) != null) {
@@ -53,7 +53,7 @@ public class WorldDownloaderUtils {
     final URL url = new URL(fileURL);
     Bukkit.getScheduler()
         .runTaskAsynchronously(
-            core,
+            plugin,
             new Runnable() {
               @Override
               public void run() {
@@ -152,7 +152,7 @@ public class WorldDownloaderUtils {
   public boolean deleteWorld(final File path) {
     Bukkit.getScheduler()
         .runTaskAsynchronously(
-            core,
+            plugin,
             new Runnable() {
               @Override
               public void run() {

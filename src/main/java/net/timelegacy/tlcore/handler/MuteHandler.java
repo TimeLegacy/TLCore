@@ -1,26 +1,21 @@
 package net.timelegacy.tlcore.handler;
 
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.UUID;
-import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bson.Document;
 
 public class MuteHandler {
 
-  private TLCore core = TLCore.getInstance();
+  private static MongoCollection<Document> players = MongoDB.mongoDatabase.getCollection("players");
 
-  /**
-   * Check if player is muted
-   *
-   * @param playerName the player who is being checked if they are muted or not
-   * @return true, false
-   */
-  public boolean isMuted(String playerName) {
-    if (core.playerHandler.playerExistsName(playerName)) {
-      FindIterable<Document> doc = core.mongoDB.players.find(Filters.eq("username", playerName));
+  public static boolean isMuted(String playerName) {
+    if (PlayerHandler.playerExistsName(playerName)) {
+      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
       String muted = doc.first().getString("muted");
       if (muted.equalsIgnoreCase("true")) {
         return true;
@@ -34,9 +29,9 @@ public class MuteHandler {
     return false;
   }
 
-  public String getMuteExpire(String playerName) {
+  public static String getMuteExpire(String playerName) {
     if (isMuted(playerName)) {
-      FindIterable<Document> doc = core.mongoDB.players.find(Filters.eq("username", playerName));
+      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
       String muted = doc.first().getString("muted");
 
       if (!muted.equalsIgnoreCase("false") && !muted.equalsIgnoreCase("true")) {
@@ -54,7 +49,7 @@ public class MuteHandler {
     return "false";
   }
 
-  private long parse(String input) {
+  private static long parse(String input) {
     long result = 0;
     StringBuilder number = new StringBuilder();
     for (int i = 0; i < input.length(); i++) {
@@ -69,7 +64,7 @@ public class MuteHandler {
     return result;
   }
 
-  private long convert(int value, char unit) {
+  private static long convert(int value, char unit) {
     switch (unit) {
       case 'd':
         return value * 1000 * 60 * 60 * 24;
@@ -83,14 +78,8 @@ public class MuteHandler {
     return 0;
   }
 
-  /**
-   * Set player muted to true or false
-   *
-   * @param playerName the player is to be muted or unmuted
-   * @param isMuted Time format, true for perm, false for unmute, time is #d or #m or #y
-   * @param reason the reason for being muted
-   */
-  public void setMuted(String playerName, String isMuted, Punishment reason, String punisherName) {
+  public static void setMuted(String playerName, String isMuted, Punishment reason,
+      String punisherName) {
     String muteReason = "OTHER";
 
     if (!isMuted.equalsIgnoreCase("true") && !isMuted.equalsIgnoreCase("false")) {
@@ -99,53 +88,48 @@ public class MuteHandler {
     }
 
     if (!isMuted.equalsIgnoreCase("false")) {
-      core.mongoDB.players.updateOne(
+      players.updateOne(
           Filters.eq("username", playerName), new Document("$set", new Document("muted", isMuted)));
 
       if (reason != null) {
-        core.mongoDB.players.updateOne(
+        players.updateOne(
             Filters.eq("username", playerName),
-            new Document("$set", new Document("mutereason", reason.toString())));
+            new Document("$set", new Document("mute_reason", reason.toString())));
 
       } else {
-        core.mongoDB.players.updateOne(
+        players.updateOne(
             Filters.eq("username", playerName),
-            new Document("$set", new Document("mutereason", muteReason)));
+            new Document("$set", new Document("mute_reason", muteReason)));
       }
 
-      core.punishmentHandler.addPunishmentLog(
+      PunishmentHandler.addPunishmentLog(
           Punishment.Type.MUTE,
-          core.punishmentHandler.comparePunishments(
+          PunishmentHandler.comparePunishments(
               reason != null ? reason.toString() : muteReason),
           isMuted.equalsIgnoreCase("true") ? 0 : Long.parseLong(isMuted),
-          UUID.fromString(core.playerHandler.getUUID(playerName)),
-          UUID.fromString(core.playerHandler.getUUID(punisherName)));
+          UUID.fromString(PlayerHandler.getUUID(playerName)),
+          UUID.fromString(PlayerHandler.getUUID(punisherName)));
     } else {
-      core.mongoDB.players.updateOne(
+      players.updateOne(
           Filters.eq("username", playerName), new Document("$set", new Document("muted", "false")));
-      core.mongoDB.players.updateOne(
-          Filters.eq("username", playerName), new Document("$set", new Document("mutereason", "")));
+      players.updateOne(
+          Filters.eq("username", playerName),
+          new Document("$set", new Document("mute_reason", "")));
 
-      core.punishmentHandler.addPunishmentLog(
+      PunishmentHandler.addPunishmentLog(
           Punishment.Type.UNMUTE,
           Punishment.OTHER,
           0,
-          UUID.fromString(core.playerHandler.getUUID(playerName)),
-          UUID.fromString(core.playerHandler.getUUID(punisherName)));
+          UUID.fromString(PlayerHandler.getUUID(playerName)),
+          UUID.fromString(PlayerHandler.getUUID(punisherName)));
     }
   }
 
-  /**
-   * Get the mute reason
-   *
-   * @param playerName player that you're getting the reason for them being muted
-   * @return the reason for being muted
-   */
-  public String getMuteReason(String playerName) {
+  public static String getMuteReason(String playerName) {
     if (isMuted(playerName)) {
 
-      FindIterable<Document> doc = core.mongoDB.players.find(Filters.eq("username", playerName));
-      String reason = doc.first().getString("mutereason");
+      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
+      String reason = doc.first().getString("mute_reason");
 
       return reason;
 

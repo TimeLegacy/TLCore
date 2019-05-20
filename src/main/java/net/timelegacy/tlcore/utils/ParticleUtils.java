@@ -9,9 +9,7 @@ import org.bukkit.util.Vector;
 
 public class ParticleUtils {
 
-    // TODO fix dis shit
-
-    public void drawParticleLine(
+    public static void drawParticleLine(
         Location from, Location to, Particle effect, int particles, int r, int g, int b) {
         Location location = from.clone();
         Location target = to.clone();
@@ -38,7 +36,7 @@ public class ParticleUtils {
         }
     }
 
-    public void playHelix(final Location loc, final float i, final Particle effect) {
+    public static void playHelix(final Location loc, final float i, final Particle effect) {
         BukkitRunnable runnable =
             new BukkitRunnable() {
                 double radius = 0;
@@ -67,43 +65,18 @@ public class ParticleUtils {
                     radius += 1 / 50f;
                 }
             };
-        runnable.runTaskTimer(TLCore.getInstance(), 0, 1);
+        runnable.runTaskTimer(TLCore.getPlugin(), 0, 1);
     }
 
-  /*
-
-  spawnParticle
-            online
-              .getWorld()
-              .spawnParticle(
-                  Particle.REDSTONE,
-                  online.getLocation(),
-                  14,
-                  0.1f,
-                  0.1f,
-                  0.1f,
-                  0,
-                  new Particle.DustOptions(Color.WHITE, 1));
-
-  particle - the particle to spawn
-  location - the location to spawn at
-  count - the number of particles
-  offsetX - the maximum random offset on the X axis
-  offsetY - the maximum random offset on the Y axis
-  offsetZ - the maximum random offset on the Z axis
-  extra - the extra data for this particle, depends on the particle used (normally speed)
-  data - the data to use for the particle or null, the type of this depends on Particle.getDataType()
-   */
-
-    public void display(Particle effect, Location loc, int amount, int speed) {
+    public static void display(Particle effect, Location loc, int amount, int speed) {
       loc.getWorld().spawnParticle(effect, loc, amount, 0f, 0f, 0f, speed);
     }
 
-    public void display(Particle effect, Location loc) {
+    public static void display(Particle effect, Location loc) {
       loc.getWorld().spawnParticle(effect, loc, 1, 0f, 0f, 0f, 0);
     }
 
-    public void display(int red, int green, int blue, Location loc) {
+    public static void display(int red, int green, int blue, Location loc) {
         loc.getWorld()
             .spawnParticle(
                 Particle.REDSTONE,

@@ -8,7 +8,6 @@ import net.timelegacy.tlcore.command.ChatTypeCommand;
 import net.timelegacy.tlcore.command.CoinManagementCommand;
 import net.timelegacy.tlcore.command.CoinsCommand;
 import net.timelegacy.tlcore.command.CrateKeyCommand;
-import net.timelegacy.tlcore.command.DiscordCommand;
 import net.timelegacy.tlcore.command.FlyCommand;
 import net.timelegacy.tlcore.command.GamemodeCommand;
 import net.timelegacy.tlcore.command.ListCommand;
@@ -24,31 +23,10 @@ import net.timelegacy.tlcore.command.UnMuteCommand;
 import net.timelegacy.tlcore.event.FilterEvents;
 import net.timelegacy.tlcore.event.PhysicsEvents;
 import net.timelegacy.tlcore.event.PlayerEvents;
-import net.timelegacy.tlcore.handler.BanHandler;
-import net.timelegacy.tlcore.handler.CoinHandler;
-import net.timelegacy.tlcore.handler.CrateKeyHandler;
-import net.timelegacy.tlcore.handler.DiscordHandler;
-import net.timelegacy.tlcore.handler.MultiplierHandler;
-import net.timelegacy.tlcore.handler.MuteHandler;
-import net.timelegacy.tlcore.handler.PerkHandler;
 import net.timelegacy.tlcore.handler.PermissionHandler;
-import net.timelegacy.tlcore.handler.PlayerHandler;
-import net.timelegacy.tlcore.handler.PunishmentHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.handler.ServerHandler;
-import net.timelegacy.tlcore.handler.StatsHandler;
-import net.timelegacy.tlcore.handler.TopPlayersHandler;
 import net.timelegacy.tlcore.mongodb.MongoDB;
-import net.timelegacy.tlcore.utils.BungeeUtils;
-import net.timelegacy.tlcore.utils.EntityUtils;
-import net.timelegacy.tlcore.utils.FireworkUtils;
-import net.timelegacy.tlcore.utils.HologramUtils;
-import net.timelegacy.tlcore.utils.ItemUtils;
-import net.timelegacy.tlcore.utils.MessageUtils;
-import net.timelegacy.tlcore.utils.ParticleUtils;
-import net.timelegacy.tlcore.utils.PotionUtils;
-import net.timelegacy.tlcore.utils.WorldDownloaderUtils;
-import net.timelegacy.tlcore.utils.WorldUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -61,74 +39,11 @@ public class TLCore extends JavaPlugin {
   public ArrayList<String> flySpeed = new ArrayList<>();
   public boolean physics = true;
 
-  // Handlers
-  public BanHandler banHandler;
-  public MuteHandler muteHandler;
-  public CoinHandler coinHandler;
-  public MultiplierHandler multiplierHandler;
-  public PerkHandler perkHandler;
-  public PlayerHandler playerHandler;
-  public RankHandler rankHandler;
-  public ServerHandler serverHandler;
-  public StatsHandler statsHandler;
-  public TopPlayersHandler topPlayersHandler;
-  public PermissionHandler permissionHandler;
-  public CrateKeyHandler crateKeyHandler;
-  public DiscordHandler discordHandler;
-  public PunishmentHandler punishmentHandler;
-
-  // Utils
-  public BungeeUtils bungeeUtils;
-  public EntityUtils entityUtils;
-  public FireworkUtils fireworkUtils;
-  public HologramUtils hologramUtils;
-  public MessageUtils messageUtils;
-  public PotionUtils potionUtils;
-  public WorldUtils worldUtils;
-  public ItemUtils itemUtils;
-  public ParticleUtils particleUtils;
-  public WorldDownloaderUtils worldDownloader;
-
   // MongoDB
   public MongoDB mongoDB;
 
-  public static TLCore getInstance() {
+  public static TLCore getPlugin() {
     return plugin;
-  }
-
-  private void init() {
-
-    // Handlers
-    banHandler = new BanHandler();
-    coinHandler = new CoinHandler();
-    multiplierHandler = new MultiplierHandler();
-    perkHandler = new PerkHandler();
-    playerHandler = new PlayerHandler();
-    rankHandler = new RankHandler();
-    serverHandler = new ServerHandler();
-    statsHandler = new StatsHandler();
-    topPlayersHandler = new TopPlayersHandler();
-    permissionHandler = new PermissionHandler();
-    muteHandler = new MuteHandler();
-    crateKeyHandler = new CrateKeyHandler();
-    discordHandler = new DiscordHandler();
-    punishmentHandler = new PunishmentHandler();
-
-    // Utils
-    bungeeUtils = new BungeeUtils();
-    entityUtils = new EntityUtils();
-    fireworkUtils = new FireworkUtils();
-    hologramUtils = new HologramUtils();
-    itemUtils = new ItemUtils();
-    messageUtils = new MessageUtils();
-    potionUtils = new PotionUtils();
-    worldUtils = new WorldUtils();
-    itemUtils = new ItemUtils();
-    worldDownloader = new WorldDownloaderUtils();
-    particleUtils = new ParticleUtils();
-
-    // MongoDB
-    mongoDB = new MongoDB();
   }
 
   public void onEnable() {
@@ -144,11 +59,9 @@ public class TLCore extends JavaPlugin {
 
     Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
 
-    init();
-
     mongoDB.connect(config.getString("URI"));
 
-    serverHandler.createServer();
+    ServerHandler.createServer();
 
     plugin.getCommand("coins").setExecutor(new CoinsCommand());
     plugin.getCommand("cratekeys").setExecutor(new CrateKeyCommand());
@@ -168,23 +81,21 @@ public class TLCore extends JavaPlugin {
     plugin.getCommand("mute").setExecutor(new MuteCommand());
     plugin.getCommand("unmute").setExecutor(new UnMuteCommand());
     plugin.getCommand("chat").setExecutor(new ChatTypeCommand());
-    plugin.getCommand("discord").setExecutor(new DiscordCommand());
 
     plugin.getServer().getPluginManager().registerEvents(new FilterEvents(), plugin);
     plugin.getServer().getPluginManager().registerEvents(new PlayerEvents(), plugin);
     plugin.getServer().getPluginManager().registerEvents(new PhysicsEvents(), plugin);
 
-    rankHandler.loadRanks();
-    rankHandler.tabColors();
+    RankHandler.loadRanks();
+    RankHandler.tabColors();
   }
 
   @Override
   public void onDisable() {
 
-    permissionHandler.clearPermissions();
+    PermissionHandler.clearPermissions();
 
     mongoDB.disconnect();
-    // ac.unregister();
   }
 
   public void log(String msg, Level level) {

@@ -7,12 +7,6 @@ import org.bukkit.util.Vector;
 
 public class EntityUtils {
 
-  /**
-   * Nearby Entities
-   *
-   * @param location Location to have the radius based around
-   * @param radius Radius of blocks
-   */
   public static Entity[] getNearbyEntities(Location location, int radius) {
     int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16)) / 16;
     HashSet<Entity> radiusEntities = new HashSet<Entity>();
@@ -35,19 +29,7 @@ public class EntityUtils {
     return radiusEntities.toArray(new Entity[radiusEntities.size()]);
   }
 
-  /**
-   * No AI //todo fix
-   *
-   * @param en
-   *     <p>public void noAI(Entity en) { net.minecraft.server.v1_13_R2.Entity nmsEn =
-   *     ((CraftEntity) en).getHandle(); NBTTagCompound compound = new NBTTagCompound();
-   *     nmsEn.c(compound); compound.setByte("NoAI", (byte) 1); nmsEn.f(compound); }
-   */
-
-  /**
-   * Make an entity teleport and look at a specific location
-   */
-  public void teleportLook(Entity entity, Location teleportLocation, Location lookLocation) {
+  public static void teleportLook(Entity entity, Location teleportLocation, Location lookLocation) {
     Location teleportLocation1 = teleportLocation;
     Location location = teleportLocation1;
     Vector dirBetweenLocations = lookLocation.toVector().subtract(teleportLocation1.toVector());

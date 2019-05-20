@@ -1,7 +1,10 @@
 package net.timelegacy.tlcore.command;
 
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.Rank;
+import net.timelegacy.tlcore.handler.RankHandler;
+import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,55 +12,53 @@ import org.bukkit.entity.Player;
 
 public class RankManagementCommand implements CommandExecutor {
 
-  private TLCore core = TLCore.getInstance();
-
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
     if (sender instanceof Player) {
 
       Player p = (Player) sender;
 
-      Rank r = core.rankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getName());
       if (r.getPriority() >= 9) {
 
         if (args.length < 1 || args.length > 3) {
-          core.messageUtils.sendMessage(
-              sender, core.messageUtils.MAIN_COLOR + "&lRank Management", false);
-          core.messageUtils.helpMenu(sender, "/rm get <player>", "View a player's rank");
-          core.messageUtils.helpMenu(sender, "/rm set <player> <rank>", "Set a player's rank");
-          core.messageUtils.helpMenu(
+          MessageUtils.sendMessage(
+              sender, MessageUtils.MAIN_COLOR + "&lRank Management", false);
+          MessageUtils.helpMenu(sender, "/rm get <player>", "View a player's rank");
+          MessageUtils.helpMenu(sender, "/rm set <player> <rank>", "Set a player's rank");
+          MessageUtils.helpMenu(
               sender, "/rm remove <player>", "Set a player's rank to DEFAULT");
-          core.messageUtils.helpMenu(sender, "/rm list", "List the possible ranks");
+          MessageUtils.helpMenu(sender, "/rm list", "List the possible ranks");
         }
 
         if (args.length == 1) {
           if (args[0].equalsIgnoreCase("list")) {
-            core.messageUtils.sendMessage(
-                sender, core.messageUtils.MAIN_COLOR + "&lRanks: ", false);
-            for (Rank rank : core.rankHandler.rankList) {
-              core.messageUtils.sendMessage(sender, rank.getMainColor() + rank.getName(), false);
+            MessageUtils.sendMessage(
+                sender, MessageUtils.MAIN_COLOR + "&lRanks: ", false);
+            for (Rank rank : RankHandler.rankList) {
+              MessageUtils.sendMessage(sender, rank.getPrimaryColor() + rank.getName(), false);
             }
           }
         } else if (args.length == 2) {
           if (args[0].equalsIgnoreCase("get")) {
             String player = args[1];
 
-            Rank rank = core.rankHandler.getRank(p.getName());
+            Rank rank = RankHandler.getRank(p.getName());
 
-            if (!core.playerHandler.playerExistsName(player)) {
-              core.messageUtils.sendMessage(
-                  sender, core.messageUtils.ERROR_COLOR + "Player not found.", true);
+            if (!PlayerHandler.playerExistsName(player)) {
+              MessageUtils.sendMessage(
+                  sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
             } else {
-              core.messageUtils.sendMessage(
+              MessageUtils.sendMessage(
                   sender,
-                  core.messageUtils.SECOND_COLOR
+                  MessageUtils.SECOND_COLOR
                       + ""
                       + player
-                      + core.messageUtils.MAIN_COLOR
+                      + MessageUtils.MAIN_COLOR
                       + " is rank "
-                      + core.messageUtils.SECOND_COLOR
+                      + MessageUtils.SECOND_COLOR
                       + rank
-                      + core.messageUtils.MAIN_COLOR
+                      + MessageUtils.MAIN_COLOR
                       + ".",
                   true);
             }
@@ -65,64 +66,64 @@ public class RankManagementCommand implements CommandExecutor {
 
           if (args[0].equalsIgnoreCase("remove")) {
             String player = args[1];
-            String uuid = core.playerHandler.getUUID(player);
+            String uuid = PlayerHandler.getUUID(player);
 
-            if (core.playerHandler.playerExistsName(player)) {
+            if (PlayerHandler.playerExistsName(player)) {
 
-              core.rankHandler.removeRank(uuid);
-              core.messageUtils.sendMessage(
+              RankHandler.removeRank(uuid);
+              MessageUtils.sendMessage(
                   sender,
-                  core.messageUtils.SECOND_COLOR
+                  MessageUtils.SECOND_COLOR
                       + player
-                      + core.messageUtils.MAIN_COLOR
+                      + MessageUtils.MAIN_COLOR
                       + " has been set to rank "
-                      + core.messageUtils.SECOND_COLOR
+                      + MessageUtils.SECOND_COLOR
                       + "DEFAULT",
                   true);
             } else {
-              core.messageUtils.sendMessage(
-                  sender, core.messageUtils.ERROR_COLOR + "Player not found.", true);
+              MessageUtils.sendMessage(
+                  sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
             }
           }
         } else if (args.length == 3) {
           if (args[0].equalsIgnoreCase("set")) {
             String player = args[1];
-            if (core.playerHandler.playerExistsName(player)) {
+            if (PlayerHandler.playerExistsName(player)) {
 
               String rank = args[2].toUpperCase();
 
               // DEFAULT&f, &d&oVIP&f, &d&oVIPPLUS&f, &d&oPREMIUM&f, &d&oYOUTUBER&f,
               // &d&oARCHITECT&f, &d&oHELPER&f, &d&oMODERATOR&f, &d&oADMIN&f, &d&oFOUNDER
 
-              if (core.rankHandler.isValidRank(rank)) {
+              if (RankHandler.isValidRank(rank)) {
 
-                core.rankHandler.setRank(player, rank);
-                core.messageUtils.sendMessage(
+                RankHandler.setRank(player, rank);
+                MessageUtils.sendMessage(
                     sender,
-                    core.messageUtils.SECOND_COLOR
+                    MessageUtils.SECOND_COLOR
                         + player
-                        + core.messageUtils.MAIN_COLOR
+                        + MessageUtils.MAIN_COLOR
                         + " has been set to rank "
-                        + core.messageUtils.SECOND_COLOR
+                        + MessageUtils.SECOND_COLOR
                         + rank,
                     true);
 
               } else {
-                core.messageUtils.sendMessage(
-                    sender, core.messageUtils.ERROR_COLOR + "Invalid rank.", true);
+                MessageUtils.sendMessage(
+                    sender, MessageUtils.ERROR_COLOR + "Invalid rank.", true);
               }
             } else {
-              core.messageUtils.sendMessage(
-                  sender, core.messageUtils.ERROR_COLOR + "Player not found.", true);
+              MessageUtils.sendMessage(
+                  sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
             }
           }
         } else {
 
-          core.messageUtils.sendMessage(
-              sender, core.messageUtils.ERROR_COLOR + "Type /rm for command help", true);
+          MessageUtils.sendMessage(
+              sender, MessageUtils.ERROR_COLOR + "Type /rm for command help", true);
         }
       } else {
-        core.messageUtils.noPerm(p);
+        MessageUtils.noPerm(p);
       }
     }
 

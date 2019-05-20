@@ -20,9 +20,9 @@ import org.bukkit.event.world.WorldLoadEvent;
 
 public class PhysicsEvents implements Listener {
 
-  private TLCore core = TLCore.getInstance();
+  private static TLCore plugin = TLCore.getPlugin();
 
-  private void hideAdvancementsFor(World world) {
+  private static void hideAdvancementsFor(World world) {
     world.setGameRuleValue("announceAdvancements", "false");
   }
 
@@ -34,63 +34,63 @@ public class PhysicsEvents implements Listener {
 
   @EventHandler
   public void onBlockFromTo(BlockFromToEvent event) {
-    if (!core.physics) {
+    if (!plugin.physics) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onBlockIgnite(BlockIgniteEvent event) {
-    if (!core.physics) {
+    if (!plugin.physics) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onBlockBurn(BlockBurnEvent event) {
-    if (!core.physics) {
+    if (!plugin.physics) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onBlockPhysics(BlockPhysicsEvent event) {
-    if (!core.physics) {
+    if (!plugin.physics) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onLeavesDecay(LeavesDecayEvent event) {
-    if (!core.physics) {
+    if (!plugin.physics) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onBlockForm(BlockFormEvent event) {
-    if (!core.physics) {
+    if (!plugin.physics) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onEntityBlockForm(EntityBlockFormEvent event) {
-    if (!core.physics) {
+    if (!plugin.physics) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void EntityChangeBlockEvent(EntityChangeBlockEvent event) {
-    if (!core.physics) {
+    if (!plugin.physics) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onBlockSpread(BlockSpreadEvent event) {
-    if (!core.physics) {
+    if (!plugin.physics) {
       event.setCancelled(true);
     }
   }
@@ -98,7 +98,7 @@ public class PhysicsEvents implements Listener {
   @SuppressWarnings("deprecation")
   @EventHandler
   public void onExplode(EntityExplodeEvent event) {
-    if (!core.physics) {
+    if (!plugin.physics) {
       for (Block block : event.blockList()) {
         block.getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, block.getType());
       }

@@ -2,6 +2,8 @@ package net.timelegacy.tlcore.command;
 
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.Rank;
+import net.timelegacy.tlcore.handler.RankHandler;
+import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,19 +13,17 @@ import org.bukkit.event.EventHandler;
 
 public class TeleportHereCommand implements CommandExecutor {
 
-  private TLCore core = TLCore.getInstance();
-
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
     if (sender instanceof Player) {
       final Player p = (Player) sender;
 
-      Rank r = core.rankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getName());
       if (r.getPriority() >= 9) {
 
         if (args.length == 0) {
-          core.messageUtils.sendMessage(
-              p, core.messageUtils.ERROR_COLOR + "Usage: /tphere [player]", true);
+          MessageUtils.sendMessage(
+              p, MessageUtils.ERROR_COLOR + "Usage: /tphere [player]", true);
           return true;
         }
 
@@ -31,15 +31,15 @@ public class TeleportHereCommand implements CommandExecutor {
           Player t = Bukkit.getPlayer(args[0]);
 
           if (t == null) {
-            core.messageUtils.sendMessage(
-                p, core.messageUtils.ERROR_COLOR + "Player not found.", true);
+            MessageUtils.sendMessage(
+                p, MessageUtils.ERROR_COLOR + "Player not found.", true);
           } else {
             t.teleport(p);
-            core.messageUtils.sendMessage(
+            MessageUtils.sendMessage(
                 p,
-                core.messageUtils.MAIN_COLOR
+                MessageUtils.MAIN_COLOR
                     + "Summoning "
-                    + core.messageUtils.SECOND_COLOR
+                    + MessageUtils.SECOND_COLOR
                     + t.getName(),
                 true);
           }
@@ -47,10 +47,10 @@ public class TeleportHereCommand implements CommandExecutor {
           return true;
         }
 
-        core.messageUtils.sendMessage(
-            p, core.messageUtils.ERROR_COLOR + "Usage: /tphere [player]", true);
+        MessageUtils.sendMessage(
+            p, MessageUtils.ERROR_COLOR + "Usage: /tphere [player]", true);
       } else {
-        core.messageUtils.noPerm(p);
+        MessageUtils.noPerm(p);
       }
 
       return true;

@@ -1,20 +1,19 @@
 package net.timelegacy.tlcore.command;
 
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.handler.MuteHandler;
+import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.Punishment;
 import net.timelegacy.tlcore.handler.Rank;
+import net.timelegacy.tlcore.handler.RankHandler;
+import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
-/**
- * Created by Batman on 2016-06-26.
- */
 public class UnMuteCommand implements CommandExecutor {
-
-  private TLCore core = TLCore.getInstance();
 
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
@@ -23,40 +22,40 @@ public class UnMuteCommand implements CommandExecutor {
 
       Player p = (Player) sender;
 
-      Rank r = core.rankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getName());
       if (r.getPriority() >= 8) {
 
         if (args.length == 0) {
-          core.messageUtils.sendMessage(
-              p, core.messageUtils.ERROR_COLOR + "Usage: /unmute [player]", true);
+          MessageUtils.sendMessage(
+              p, MessageUtils.ERROR_COLOR + "Usage: /unmute [player]", true);
         } else if (args.length == 1) {
 
-          if (core.playerHandler.playerExistsName(args[0])) {
+          if (PlayerHandler.playerExistsName(args[0])) {
 
-            if (core.muteHandler.isMuted(args[0])) {
+            if (MuteHandler.isMuted(args[0])) {
 
-              core.muteHandler.setMuted(args[0], "false", Punishment.NULL, sender.getName());
-              core.messageUtils.sendMessage(
+              MuteHandler.setMuted(args[0], "false", Punishment.NULL, sender.getName());
+              MessageUtils.sendMessage(
                   sender,
-                  core.messageUtils.SECOND_COLOR
+                  MessageUtils.SECOND_COLOR
                       + args[0]
-                      + core.messageUtils.MAIN_COLOR
+                      + MessageUtils.MAIN_COLOR
                       + " is now unmuted.",
                   true);
             } else {
-              core.messageUtils.sendMessage(
-                  sender, core.messageUtils.ERROR_COLOR + "Player isn't muted.", true);
+              MessageUtils.sendMessage(
+                  sender, MessageUtils.ERROR_COLOR + "Player isn't muted.", true);
             }
           } else {
-            core.messageUtils.sendMessage(
-                sender, core.messageUtils.ERROR_COLOR + "Player not found.", true);
+            MessageUtils.sendMessage(
+                sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
           }
         } else {
-          core.messageUtils.sendMessage(
-              p, core.messageUtils.ERROR_COLOR + "Usage: /unmute [player]", true);
+          MessageUtils.sendMessage(
+              p, MessageUtils.ERROR_COLOR + "Usage: /unmute [player]", true);
         }
       } else {
-        core.messageUtils.noPerm(p);
+        MessageUtils.noPerm(p);
       }
     }
 

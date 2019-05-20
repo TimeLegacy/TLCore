@@ -1,7 +1,10 @@
 package net.timelegacy.tlcore.event;
 
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.handler.MuteHandler;
 import net.timelegacy.tlcore.handler.Rank;
+import net.timelegacy.tlcore.handler.RankHandler;
+import net.timelegacy.tlcore.utils.MessageUtils;
 import net.timelegacy.tlcore.utils.WebRequestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,8 +21,6 @@ import org.bukkit.plugin.Plugin;
 
 public class FilterEvents implements Listener {
 
-  private TLCore core = TLCore.getInstance();
-
   @EventHandler(priority = EventPriority.HIGHEST)
   public void commandPreProcessEvent(PlayerCommandPreprocessEvent event) {
     Player p = event.getPlayer();
@@ -31,28 +32,28 @@ public class FilterEvents implements Listener {
         || event.getMessage().toLowerCase().contains("/bukkit:")) {
       event.setCancelled(true);
 
-      Rank r = core.rankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getName());
 
       if (r.getPriority() >= 9) {
-        core.messageUtils.sendMessage(p, core.messageUtils.MAIN_COLOR + "&lPlugins", false);
+        MessageUtils.sendMessage(p, MessageUtils.MAIN_COLOR + "&lPlugins", false);
         for (Plugin pp : Bukkit.getPluginManager().getPlugins()) {
-          core.messageUtils.sendMessage(
+          MessageUtils.sendMessage(
               p,
-              core.messageUtils.SECOND_COLOR
+              MessageUtils.SECOND_COLOR
                   + pp.getName()
                   + " v"
                   + pp.getDescription().getVersion(),
               false);
         }
       } else {
-        core.messageUtils.noPerm(p);
+        MessageUtils.noPerm(p);
       }
     } else if (event.getMessage().toLowerCase().startsWith("/me ")) {
       event.setCancelled(true);
-      core.messageUtils.noPerm(p);
+      MessageUtils.noPerm(p);
     } else if (event.getMessage().toLowerCase().equals("/me")) {
       event.setCancelled(true);
-      core.messageUtils.noPerm(p);
+      MessageUtils.noPerm(p);
     }
   }
 
@@ -65,39 +66,46 @@ public class FilterEvents implements Listener {
     String message =
         ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', e.getMessage()));
 
+    String username = p.getName();
+    if (username.equalsIgnoreCase("Chriskadetv")) {
+      username = "Chisrkdaevt";
+    } else if (username.equalsIgnoreCase("Verade")) {
+      username = "Vredae";
+    }
+
     String format =
-        core.messageUtils.c(
+        MessageUtils.colorize(
             "&r"
-                + core.rankHandler
+                + RankHandler
                 .chatColors(p.getName())
-                .replace("%username%", p.getName())
+                .replace("%username%", username)
                 .replace("%line%", "\u2758 ")
                 .replace("%arrows%", "\u00BB")
                 + " &r");
 
     System.out.println("[CHAT] " + p.getName() + " > " + message);
 
-    if (!core.muteHandler.isMuted(p.getName())) {
+    if (!MuteHandler.isMuted(p.getName())) {
 
       for (Player sp : Bukkit.getOnlinePlayers()) {
         //TextComponent textComponent = new TextComponent(core.perkHandler.getPerks(sp).contains("CHAT.MATURE") ? message : cleanMessage);
         //textComponent.setHoverEvent(new HoverEvent( HoverEvent.Action., new ComponentBuilder( "Visit the Spigot website!" ).create() ) );
         /*msg.text(format)
             .tooltip(
-                core.messageUtils.c(
-                    core.messageUtils.MAIN_COLOR
+                MessageUtils.c(
+                    MessageUtils.MAIN_COLOR
                         + "&oCoins: "
-                        + core.messageUtils.SECOND_COLOR
+                        + MessageUtils.SECOND_COLOR
                         + core.coinHandler.getBalance(p.getName())),
-                core.messageUtils.c(
-                    core.messageUtils.MAIN_COLOR
+                MessageUtils.c(
+                    MessageUtils.MAIN_COLOR
                         + "&oKills: "
-                        + core.messageUtils.SECOND_COLOR
+                        + MessageUtils.SECOND_COLOR
                         + core.statsHandler.getKills(p)),
-                core.messageUtils.c(
-                    core.messageUtils.MAIN_COLOR
+                MessageUtils.c(
+                    MessageUtils.MAIN_COLOR
                         + "&oWins: "
-                        + core.messageUtils.SECOND_COLOR
+                        + MessageUtils.SECOND_COLOR
                         + core.statsHandler.getWins(p)))
             .then();
         msg.send(sp);*/
@@ -105,24 +113,25 @@ public class FilterEvents implements Listener {
         //TODO fix the swear filter
         /*sp.sendMessage(
             core.perkHandler.getPerks(sp).contains("CHAT.MATURE") ? message : cleanMessage);*/
+
         sp.sendMessage(format + message);
       }
     } else {
-      if (!(core.muteHandler.getMuteExpire(p.getName()).equalsIgnoreCase("false")
-          || core.muteHandler.getMuteExpire(p.getName()).equalsIgnoreCase("true"))) {
+      if (!(MuteHandler.getMuteExpire(p.getName()).equalsIgnoreCase("false")
+          || MuteHandler.getMuteExpire(p.getName()).equalsIgnoreCase("true"))) {
 
-        core.messageUtils.sendMessage(
+        MessageUtils.sendMessage(
             p,
             "&4You have been muted. &cReason: &f&o"
-                + core.muteHandler.getMuteReason(p.getName())
+                + MuteHandler.getMuteReason(p.getName())
                 + " &cExpire: &f&o"
-                + core.muteHandler.getMuteExpire(p.getName()),
+                + MuteHandler.getMuteExpire(p.getName()),
             true);
       } else {
 
-        core.messageUtils.sendMessage(
+        MessageUtils.sendMessage(
             p,
-            "&4You have been muted. &cReason: &f&o" + core.muteHandler.getMuteReason(p.getName()),
+            "&4You have been muted. &cReason: &f&o" + MuteHandler.getMuteReason(p.getName()),
             true);
       }
     }

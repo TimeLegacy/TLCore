@@ -10,12 +10,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 public class FireworkUtils {
 
-  /**
-   * Spawn Firework
-   *
-   * @param loc Location to have firework spawned
-   */
-  public Firework spawnFirework(Location loc) {
+  public static Firework spawnFirework(Location loc) {
     Random colour = new Random();
 
     Firework fw = loc.getWorld().spawn(loc, Firework.class);
@@ -39,13 +34,7 @@ public class FireworkUtils {
     return fw;
   }
 
-  /**
-   * Spawn Firework
-   *
-   * @param loc Location of the firework
-   * @param power The power of the firework
-   */
-  public Firework spawnFirework(Location loc, int power) {
+  public static Firework spawnFirework(Location loc, int power) {
     Random colour = new Random();
 
     Firework fw = loc.getWorld().spawn(loc, Firework.class);
@@ -69,14 +58,7 @@ public class FireworkUtils {
     return fw;
   }
 
-  /**
-   * Spawn Firework
-   *
-   * @param loc Location of the firework
-   * @param c Color of the firework
-   * @param power Power of the firework
-   */
-  public Firework spawnFirework(Location loc, Color c, int power) {
+  public static Firework spawnFirework(Location loc, Color c, int power) {
     Firework fw = loc.getWorld().spawn(loc, Firework.class);
     FireworkMeta fwMeta = fw.getFireworkMeta();
 
@@ -95,13 +77,7 @@ public class FireworkUtils {
     return fw;
   }
 
-  /**
-   * Spawn Firework
-   *
-   * @param loc Location of the firework
-   * @param c Color of the firework
-   */
-  public Firework spawnFirework(Location loc, Color c) {
+  public static Firework spawnFirework(Location loc, Color c) {
     Firework fw = loc.getWorld().spawn(loc, Firework.class);
     FireworkMeta fwMeta = fw.getFireworkMeta();
 
@@ -120,12 +96,7 @@ public class FireworkUtils {
     return fw;
   }
 
-  /**
-   * Spawn Firework Color
-   *
-   * @param c Firework color
-   */
-  public Color getFWColor(int c) {
+  public static Color getFWColor(int c) {
     switch (c) {
       case 1:
         return Color.TEAL;

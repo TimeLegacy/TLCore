@@ -11,10 +11,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 public class ItemUtils {
 
-  /**
-   * Create Item
-   */
-  public ItemStack createItem(Material mat, int amount, String name, String... lore) {
+  public static ItemStack createItem(Material mat, int amount, String name, String... lore) {
     ItemStack is = new ItemStack(mat, amount);
     ItemMeta im = is.getItemMeta();
 
@@ -32,10 +29,8 @@ public class ItemUtils {
     return is;
   }
 
-  /**
-   * Create Item
-   */
-  public ItemStack createItem(Material mat, int amount, Byte b, String name, String... lore) {
+  public static ItemStack createItem(Material mat, int amount, Byte b, String name,
+      String... lore) {
     ItemStack is = new ItemStack(mat, amount, b);
     ItemMeta im = is.getItemMeta();
 
@@ -53,24 +48,15 @@ public class ItemUtils {
     return is;
   }
 
-  /**
-   * Create Item
-   */
-  public ItemStack createItem(Material mat, int amount, Byte b) {
+  public static ItemStack createItem(Material mat, int amount, Byte b) {
     return new ItemStack(mat, amount, b);
   }
 
-  /**
-   * Create Item
-   */
-  public ItemStack createItem(Material mat, int amount, Short b) {
+  public static ItemStack createItem(Material mat, int amount, Short b) {
     return new ItemStack(mat, amount, b);
   }
 
-  /**
-   * Create Item
-   */
-  public ItemStack createItem(
+  public static ItemStack createItem(
       Material mat, int amount, int r, int g, int b, String name, String... lore) {
     ItemStack is = new ItemStack(mat, amount);
     LeatherArmorMeta im = (LeatherArmorMeta) is.getItemMeta();
@@ -90,10 +76,7 @@ public class ItemUtils {
     return is;
   }
 
-  /**
-   * Create Item
-   */
-  public ItemStack createItem(ItemStack i, int amount, String name, String... lore) {
+  public static ItemStack createItem(ItemStack i, int amount, String name, String... lore) {
     ItemStack is = i;
     is.setAmount(amount);
     ItemMeta im = is.getItemMeta();
@@ -111,26 +94,4 @@ public class ItemUtils {
     is.setItemMeta(im);
     return is;
   }
-
-  /*public ItemStack setSkullOwner(ItemStack item, String id, String textureValue) {
-
-    skullNMS.getDeclaredMethod("ItemStack")
-    net.minecraft.server.v1_13_R2.ItemStack nmsStack = skullNMS.getDeclaredMethod("startTiming";
-
-    NBTTagCompound tag = nmsStack.getOrCreateTag();
-
-    NBTTagCompound skullOwner = new NBTTagCompound();
-    skullOwner.setString("Id", id);
-    NBTTagCompound properties = new NBTTagCompound();
-    NBTTagList textures = new NBTTagList();
-    NBTTagCompound value = new NBTTagCompound();
-    value.setString("Value", textureValue);
-    textures.add(value);
-    properties.set("textures", textures);
-    skullOwner.set("Properties", properties);
-
-    tag.set("SkullOwner", skullOwner);
-
-    return CraftItemStack.asBukkitCopy(nmsStack);
-  }*/
 }

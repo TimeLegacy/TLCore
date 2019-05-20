@@ -1,21 +1,18 @@
 package net.timelegacy.tlcore.handler;
 
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bson.Document;
 import org.bukkit.entity.Player;
 
 public class PlayerHandler {
 
-  private TLCore core = TLCore.getInstance();
+  private static MongoCollection<Document> players = MongoDB.mongoDatabase.getCollection("players");
 
-  /**
-   * Create a new player in the database.
-   *
-   * @param player Player that is online
-   */
-  public void createPlayer(Player player) {
+  public static void createPlayer(Player player) {
     if (!playerExists(player)) {
 
       Document doc =
@@ -23,52 +20,39 @@ public class PlayerHandler {
               .append("username", player.getName())
               .append("rank", "DEFAULT")
               .append("banned", "false")
-              .append("banreason", "")
+              .append("ban_reason", "")
               .append("muted", "false")
-              .append("mutereason", "")
+              .append("mute_reason", "")
               .append("coins", 0)
+              .append("crate_keys", 0)
               .append("perks", "")
-              .append("kills", 0)
-              .append("deaths", 0)
-              .append("cratekeys", 0)
-              .append("wins", 0)
-              .append("losses", 0)
-              .append("lastip", player.getAddress().getHostName())
               .append("online", true)
-              .append("lastconnection", System.currentTimeMillis())
-              .append("discordid", "")
-              .append("discordtoken", "");
+              .append("last_ip", player.getAddress().getHostName())
+              .append("previous_ips", player.getAddress().getHostName() + ",")
+              .append("date_joined", System.currentTimeMillis())
+              .append("last_connection", System.currentTimeMillis());
 
-      core.mongoDB.players.insertOne(doc);
+      players.insertOne(doc);
     }
   }
 
-  /**
-   * Check if a player exists in the database
-   */
-  public boolean playerExists(Player player) {
+  public static boolean playerExists(Player player) {
     FindIterable<Document> iterable =
-        core.mongoDB.players.find(new Document("uuid", player.getUniqueId().toString()));
+        players.find(new Document("uuid", player.getUniqueId().toString()));
     return iterable.first() != null;
   }
 
-  /**
-   * Check if a player exists based on their username
-   */
-  public boolean playerExistsName(String playerName) {
+  public static boolean playerExistsName(String playerName) {
     FindIterable<Document> iterable =
-        core.mongoDB.players.find(new Document("username", playerName));
+        players.find(new Document("username", playerName));
     return iterable.first() != null;
   }
 
-  /**
-   * Get the uuid of a player from the database
-   */
-  public String getUUID(String playerName) {
+  public static String getUUID(String playerName) {
     String uuid = null;
 
-    if (core.playerHandler.playerExistsName(playerName)) {
-      FindIterable<Document> doc = core.mongoDB.players.find(Filters.eq("username", playerName));
+    if (playerExistsName(playerName)) {
+      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
       String uid = doc.first().getString("uuid");
 
       uuid = uid;
@@ -76,64 +60,73 @@ public class PlayerHandler {
     return uuid;
   }
 
-  /**
-   * Update the username if it's different from the one in the DB
-   */
-  public void updateUsername(Player player) {
-    if (core.playerHandler.playerExists(player)) {
-      core.mongoDB.players.updateOne(
+  public static void updateUsername(Player player) {
+    if (playerExists(player)) {
+      players.updateOne(
           Filters.eq("uuid", player.getUniqueId().toString()),
           new Document("$set", new Document("username", player.getName())));
     }
   }
 
-  /**
-   * Update the IP that a player connected from.
-   */
-  public void updateIP(Player player) {
-    if (core.playerHandler.playerExists(player)) {
-      core.mongoDB.players.updateOne(
+  public static void updateIP(Player player) {
+    if (playerExists(player)) {
+      players.updateOne(
           Filters.eq("uuid", player.getUniqueId().toString()),
           new Document(
-              "$set", new Document("lastip", player.getAddress().getAddress().getHostAddress())));
+              "$set", new Document("last_ip", player.getAddress().getAddress().getHostAddress())));
+
+      players.updateOne(
+          Filters.eq("uuid", player.getUniqueId().toString()),
+          new Document(
+              "$set", new Document("previous_ips",
+              getPreviousIPs(player.getName()) + "," + player.getAddress().getAddress()
+                  .getHostAddress())));
     }
   }
 
-  // mServerSocket.getInetAddress().getHostAddress()
-
-  /**
-   * Update the online status of a player.
-   */
-  public void updateOnline(Player player, boolean online) {
-    if (core.playerHandler.playerExists(player)) {
-      core.mongoDB.players.updateOne(
+  public static void updateOnline(Player player, boolean online) {
+    if (playerExists(player)) {
+      players.updateOne(
           Filters.eq("uuid", player.getUniqueId().toString()),
           new Document("$set", new Document("online", online)));
     }
   }
 
-  /**
-   * Update when the player last joined a server on the network
-   */
-  public void updateLastConnection(Player player) {
-    if (core.playerHandler.playerExists(player)) {
-      core.mongoDB.players.updateOne(
+  public static void updateLastConnection(Player player) {
+    if (playerExists(player)) {
+      players.updateOne(
           Filters.eq("uuid", player.getUniqueId().toString()),
-          new Document("$set", new Document("lastconnection", System.currentTimeMillis())));
+          new Document("$set", new Document("last_connection", System.currentTimeMillis())));
     }
   }
 
-  //
+  public static String getLastIP(String playerName) {
+    FindIterable<Document> doc =
+        players.find(Filters.eq("username", playerName));
+    String ip = doc.first().getString("last_ip");
+    return ip;
+  }
 
-  /**
-   * Get the uuid of a player on the server from the database
-   */
-  public String getUsername(Player playerName) {
+  public static String getPreviousIPs(String playerName) {
+    FindIterable<Document> doc =
+        players.find(Filters.eq("username", playerName));
+    String ip = doc.first().getString("previous_ips");
+    return ip;
+  }
+
+  public static String getDateJoined(String playerName) {
+    FindIterable<Document> doc =
+        players.find(Filters.eq("username", playerName));
+    String date_joined = doc.first().getString("date_joined");
+    return date_joined;
+  }
+
+  public static String getUsername(Player playerName) {
     String uuid = null;
 
-    if (core.playerHandler.playerExists(playerName)) {
+    if (playerExists(playerName)) {
       FindIterable<Document> doc =
-          core.mongoDB.players.find(Filters.eq("uuid", playerName.getUniqueId().toString()));
+          players.find(Filters.eq("uuid", playerName.getUniqueId().toString()));
       String uid = doc.first().getString("username");
 
       uuid = uid;

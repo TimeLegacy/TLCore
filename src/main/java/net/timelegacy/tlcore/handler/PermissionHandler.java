@@ -8,11 +8,11 @@ import org.bukkit.permissions.PermissionAttachment;
 
 public class PermissionHandler {
 
-  private TLCore core = TLCore.getInstance();
+  private static TLCore plugin = TLCore.getPlugin();
 
-  private HashMap<UUID, PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
+  private static HashMap<UUID, PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
 
-  public void detachPermissions(Player p) {
+  public static void detachPermissions(Player p) {
     p.removeAttachment(perms.get(p.getUniqueId()));
   }
 
@@ -21,18 +21,18 @@ public class PermissionHandler {
     pperms.setPermission(permission, true);
   }
 
-  public void removePermission(Player p, String permission) {
+  public static void removePermission(Player p, String permission) {
     if (p.hasPermission(permission)) {
       perms.get(p.getUniqueId()).unsetPermission(permission);
     }
   }
 
-  public void clearPermissions() {
+  public static void clearPermissions() {
     perms.clear();
   }
 
-  public void attachPermissions(Player p) {
-    PermissionAttachment attachment = p.addAttachment(core);
+  public static void attachPermissions(Player p) {
+    PermissionAttachment attachment = p.addAttachment(plugin);
     perms.put(p.getUniqueId(), attachment);
   }
 }

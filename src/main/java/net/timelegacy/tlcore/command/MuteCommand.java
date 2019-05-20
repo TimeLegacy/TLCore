@@ -1,8 +1,13 @@
 package net.timelegacy.tlcore.command;
 
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.handler.MuteHandler;
+import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.Punishment;
+import net.timelegacy.tlcore.handler.PunishmentHandler;
 import net.timelegacy.tlcore.handler.Rank;
+import net.timelegacy.tlcore.handler.RankHandler;
+import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,88 +15,86 @@ import org.bukkit.entity.Player;
 
 public class MuteCommand implements CommandExecutor {
 
-  private TLCore core = TLCore.getInstance();
-
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
     if (sender instanceof Player) {
 
       Player p = (Player) sender;
 
-      Rank r = core.rankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getName());
       if (r.getPriority() >= 7) {
         if (args.length == 0) {
-          core.messageUtils.sendMessage(
+          MessageUtils.sendMessage(
               p,
-              core.messageUtils.ERROR_COLOR
+              MessageUtils.ERROR_COLOR
                   + "Usage: /mute [player] [HACKING/PROFANITY/OTHER] [time #d/#m/#y (blank for permenent)]",
               true);
         }
 
         if (args.length >= 2
-            && !core.punishmentHandler
+            && !PunishmentHandler
             .comparePunishments(args[1])
             .toString()
             .equalsIgnoreCase("null")) {
-          Punishment muteReason = core.punishmentHandler.comparePunishments(args[1]);
+          Punishment muteReason = PunishmentHandler.comparePunishments(args[1]);
           if (args.length == 2) {
 
-            if (core.playerHandler.playerExistsName(args[0])) {
+            if (PlayerHandler.playerExistsName(args[0])) {
 
-              if (!core.muteHandler.isMuted(args[0])) {
+              if (!MuteHandler.isMuted(args[0])) {
 
                 String expire = "true";
 
-                core.muteHandler.setMuted(args[0], expire, muteReason, sender.getName());
-                core.messageUtils.sendMessage(
+                MuteHandler.setMuted(args[0], expire, muteReason, sender.getName());
+                MessageUtils.sendMessage(
                     sender,
-                    core.messageUtils.SECOND_COLOR
+                    MessageUtils.SECOND_COLOR
                         + args[0]
-                        + core.messageUtils.MAIN_COLOR
+                        + MessageUtils.MAIN_COLOR
                         + " is now muted.",
                     true);
               } else {
-                core.messageUtils.sendMessage(
-                    sender, core.messageUtils.ERROR_COLOR + "Player is already muted.", true);
+                MessageUtils.sendMessage(
+                    sender, MessageUtils.ERROR_COLOR + "Player is already muted.", true);
               }
             } else {
-              core.messageUtils.sendMessage(
-                  sender, core.messageUtils.ERROR_COLOR + "Player not found.", true);
+              MessageUtils.sendMessage(
+                  sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
             }
           } else if (args.length == 3) {
 
-            if (core.playerHandler.playerExistsName(args[0])) {
+            if (PlayerHandler.playerExistsName(args[0])) {
 
-              if (!core.muteHandler.isMuted(args[0])) {
+              if (!MuteHandler.isMuted(args[0])) {
 
                 String expire = args[2];
 
-                core.muteHandler.setMuted(args[0], expire, muteReason, sender.getName());
-                core.messageUtils.sendMessage(
+                MuteHandler.setMuted(args[0], expire, muteReason, sender.getName());
+                MessageUtils.sendMessage(
                     sender,
-                    core.messageUtils.SECOND_COLOR
+                    MessageUtils.SECOND_COLOR
                         + args[0]
-                        + core.messageUtils.MAIN_COLOR
+                        + MessageUtils.MAIN_COLOR
                         + " is now muted.",
                     true);
               } else {
-                core.messageUtils.sendMessage(
-                    sender, core.messageUtils.ERROR_COLOR + "Player is already muted.", true);
+                MessageUtils.sendMessage(
+                    sender, MessageUtils.ERROR_COLOR + "Player is already muted.", true);
               }
             } else {
-              core.messageUtils.sendMessage(
-                  sender, core.messageUtils.ERROR_COLOR + "Player not found.", true);
+              MessageUtils.sendMessage(
+                  sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
             }
           } else {
-            core.messageUtils.sendMessage(
+            MessageUtils.sendMessage(
                 p,
-                core.messageUtils.ERROR_COLOR
+                MessageUtils.ERROR_COLOR
                     + "Usage: /mute [player] [HACKING/PROFANITY/OTHER] [time #d/#m/#y (blank for permenent)]",
                 true);
           }
         }
       } else {
-        core.messageUtils.noPerm(p);
+        MessageUtils.noPerm(p);
       }
     }
 

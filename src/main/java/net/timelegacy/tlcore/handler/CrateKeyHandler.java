@@ -1,61 +1,66 @@
 package net.timelegacy.tlcore.handler;
 
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bson.Document;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class CrateKeyHandler {
 
-  private TLCore core = TLCore.getInstance();
+  private static MongoCollection<Document> players = MongoDB.mongoDatabase.getCollection("players");
 
-  /**
-   * Add key to a player
-   */
-  public void addKey(Player p, int amount) {
-    int am;
-    if (core.playerHandler.playerExists(p)) {
-
-      am = Integer.valueOf(amount);
-      setKeys(p, Integer.valueOf(getKeys(p).intValue() + am));
-
-    } else {
-      core.playerHandler.createPlayer(p);
-      addKey(p, amount);
-    }
+  public static boolean checkTransaction(String playerName, Integer amount) {
+    return getBalance(playerName) >= amount;
   }
 
-  /**
-   * Set keys of a player
-   */
-  public void setKeys(Player p, Integer amount) {
-
-    if (core.playerHandler.playerExists(p)) {
-      core.mongoDB.players.updateOne(
-          Filters.eq("uuid", p.getUniqueId().toString()),
-          new Document("$set", new Document("cratekeys", amount)));
-    } else {
-      core.playerHandler.createPlayer(p);
-      setKeys(p, amount);
-    }
-  }
-
-  /**
-   * Get the keys of a player
-   */
-  public Integer getKeys(Player p) {
+  public static int getBalance(String playerName) {
     int retval = 0;
-    if (core.playerHandler.playerExists(p)) {
-      FindIterable<Document> doc =
-          core.mongoDB.players.find(Filters.eq("uuid", p.getUniqueId().toString()));
-      int coins = doc.first().getInteger("cratekeys");
+    if (PlayerHandler.playerExistsName(playerName)) {
+      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
 
-      retval = coins;
+      retval = doc.first().getInteger("crate_keys");
     } else {
-      core.playerHandler.createPlayer(p);
-      getKeys(p);
+      PlayerHandler.createPlayer(Bukkit.getPlayer(playerName));
+      getBalance(playerName);
     }
     return retval;
+  }
+
+  public static void addCrateKeys(String playerName, Integer amount) {
+    int am = amount;
+    if (PlayerHandler.playerExistsName(playerName)) {
+      if (MultiplierHandler.isMultiplierEnabled()) {
+        am = MultiplierHandler.getMultiplier() * amount;
+      }
+      setBalance(playerName, getBalance(playerName) + am);
+    } else {
+      PlayerHandler.createPlayer(Bukkit.getPlayer(playerName));
+      addCrateKeys(playerName, amount);
+    }
+  }
+
+  public static void setBalance(String playerName, Integer amount) {
+    if (PlayerHandler.playerExistsName(playerName)) {
+      players.updateOne(
+          Filters.eq("username", playerName),
+          new Document("$set", new Document("crate_keys", amount)));
+    } else {
+      PlayerHandler.createPlayer(Bukkit.getPlayer(playerName));
+      setBalance(playerName, amount);
+    }
+  }
+
+  public static void removeCrateKeys(String playerName, Integer amount) {
+    if (PlayerHandler.playerExistsName(playerName)) {
+      if (checkTransaction(playerName, amount)) {
+        setBalance(playerName, getBalance(playerName) - amount);
+      }
+    } else {
+      PlayerHandler.createPlayer(Bukkit.getPlayer(playerName));
+    }
   }
 }
