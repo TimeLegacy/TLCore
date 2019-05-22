@@ -2,6 +2,7 @@ name: TLCore
 version: 1.0
 author: Nyarrth
 main: net.timelegacy.tlcore.TLCore
+api-version: 1.13
 commands:
   Coins:
     description: Check how many Coins you have!
@@ -39,9 +40,6 @@ commands:
   Reboot:
     description: Reboot the server.
     aliases: [rb]
-  Update:
-    description: Update a plugin.
-    aliases: [ud]
   Perk:
     description: Adds a perk to a player.
   Ban:
