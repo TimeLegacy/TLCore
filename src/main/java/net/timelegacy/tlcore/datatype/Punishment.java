@@ -1,4 +1,4 @@
-package net.timelegacy.tlcore.handler;
+package net.timelegacy.tlcore.datatype;
 
 public enum Punishment {
   HACKING,

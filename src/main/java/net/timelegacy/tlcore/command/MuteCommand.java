@@ -1,11 +1,10 @@
 package net.timelegacy.tlcore.command;
 
-import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.datatype.Punishment;
+import net.timelegacy.tlcore.datatype.Rank;
 import net.timelegacy.tlcore.handler.MuteHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
-import net.timelegacy.tlcore.handler.Punishment;
 import net.timelegacy.tlcore.handler.PunishmentHandler;
-import net.timelegacy.tlcore.handler.Rank;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.command.Command;
