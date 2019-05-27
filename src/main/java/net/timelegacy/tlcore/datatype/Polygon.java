@@ -16,6 +16,7 @@ public class Polygon {
     public Polygon(AABB3D[] poly) {
         if (poly.length > 0) {
             edgeShell = poly[0];
+            polyParts = new ArrayList<>();
             for (AABB3D polygonPart : poly) {
                 addPartMath(polygonPart);
             }
