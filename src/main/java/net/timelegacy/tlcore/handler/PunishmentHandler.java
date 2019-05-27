@@ -3,11 +3,13 @@ package net.timelegacy.tlcore.handler;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import net.timelegacy.tlcore.datatype.Punishment;
+import net.timelegacy.tlcore.mongodb.MongoDB;
+import org.bson.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import net.timelegacy.tlcore.mongodb.MongoDB;
-import org.bson.Document;
 
 public class PunishmentHandler {
 

@@ -4,15 +4,16 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.datatype.Rank;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RankHandler {
 

@@ -1,8 +1,7 @@
 package net.timelegacy.tlcore.event;
 
-import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.datatype.Rank;
 import net.timelegacy.tlcore.handler.MuteHandler;
-import net.timelegacy.tlcore.handler.Rank;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
 import net.timelegacy.tlcore.utils.WebRequestUtils;
