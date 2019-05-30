@@ -56,7 +56,7 @@ public class RankManagementCommand implements CommandExecutor {
                       + MessageUtils.MAIN_COLOR
                       + " is rank "
                       + MessageUtils.SECOND_COLOR
-                      + rank
+                          + rank.getName()
                       + MessageUtils.MAIN_COLOR
                       + ".",
                   true);

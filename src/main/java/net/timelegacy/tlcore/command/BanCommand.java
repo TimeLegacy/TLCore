@@ -45,8 +45,28 @@ public class BanCommand implements CommandExecutor {
             if (PlayerHandler.playerExistsName(args[0])) {
 
               if (!BanHandler.isBanned(args[0])) {
-                args[2] = "true";
-                doThing(args, sender);
+                String reason = args[1].toUpperCase();
+
+                Punishment banReason = PunishmentHandler.comparePunishments(reason);
+
+                String expire = "true";
+
+                BanHandler.setBanned(args[0], expire, banReason, sender.getName());
+                MessageUtils.sendMessage(
+                        sender,
+                        MessageUtils.SECOND_COLOR + args[0] + MessageUtils.MAIN_COLOR + " is now banned.",
+                        true);
+
+                Player pl = Bukkit.getPlayer(args[0]);
+                if (pl != null) {
+                  BungeeUtils.kickPlayer(
+                          pl,
+                          ChatColor.translateAlternateColorCodes(
+                                  '&',
+                                  MessageUtils.messagePrefix
+                                          + "&4You have been banned from the server. &cReason: &f&o"
+                                          + reason));
+                }
               } else {
                 MessageUtils.sendMessage(
                     sender, MessageUtils.ERROR_COLOR + "Player is already banned.", true);
@@ -60,7 +80,28 @@ public class BanCommand implements CommandExecutor {
             if (PlayerHandler.playerExistsName(args[0])) {
 
               if (!BanHandler.isBanned(args[0])) {
-                doThing(args, sender);
+                String reason = args[1].toUpperCase();
+
+                Punishment banReason = PunishmentHandler.comparePunishments(reason);
+
+                String expire = args[2];
+
+                BanHandler.setBanned(args[0], expire, banReason, sender.getName());
+                MessageUtils.sendMessage(
+                        sender,
+                        MessageUtils.SECOND_COLOR + args[0] + MessageUtils.MAIN_COLOR + " is now banned.",
+                        true);
+
+                Player pl = Bukkit.getPlayer(args[0]);
+                if (pl != null) {
+                  BungeeUtils.kickPlayer(
+                          pl,
+                          ChatColor.translateAlternateColorCodes(
+                                  '&',
+                                  MessageUtils.messagePrefix
+                                          + "&4You have been banned from the server. &cReason: &f&o"
+                                          + reason));
+                }
               } else {
                 MessageUtils.sendMessage(
                     sender, MessageUtils.ERROR_COLOR + "Player is already banned.", true);
@@ -83,30 +124,5 @@ public class BanCommand implements CommandExecutor {
     }
 
     return false;
-  }
-
-  private void doThing(String[] args, CommandSender sender) {
-    String reason = args[1].toUpperCase();
-
-    Punishment banReason = PunishmentHandler.comparePunishments(reason);
-
-    String expire = args[2];
-
-    BanHandler.setBanned(args[0], expire, banReason, sender.getName());
-    MessageUtils.sendMessage(
-        sender,
-        MessageUtils.SECOND_COLOR + args[0] + MessageUtils.MAIN_COLOR + " is now banned.",
-        true);
-
-    Player pl = Bukkit.getPlayer(args[0]);
-    if (pl != null) {
-      BungeeUtils.kickPlayer(
-          pl,
-          ChatColor.translateAlternateColorCodes(
-              '&',
-              MessageUtils.messagePrefix
-                  + "&4You have been banned from the server. &cReason: &f&o"
-                  + reason));
-    }
   }
 }

@@ -32,15 +32,20 @@ public class GamemodeCommand implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("2")) {
           p.setGameMode(GameMode.ADVENTURE);
           MessageUtils.sendMessage(
-              p, MessageUtils.SUCCESS_COLOR + "Gamemode set to Adventure.", true);
+                  p, MessageUtils.SUCCESS_COLOR + "Gamemode set to Adventure.", true);
+
+        } else if (args[0].equalsIgnoreCase("3")) {
+          p.setGameMode(GameMode.SPECTATOR);
+          MessageUtils.sendMessage(
+                  p, MessageUtils.SUCCESS_COLOR + "Gamemode set to Spectator.", true);
 
         } else {
           MessageUtils.sendMessage(
-              p, MessageUtils.ERROR_COLOR + "Usage: /gamemode [0, 1, 2]", true);
+                  p, MessageUtils.ERROR_COLOR + "Usage: /gamemode [0, 1, 2, 3]", true);
         }
       } else {
         MessageUtils.sendMessage(
-            p, MessageUtils.ERROR_COLOR + "Usage: /gamemode [0, 1, 2]", true);
+                p, MessageUtils.ERROR_COLOR + "Usage: /gamemode [0, 1, 2, 3]", true);
       }
     } else {
       MessageUtils.noPerm(p);

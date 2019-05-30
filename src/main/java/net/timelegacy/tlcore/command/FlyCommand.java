@@ -19,7 +19,7 @@ public class FlyCommand implements CommandExecutor {
     if (sender instanceof Player) {
       final Player p = (Player) sender;
       Rank r = RankHandler.getRank(p.getName());
-      if (r.getPriority() >= 9) {
+      if (r.getPriority() >= 7) {
 
         if (plugin.flySpeed.contains(p.getName())) {
           plugin.flySpeed.remove(p.getName());
