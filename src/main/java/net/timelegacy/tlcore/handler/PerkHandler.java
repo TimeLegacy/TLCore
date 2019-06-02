@@ -18,7 +18,7 @@ public class PerkHandler {
    * Add a perk to a player
    *
    * @param uuid player's uuid
-   * @param perk perk as a string
+   * @param perk perk node (ex: "LOBBY.HAT.GIFT") as string
    */
   public static void addPerk(UUID uuid, String perk) {
     if (PlayerHandler.playerExists(uuid)) {
@@ -49,7 +49,9 @@ public class PerkHandler {
 
 
   /**
-   * @param uuid
+   * Get a list of a player's perks
+   *
+   * @param uuid uuid of a player
    * @return
    */
   public static List<String> getPerks(UUID uuid) {
@@ -68,10 +70,23 @@ public class PerkHandler {
     return perkList;
   }
 
+  /**
+   * Check if a player has a a perk
+   *
+   * @param uuid player's uuid
+   * @param perk perk node (ex: "LOBBY.HAT.GIFT") as string
+   * @return
+   */
   public static boolean hasPerk(UUID uuid, String perk) {
     return perksString(uuid).contains(perk);
   }
 
+  /**
+   * Remove a perk from a player
+   *
+   * @param uuid player's uuid
+   * @param perk perk node (ex: "LOBBY.HAT.GIFT") as string
+   */
   public static void removePerk(UUID uuid, String perk) {
     if (PlayerHandler.playerExists(uuid)) {
 
@@ -79,8 +94,8 @@ public class PerkHandler {
         if (hasPerk(uuid, perk)) {
           players.updateOne(
                   Filters.eq("uuid", uuid.toString()),
-              new Document("$set",
-                      new Document("perks", perksString(uuid).replace(perk + ",", ""))));
+                  new Document("$set",
+                          new Document("perks", perksString(uuid).replace(perk + ",", ""))));
         }
       }
     }

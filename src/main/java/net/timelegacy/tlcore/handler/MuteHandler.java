@@ -15,9 +15,15 @@ public class MuteHandler {
 
   private static MongoCollection<Document> players = MongoDB.mongoDatabase.getCollection("players");
 
-  public static boolean isMuted(String playerName) {
-    if (PlayerHandler.playerExistsName(playerName)) {
-      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
+  /**
+   * Check if a player is muted
+   *
+   * @param uuid player's uuid
+   * @return
+   */
+  public static boolean isMuted(UUID uuid) {
+    if (PlayerHandler.playerExists(uuid)) {
+      FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
       String muted = doc.first().getString("muted");
       if (muted.equalsIgnoreCase("true")) {
         return true;
@@ -31,9 +37,15 @@ public class MuteHandler {
     return false;
   }
 
-  public static String getMuteExpire(String playerName) {
-    if (isMuted(playerName)) {
-      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
+  /**
+   * Get when the mute expires
+   *
+   * @param uuid player's uuid
+   * @return
+   */
+  public static String getMuteExpire(UUID uuid) {
+    if (isMuted(uuid)) {
+      FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
       String muted = doc.first().getString("muted");
 
       if (!muted.equalsIgnoreCase("false") && !muted.equalsIgnoreCase("true")) {
@@ -80,8 +92,16 @@ public class MuteHandler {
     return 0;
   }
 
-  public static void setMuted(String playerName, String isMuted, Punishment reason,
-      String punisherName) {
+  /**
+   * Set a player as muted or not
+   *
+   * @param uuid         player to be muted/unmuted
+   * @param isMuted      #d/#m/#y OR true/false
+   * @param reason       punishment reason
+   * @param punisherUUID player that banned the
+   */
+  public static void setMuted(UUID uuid, String isMuted, Punishment reason,
+                              UUID punisherUUID) {
     String muteReason = "OTHER";
 
     if (!isMuted.equalsIgnoreCase("true") && !isMuted.equalsIgnoreCase("false")) {
@@ -91,16 +111,16 @@ public class MuteHandler {
 
     if (!isMuted.equalsIgnoreCase("false")) {
       players.updateOne(
-          Filters.eq("username", playerName), new Document("$set", new Document("muted", isMuted)));
+              Filters.eq("username", uuid), new Document("$set", new Document("muted", isMuted)));
 
       if (reason != null) {
         players.updateOne(
-            Filters.eq("username", playerName),
+            Filters.eq("username", uuid),
             new Document("$set", new Document("mute_reason", reason.toString())));
 
       } else {
         players.updateOne(
-            Filters.eq("username", playerName),
+            Filters.eq("username", uuid),
             new Document("$set", new Document("mute_reason", muteReason)));
       }
 
@@ -109,34 +129,44 @@ public class MuteHandler {
           PunishmentHandler.comparePunishments(
               reason != null ? reason.toString() : muteReason),
           isMuted.equalsIgnoreCase("true") ? 0 : Long.parseLong(isMuted),
-          UUID.fromString(PlayerHandler.getUUID(playerName)),
-          UUID.fromString(PlayerHandler.getUUID(punisherName)));
+              uuid,
+              punisherUUID);
     } else {
       players.updateOne(
-          Filters.eq("username", playerName), new Document("$set", new Document("muted", "false")));
+              Filters.eq("username", uuid), new Document("$set", new Document("muted", "false")));
       players.updateOne(
-          Filters.eq("username", playerName),
+          Filters.eq("username", uuid),
           new Document("$set", new Document("mute_reason", "")));
 
       PunishmentHandler.addPunishmentLog(
           Punishment.Type.UNMUTE,
-          Punishment.OTHER,
-          0,
-          UUID.fromString(PlayerHandler.getUUID(playerName)),
-          UUID.fromString(PlayerHandler.getUUID(punisherName)));
+              Punishment.OTHER,
+              0,
+              uuid,
+              uuid);
     }
   }
 
-  public static String getMuteReason(String playerName) {
-    if (isMuted(playerName)) {
+  /**
+   * Get why a player was muted
+   *
+   * @param uuid player's uuid
+   * @return
+   */
+  public static Punishment getMuteReason(UUID uuid) {
+    if (isMuted(uuid)) {
 
-      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
-      String reason = doc.first().getString("mute_reason");
+      FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
 
-      return reason;
+      String resn = doc.first().getString("mute_reason");
+      if (resn != null) {
+        return Punishment.valueOf(resn);
+      } else {
+        return Punishment.NULL;
+      }
 
     } else {
-      return "Player not muted.";
+      return Punishment.NULL;
     }
   }
 }

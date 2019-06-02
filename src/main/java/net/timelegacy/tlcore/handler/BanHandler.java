@@ -95,6 +95,7 @@ public class BanHandler {
 
   /**
    * Set a player as banned/unbanned
+   *
    * @param bannedUUID player to be banned/unbanned
    * @param isBanned #d/#m/#y OR true/false
    * @param reason punishment reason
@@ -146,15 +147,26 @@ public class BanHandler {
     }
   }
 
-  public static String getBanReason(String playerName) {
-    if (isBanned(playerName)) {
+    /**
+     * Get why a player was banned
+     *
+     * @param uuid player's uuid
+     * @return
+     */
+    public static Punishment getBanReason(UUID uuid) {
+        if (isBanned(uuid)) {
 
-      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
+            FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
 
-      return doc.first().getString("ban_reason");
+            String resn = doc.first().getString("ban_reason");
+            if (resn != null) {
+                return Punishment.valueOf(resn);
+            } else {
+                return Punishment.NULL;
+            }
 
-    } else {
-      return "Player not banned.";
+        } else {
+            return Punishment.NULL;
     }
   }
 }
