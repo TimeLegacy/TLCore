@@ -64,9 +64,18 @@ public class RankHandler {
       FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
       String rnk = doc.first().getString("rank");
 
-      for (Rank r : rankList) {
-        if (r.getName().equalsIgnoreCase(rnk)) {
-          rank = r;
+        String[] ranks = rnk.split(",");
+        //list of ranks
+        for (String r : ranks) {
+            String[] rr = r.split(":");
+            if (stringToRank(rr[0]).getPriority() >= 6) {
+                rank = stringToRank(rr[0]);
+
+                //check if server is the same and override
+            } else if (rr[1].equalsIgnoreCase(ServerHandler.getType(ServerHandler.getServerUUID()))) {
+                rank = stringToRank(rr[0]);
+            } else if (rr[0].equalsIgnoreCase("DEFAULT")) {
+                rank = stringToRank(rr[0]);
         }
       }
     }
@@ -112,9 +121,34 @@ public class RankHandler {
    */
   public static void setRank(UUID uuid, Rank rank) {
     if (PlayerHandler.playerExists(uuid)) {
+        FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
+        String rnk = doc.first().getString("rank");
 
-      players.updateOne(
-              Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("rank", rank)));
+        String[] ranks = rnk.split(",");
+        //list of ranks
+        for (String r : ranks) {
+            String[] rr = r.split(":");
+            if (rank.getPriority() >= 6 && rr[1].equalsIgnoreCase("global")) {
+                players.updateOne(
+                        Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("rank", rnk.replace(r, rank.getName() + ":global"))));
+
+                //check if server is the same and override
+            } else if (rr[1].equalsIgnoreCase(ServerHandler.getType(ServerHandler.getServerUUID()))) {
+                if (!rank.getName().equalsIgnoreCase("DEFAULT")) {
+                    players.updateOne(
+                            Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("rank",
+                                    rnk.replace(r, rank.getName() + ":" + ServerHandler.getType(ServerHandler.getServerUUID())))));
+                } else {
+                    removeRank(uuid);
+                }
+            }
+        }
+
+        if (!rnk.contains(ServerHandler.getType(ServerHandler.getServerUUID()))) {
+            players.updateOne(
+                    Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("rank",
+                            rnk + rank.getName() + ":" + ServerHandler.getType(ServerHandler.getServerUUID()) + ",")));
+        }
     }
   }
 
@@ -126,9 +160,24 @@ public class RankHandler {
   public static void removeRank(UUID uuid) {
 
     if (PlayerHandler.playerExists(uuid)) {
+        FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
+        String rnk = doc.first().getString("rank");
 
-      players.updateOne(
-              Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("rank", "DEFAULT")));
+        String[] ranks = rnk.split(",");
+        //list of ranks
+        for (String r : ranks) {
+            String[] rr = r.split(":");
+            if (stringToRank(rr[0]).getPriority() >= 6) {
+                //remove staff rank if they're staff
+                players.updateOne(
+                        Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("rank", rnk.replace(r, "DEFAULT:global"))));
+
+                //check if server is the same and override
+            } else if (rr[1].equalsIgnoreCase(ServerHandler.getType(ServerHandler.getServerUUID()))) {
+                players.updateOne(
+                        Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("rank", rnk.replace(r + ",", ""))));
+            }
+        }
     }
   }
 
