@@ -1,6 +1,5 @@
 package net.timelegacy.tlcore.utils;
 
-import java.util.Random;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
@@ -8,8 +7,16 @@ import org.bukkit.Location;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 
+import java.util.Random;
+
 public class FireworkUtils {
 
+  /**
+   * Spawn a random colored firework
+   *
+   * @param loc location to spawn
+   * @return
+   */
   public static Firework spawnFirework(Location loc) {
     Random colour = new Random();
 
@@ -25,7 +32,7 @@ public class FireworkUtils {
     Color c2 = getFWColor(c2i);
 
     FireworkEffect effect =
-        FireworkEffect.builder().withFade(c2).withColor(c1).with(fwType).withTrail().build();
+            FireworkEffect.builder().withFade(c2).withColor(c1).with(fwType).withTrail().build();
 
     fwMeta.addEffect(effect);
     fwMeta.setPower(1);
@@ -34,6 +41,13 @@ public class FireworkUtils {
     return fw;
   }
 
+  /**
+   * Spawn a firework
+   *
+   * @param loc location to spawn
+   * @param power power of firework
+   * @return
+   */
   public static Firework spawnFirework(Location loc, int power) {
     Random colour = new Random();
 
@@ -49,7 +63,7 @@ public class FireworkUtils {
     Color c2 = getFWColor(c2i);
 
     FireworkEffect effect =
-        FireworkEffect.builder().withFade(c2).withColor(c1).with(fwType).withTrail().build();
+            FireworkEffect.builder().withFade(c2).withColor(c1).with(fwType).withTrail().build();
 
     fwMeta.addEffect(effect);
     fwMeta.setPower(power);
@@ -58,6 +72,14 @@ public class FireworkUtils {
     return fw;
   }
 
+  /**
+   * Spawn a firework
+   *
+   * @param loc location to spawn
+   * @param c color of firework
+   * @param power power of firework
+   * @return
+   */
   public static Firework spawnFirework(Location loc, Color c, int power) {
     Firework fw = loc.getWorld().spawn(loc, Firework.class);
     FireworkMeta fwMeta = fw.getFireworkMeta();
@@ -68,7 +90,7 @@ public class FireworkUtils {
     Color c2 = c;
 
     FireworkEffect effect =
-        FireworkEffect.builder().withFade(c2).withColor(c1).with(fwType).withTrail().build();
+            FireworkEffect.builder().withFade(c2).withColor(c1).with(fwType).withTrail().build();
 
     fwMeta.addEffect(effect);
     fwMeta.setPower(power);
@@ -77,6 +99,13 @@ public class FireworkUtils {
     return fw;
   }
 
+  /**
+   * Spawn a firework
+   *
+   * @param loc location to spawn
+   * @param c color of firework
+   * @return
+   */
   public static Firework spawnFirework(Location loc, Color c) {
     Firework fw = loc.getWorld().spawn(loc, Firework.class);
     FireworkMeta fwMeta = fw.getFireworkMeta();
@@ -87,7 +116,7 @@ public class FireworkUtils {
     Color c2 = c;
 
     FireworkEffect effect =
-        FireworkEffect.builder().withFade(c2).withColor(c1).with(fwType).withTrail().build();
+            FireworkEffect.builder().withFade(c2).withColor(c1).with(fwType).withTrail().build();
 
     fwMeta.addEffect(effect);
     fwMeta.setPower(1);
@@ -96,6 +125,11 @@ public class FireworkUtils {
     return fw;
   }
 
+  /**
+   * Get firework color
+   * @param c
+   * @return
+   */
   public static Color getFWColor(int c) {
     switch (c) {
       case 1:

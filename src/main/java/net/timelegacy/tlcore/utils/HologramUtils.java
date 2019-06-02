@@ -7,6 +7,12 @@ import org.bukkit.entity.Entity;
 
 public class HologramUtils {
 
+  /**
+   * Create a hologram
+   *
+   * @param l    location to create
+   * @param text text of hologram
+   */
   public static void createHologram(Location l, String text) {
     ArmorStand as = l.getWorld().spawn(l, ArmorStand.class);
 
@@ -16,6 +22,11 @@ public class HologramUtils {
     as.setGravity(false);
   }
 
+  /**
+   * Remove all holograms in the world
+   *
+   * @param w
+   */
   public static void removeAllHolograms(World w) {
     for (Entity e : w.getEntities()) {
       if (e instanceof ArmorStand) {
