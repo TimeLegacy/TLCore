@@ -57,7 +57,7 @@ public class PermissionHandler {
    * @param p          player
    * @param permission normal bukkit permission for plugins
    */
-  public void addPermission(Player p, String permission) {
+  public static void addPermission(Player p, String permission) {
     PermissionAttachment pperms = perms.get(p.getUniqueId());
     pperms.setPermission(permission, true);
   }

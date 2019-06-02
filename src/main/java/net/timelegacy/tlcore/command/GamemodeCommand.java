@@ -23,11 +23,11 @@ public class GamemodeCommand implements CommandExecutor {
             MessageUtils.sendMessage(
                     p, MessageUtils.SUCCESS_COLOR + "Gamemode set to Survival.", true);
         } else if (commandLabel.equalsIgnoreCase("gmc")) {
-            p.setGameMode(GameMode.SURVIVAL);
+            p.setGameMode(GameMode.CREATIVE);
             MessageUtils.sendMessage(
                     p, MessageUtils.SUCCESS_COLOR + "Gamemode set to Creative.", true);
         } else if (commandLabel.equalsIgnoreCase("gmsp")) {
-            p.setGameMode(GameMode.SURVIVAL);
+            p.setGameMode(GameMode.SPECTATOR);
             MessageUtils.sendMessage(
                     p, MessageUtils.SUCCESS_COLOR + "Gamemode set to Spectator.", true);
         } else {

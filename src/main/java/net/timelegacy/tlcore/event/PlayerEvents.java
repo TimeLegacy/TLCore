@@ -30,15 +30,6 @@ public class PlayerEvents implements Listener {
     p.sendMessage("");
     p.sendMessage("");
 
-    /*p.getInventory().clear();
-
-    for (PotionEffect effect : p.getActivePotionEffects()) {
-      p.removePotionEffect(effect.getType());
-    }
-
-    p.setHealth(20D);
-    p.setFoodLevel(20);*/
-
     event.setJoinMessage(null);
 
     plugin.flySpeed.remove(p.getUniqueId());
