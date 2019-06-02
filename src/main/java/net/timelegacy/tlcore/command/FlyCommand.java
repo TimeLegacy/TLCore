@@ -18,11 +18,11 @@ public class FlyCommand implements CommandExecutor {
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
     if (sender instanceof Player) {
       final Player p = (Player) sender;
-      Rank r = RankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getUniqueId());
       if (r.getPriority() >= 7) {
 
-        if (plugin.flySpeed.contains(p.getName())) {
-          plugin.flySpeed.remove(p.getName());
+        if (plugin.flySpeed.contains(p.getUniqueId())) {
+          plugin.flySpeed.remove(p.getUniqueId());
           p.setFlying(false);
           p.setFlySpeed(0.1f);
           p.setAllowFlight(false);
@@ -35,7 +35,7 @@ public class FlyCommand implements CommandExecutor {
             p.setAllowFlight(true);
             p.setFlying(true);
             p.setAllowFlight(true);
-            plugin.flySpeed.add(p.getName());
+            plugin.flySpeed.add(p.getUniqueId());
           } else {
             String posnum = args[0];
 
@@ -91,7 +91,7 @@ public class FlyCommand implements CommandExecutor {
                 p.setAllowFlight(true);
                 p.setFlying(true);
                 p.setAllowFlight(true);
-                plugin.flySpeed.add(p.getName());
+                plugin.flySpeed.add(p.getUniqueId());
               }
             } catch (NumberFormatException ex) {
               MessageUtils.sendMessage(

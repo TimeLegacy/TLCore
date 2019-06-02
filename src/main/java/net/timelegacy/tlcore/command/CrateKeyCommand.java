@@ -5,7 +5,6 @@ import net.timelegacy.tlcore.handler.CrateKeyHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +14,7 @@ public class CrateKeyCommand implements CommandExecutor {
 
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
     Player p = (Player) sender;
-    Rank r = RankHandler.getRank(p.getName());
+    Rank r = RankHandler.getRank(p.getUniqueId());
     if (r.getPriority() >= 9) {
 
       if (args.length < 2 || args.length > 3) {
@@ -31,72 +30,76 @@ public class CrateKeyCommand implements CommandExecutor {
       if (args.length == 2) {
         if (args[0].equalsIgnoreCase("get")) {
           String player = args[1];
-          Player uuid = Bukkit.getPlayer(player);
-          PlayerHandler.playerExists(uuid);
+          if (PlayerHandler.playerExists(player)) {
 
-          int coins = CrateKeyHandler.getBalance(uuid.getName());
+            int coins = CrateKeyHandler.getBalance(PlayerHandler.getUUID(player));
 
-          if (!PlayerHandler.playerExists(uuid)) {
-            MessageUtils.sendMessage(
-                sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
+            if (!PlayerHandler.playerExists(PlayerHandler.getUUID(player))) {
+              MessageUtils.sendMessage(
+                      sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
+            } else {
+              MessageUtils.sendMessage(
+                      sender,
+                      MessageUtils.SECOND_COLOR
+                              + player
+                              + MessageUtils.MAIN_COLOR
+                              + " has "
+                              + MessageUtils.SECOND_COLOR
+                              + coins
+                              + MessageUtils.MAIN_COLOR
+                              + " keys.",
+                      true);
+            }
+
+            return true;
           } else {
             MessageUtils.sendMessage(
-                sender,
-                MessageUtils.SECOND_COLOR
-                    + player
-                    + MessageUtils.MAIN_COLOR
-                    + " has "
-                    + MessageUtils.SECOND_COLOR
-                    + coins
-                    + MessageUtils.MAIN_COLOR
-                    + " keys.",
-                true);
+                    sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
           }
-
-          return true;
         }
       } else if (args.length == 3) {
         if (args[0].equalsIgnoreCase("set")) {
           String player = args[1];
-          Player uuid = Bukkit.getPlayer(player);
-          PlayerHandler.playerExists(uuid);
 
-          String amount = args[2];
+          if (PlayerHandler.playerExists(player)) {
 
-          int am;
+            String amount = args[2];
 
-          try {
-            am = Integer.parseInt(amount);
-          } catch (NumberFormatException ex) {
+            int am;
+
+            try {
+              am = Integer.parseInt(amount);
+            } catch (NumberFormatException ex) {
+              MessageUtils.sendMessage(sender, MessageUtils.ERROR_COLOR + "Invalid amount.", true);
+              return true;
+            }
+
+            CrateKeyHandler.setBalance(PlayerHandler.getUUID(player), am);
             MessageUtils.sendMessage(
-                sender, MessageUtils.ERROR_COLOR + "Invalid amount.", true);
+                    sender,
+                    MessageUtils.SECOND_COLOR
+                            + player
+                            + MessageUtils.MAIN_COLOR
+                            + " now has "
+                            + MessageUtils.SECOND_COLOR
+                            + am
+                            + MessageUtils.MAIN_COLOR
+                            + " keys.",
+                    true);
+
             return true;
+          } else {
+            MessageUtils.sendMessage(
+                    sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
           }
-
-          CrateKeyHandler.setBalance(uuid.getName(), am);
-          MessageUtils.sendMessage(
-              sender,
-              MessageUtils.SECOND_COLOR
-                  + player
-                  + MessageUtils.MAIN_COLOR
-                  + " now has "
-                  + MessageUtils.SECOND_COLOR
-                  + am
-                  + MessageUtils.MAIN_COLOR
-                  + " keys.",
-              true);
-
-          return true;
-        }
-
-        if (args[0].equalsIgnoreCase("add")) {
+        } else if (args[0].equalsIgnoreCase("add")) {
           String player = args[1];
 
           String amount = args[2];
 
           int am;
 
-          if (!PlayerHandler.playerExists(Bukkit.getPlayer(player))) {
+          if (!PlayerHandler.playerExists(player)) {
             MessageUtils.sendMessage(
                 sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
           } else {
@@ -109,7 +112,7 @@ public class CrateKeyCommand implements CommandExecutor {
             }
 
             try {
-              CrateKeyHandler.addCrateKeys(Bukkit.getPlayer(player).getName(), am);
+              CrateKeyHandler.addKeys(PlayerHandler.getUUID(player), am);
               MessageUtils.sendMessage(
                   sender,
                   MessageUtils.SECOND_COLOR
@@ -137,7 +140,7 @@ public class CrateKeyCommand implements CommandExecutor {
 
           int am;
 
-          if (!PlayerHandler.playerExists(Bukkit.getPlayer(player))) {
+          if (!PlayerHandler.playerExists(player)) {
             MessageUtils.sendMessage(
                 sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
           } else {
@@ -151,7 +154,7 @@ public class CrateKeyCommand implements CommandExecutor {
             }
 
             try {
-              CrateKeyHandler.removeCrateKeys(Bukkit.getPlayer(player).getName(), am);
+              CrateKeyHandler.removeKeys(PlayerHandler.getUUID(player), am);
               MessageUtils.sendMessage(
                   sender,
                   MessageUtils.SECOND_COLOR

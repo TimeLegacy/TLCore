@@ -12,6 +12,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
+import java.util.UUID;
+
 public class UnMuteCommand implements CommandExecutor {
 
   @EventHandler
@@ -21,7 +23,7 @@ public class UnMuteCommand implements CommandExecutor {
 
       Player p = (Player) sender;
 
-      Rank r = RankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getUniqueId());
       if (r.getPriority() >= 8) {
 
         if (args.length == 0) {
@@ -29,11 +31,12 @@ public class UnMuteCommand implements CommandExecutor {
               p, MessageUtils.ERROR_COLOR + "Usage: /unmute [player]", true);
         } else if (args.length == 1) {
 
-          if (PlayerHandler.playerExistsName(args[0])) {
+          if (PlayerHandler.playerExists(args[0])) {
+            UUID uuid = PlayerHandler.getUUID(args[0]);
 
-            if (MuteHandler.isMuted(args[0])) {
+            if (MuteHandler.isMuted(uuid)) {
 
-              MuteHandler.setMuted(args[0], "false", Punishment.NULL, sender.getName());
+              MuteHandler.setMuted(uuid, "false", Punishment.NULL, p.getUniqueId());
               MessageUtils.sendMessage(
                   sender,
                   MessageUtils.SECOND_COLOR

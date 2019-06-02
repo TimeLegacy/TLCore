@@ -15,7 +15,7 @@ public class MultiplierCommand implements CommandExecutor {
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
     Player p = (Player) sender;
-    Rank r = RankHandler.getRank(p.getName());
+    Rank r = RankHandler.getRank(p.getUniqueId());
     if (r.getPriority() >= 9) {
 
       if (args.length < 1 || args.length > 2) {

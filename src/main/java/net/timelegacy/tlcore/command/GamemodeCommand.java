@@ -15,7 +15,7 @@ public class GamemodeCommand implements CommandExecutor {
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
     Player p = (Player) sender;
-    Rank r = RankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getUniqueId());
     if (r.getPriority() >= 9) {
 
         if (commandLabel.equalsIgnoreCase("gms")) {

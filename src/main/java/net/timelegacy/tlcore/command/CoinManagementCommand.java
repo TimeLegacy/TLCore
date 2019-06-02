@@ -5,17 +5,18 @@ import net.timelegacy.tlcore.handler.CoinHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class CoinManagementCommand implements CommandExecutor {
 
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
     Player p = (Player) sender;
-    Rank r = RankHandler.getRank(p.getName());
+    Rank r = RankHandler.getRank(p.getUniqueId());
     if (r.getPriority() >= 9) {
 
       if (args.length < 2 || args.length > 3) {
@@ -32,62 +33,69 @@ public class CoinManagementCommand implements CommandExecutor {
       if (args.length == 2) {
         if (args[0].equalsIgnoreCase("get")) {
           String player = args[1];
-          Player uuid = Bukkit.getPlayer(player);
-          PlayerHandler.playerExists(uuid);
+          if (PlayerHandler.playerExists(player)) {
 
-          int coins = CoinHandler.getBalance(p.getName());
+            int coins = CoinHandler.getBalance(PlayerHandler.getUUID(player));
 
-          if (!PlayerHandler.playerExists(uuid)) {
-            MessageUtils.sendMessage(
-                sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
+            if (!PlayerHandler.playerExists(player)) {
+              MessageUtils.sendMessage(
+                      sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
+            } else {
+              MessageUtils.sendMessage(
+                      sender,
+                      MessageUtils.SECOND_COLOR
+                              + player
+                              + MessageUtils.MAIN_COLOR
+                              + " has "
+                              + MessageUtils.SECOND_COLOR
+                              + coins
+                              + MessageUtils.MAIN_COLOR
+                              + " coins.",
+                      true);
+            }
+
+            return true;
           } else {
             MessageUtils.sendMessage(
-                sender,
-                MessageUtils.SECOND_COLOR
-                    + player
-                    + MessageUtils.MAIN_COLOR
-                    + " has "
-                    + MessageUtils.SECOND_COLOR
-                    + coins
-                    + MessageUtils.MAIN_COLOR
-                    + " coins.",
-                true);
+                    sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
           }
-
-          return true;
         }
       } else if (args.length == 3) {
         if (args[0].equalsIgnoreCase("set")) {
           String player = args[1];
-          Player uuid = Bukkit.getPlayer(player);
-          PlayerHandler.playerExists(uuid);
+          if (PlayerHandler.playerExists(player)) {
 
-          String amount = args[2];
+            String amount = args[2];
 
-          int am;
+            int am;
 
-          try {
-            am = Integer.parseInt(amount);
-          } catch (NumberFormatException ex) {
+            try {
+              am = Integer.parseInt(amount);
+            } catch (NumberFormatException ex) {
+              MessageUtils.sendMessage(sender, MessageUtils.ERROR_COLOR + "Invalid amount.", true);
+              return true;
+            }
+
+            UUID uuid = PlayerHandler.getUUID(player);
+
+            CoinHandler.setBalance(uuid, am);
             MessageUtils.sendMessage(
-                sender, MessageUtils.ERROR_COLOR + "Invalid amount.", true);
+                    sender,
+                    MessageUtils.SECOND_COLOR
+                            + player
+                            + MessageUtils.MAIN_COLOR
+                            + " now has "
+                            + MessageUtils.SECOND_COLOR
+                            + am
+                            + MessageUtils.MAIN_COLOR
+                            + " coins.",
+                    true);
+
             return true;
+          } else {
+            MessageUtils.sendMessage(
+                    sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
           }
-
-          CoinHandler.setBalance(player, am);
-          MessageUtils.sendMessage(
-              sender,
-              MessageUtils.SECOND_COLOR
-                  + player
-                  + MessageUtils.MAIN_COLOR
-                  + " now has "
-                  + MessageUtils.SECOND_COLOR
-                  + am
-                  + MessageUtils.MAIN_COLOR
-                  + " coins.",
-              true);
-
-          return true;
         }
 
         if (args[0].equalsIgnoreCase("add")) {
@@ -97,7 +105,7 @@ public class CoinManagementCommand implements CommandExecutor {
 
           int am;
 
-          if (!PlayerHandler.playerExists(Bukkit.getPlayer(player))) {
+          if (!PlayerHandler.playerExists(player)) {
             MessageUtils.sendMessage(
                 sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
           } else {
@@ -109,8 +117,9 @@ public class CoinManagementCommand implements CommandExecutor {
               return true;
             }
 
+            UUID uuid = PlayerHandler.getUUID(player);
             try {
-              CoinHandler.addCoins(player, am);
+              CoinHandler.addCoins(uuid, am);
               MessageUtils.sendMessage(
                   sender,
                   MessageUtils.SECOND_COLOR
@@ -138,7 +147,7 @@ public class CoinManagementCommand implements CommandExecutor {
 
           int am;
 
-          if (!PlayerHandler.playerExists(Bukkit.getPlayer(player))) {
+          if (!PlayerHandler.playerExists(player)) {
             MessageUtils.sendMessage(
                 sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
           } else {
@@ -152,7 +161,8 @@ public class CoinManagementCommand implements CommandExecutor {
             }
 
             try {
-              CoinHandler.removeCoins(player, am);
+              UUID uuid = PlayerHandler.getUUID(player);
+              CoinHandler.removeCoins(uuid, am);
               MessageUtils.sendMessage(
                   sender,
                   MessageUtils.SECOND_COLOR

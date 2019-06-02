@@ -1,7 +1,5 @@
 package net.timelegacy.tlcore.command;
 
-import java.util.logging.Level;
-import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.CoinHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.command.Command;
@@ -18,7 +16,7 @@ public class CoinsCommand implements CommandExecutor {
       final Player p = (Player) sender;
 
       int coins = 0;
-      coins = CoinHandler.getBalance(p.getName());
+      coins = CoinHandler.getBalance(p.getUniqueId());
 
       if (coins == 1) {
         MessageUtils.sendMessage(
