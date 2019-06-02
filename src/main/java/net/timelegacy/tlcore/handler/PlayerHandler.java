@@ -72,14 +72,14 @@ public class PlayerHandler {
    * @param playerName player's username
    * @return
    */
-  public static String getUUID(String playerName) {
-    String uuid = null;
+  public static UUID getUUID(String playerName) {
+    UUID uuid = null;
 
     if (playerExists(playerName)) {
       FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
       String uid = doc.first().getString("uuid");
 
-      uuid = uid;
+      uuid = UUID.fromString(uid);
     }
     return uuid;
   }
