@@ -18,7 +18,7 @@ public class TogglePhysicsCommand implements CommandExecutor {
     if (sender instanceof Player) {
       final Player p = (Player) sender;
 
-      Rank r = RankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getUniqueId());
       if (r.getPriority() >= 9) {
         if (plugin.physics) {
           MessageUtils.sendMessage(

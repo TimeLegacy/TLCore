@@ -31,7 +31,7 @@ public class FilterEvents implements Listener {
         || event.getMessage().toLowerCase().contains("/bukkit:")) {
       event.setCancelled(true);
 
-      Rank r = RankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getUniqueId());
 
       if (r.getPriority() >= 9) {
         MessageUtils.sendMessage(p, MessageUtils.MAIN_COLOR + "&lPlugins", false);
@@ -76,15 +76,15 @@ public class FilterEvents implements Listener {
         MessageUtils.colorize(
             "&r"
                 + RankHandler
-                .chatColors(p.getName())
+                    .chatColors(p.getUniqueId())
                 .replace("%username%", username)
                 .replace("%line%", "\u2758 ")
                 .replace("%arrows%", "\u00BB")
                 + " &r");
 
-    System.out.println("[CHAT] " + p.getName() + " > " + message);
+    System.out.println("[CHAT] " + p.getUniqueId() + " > " + message);
 
-    if (!MuteHandler.isMuted(p.getName())) {
+    if (!MuteHandler.isMuted(p.getUniqueId())) {
 
       for (Player sp : Bukkit.getOnlinePlayers()) {
         //TextComponent textComponent = new TextComponent(core.perkHandler.getPerks(sp).contains("CHAT.MATURE") ? message : cleanMessage);
@@ -95,7 +95,7 @@ public class FilterEvents implements Listener {
                     MessageUtils.MAIN_COLOR
                         + "&oCoins: "
                         + MessageUtils.SECOND_COLOR
-                        + core.coinHandler.getBalance(p.getName())),
+                        + core.coinHandler.getBalance(p.getUniqueId())),
                 MessageUtils.c(
                     MessageUtils.MAIN_COLOR
                         + "&oKills: "
@@ -116,21 +116,21 @@ public class FilterEvents implements Listener {
         sp.sendMessage(format + message);
       }
     } else {
-      if (!(MuteHandler.getMuteExpire(p.getName()).equalsIgnoreCase("false")
-          || MuteHandler.getMuteExpire(p.getName()).equalsIgnoreCase("true"))) {
+      if (!(MuteHandler.getMuteExpire(p.getUniqueId()).equalsIgnoreCase("false")
+              || MuteHandler.getMuteExpire(p.getUniqueId()).equalsIgnoreCase("true"))) {
 
         MessageUtils.sendMessage(
             p,
             "&4You have been muted. &cReason: &f&o"
-                + MuteHandler.getMuteReason(p.getName())
+                    + MuteHandler.getMuteReason(p.getUniqueId())
                 + " &cExpire: &f&o"
-                + MuteHandler.getMuteExpire(p.getName()),
+                    + MuteHandler.getMuteExpire(p.getUniqueId()),
             true);
       } else {
 
         MessageUtils.sendMessage(
             p,
-            "&4You have been muted. &cReason: &f&o" + MuteHandler.getMuteReason(p.getName()),
+                "&4You have been muted. &cReason: &f&o" + MuteHandler.getMuteReason(p.getUniqueId()),
             true);
       }
     }

@@ -16,6 +16,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
+import java.util.UUID;
+
 public class BanCommand implements CommandExecutor {
 
   @EventHandler
@@ -25,7 +27,7 @@ public class BanCommand implements CommandExecutor {
 
       Player p = (Player) sender;
 
-      Rank r = RankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getUniqueId());
       if (r.getPriority() >= 8) {
 
         if (args.length == 0) {
@@ -42,16 +44,17 @@ public class BanCommand implements CommandExecutor {
             .equalsIgnoreCase("null")) {
           if (args.length == 2) {
 
-            if (PlayerHandler.playerExistsName(args[0])) {
+            if (PlayerHandler.playerExists(args[0])) {
 
-              if (!BanHandler.isBanned(args[0])) {
+              UUID player = PlayerHandler.getUUID(args[0]);
+              if (!BanHandler.isBanned(player)) {
                 String reason = args[1].toUpperCase();
 
                 Punishment banReason = PunishmentHandler.comparePunishments(reason);
 
                 String expire = "true";
 
-                BanHandler.setBanned(args[0], expire, banReason, sender.getName());
+                BanHandler.setBanned(player, expire, banReason, p.getUniqueId());
                 MessageUtils.sendMessage(
                         sender,
                         MessageUtils.SECOND_COLOR + args[0] + MessageUtils.MAIN_COLOR + " is now banned.",
@@ -77,16 +80,18 @@ public class BanCommand implements CommandExecutor {
             }
           } else if (args.length == 3) {
 
-            if (PlayerHandler.playerExistsName(args[0])) {
+            if (PlayerHandler.playerExists(args[0])) {
 
-              if (!BanHandler.isBanned(args[0])) {
+              UUID player = PlayerHandler.getUUID(args[0]);
+
+              if (!BanHandler.isBanned(player)) {
                 String reason = args[1].toUpperCase();
 
                 Punishment banReason = PunishmentHandler.comparePunishments(reason);
 
                 String expire = args[2];
 
-                BanHandler.setBanned(args[0], expire, banReason, sender.getName());
+                BanHandler.setBanned(player, expire, banReason, p.getUniqueId());
                 MessageUtils.sendMessage(
                         sender,
                         MessageUtils.SECOND_COLOR + args[0] + MessageUtils.MAIN_COLOR + " is now banned.",

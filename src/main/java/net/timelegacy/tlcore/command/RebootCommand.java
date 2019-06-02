@@ -17,7 +17,7 @@ public class RebootCommand implements CommandExecutor {
 
     Player p = (Player) sender;
 
-    Rank r = RankHandler.getRank(p.getName());
+    Rank r = RankHandler.getRank(p.getUniqueId());
     if (r.getPriority() >= 9) {
 
       for (Player on : Bukkit.getOnlinePlayers()) {

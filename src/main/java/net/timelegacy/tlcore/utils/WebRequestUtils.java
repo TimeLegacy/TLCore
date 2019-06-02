@@ -9,6 +9,13 @@ import java.net.URL;
 
 public class WebRequestUtils {
 
+  /**
+   * Post request from url
+   *
+   * @param targetURL     target url
+   * @param urlParameters url params
+   * @return
+   */
   public static String executePost(String targetURL, String urlParameters) {
     HttpURLConnection connection = null;
 
@@ -20,7 +27,7 @@ public class WebRequestUtils {
       connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
       connection.setRequestProperty(
-          "Content-Length", Integer.toString(urlParameters.getBytes().length));
+              "Content-Length", Integer.toString(urlParameters.getBytes().length));
       connection.setRequestProperty("Content-Language", "en-US");
 
       connection.setUseCaches(false);

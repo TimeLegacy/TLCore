@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class RankHandler {
 
@@ -24,6 +25,9 @@ public class RankHandler {
   private static MongoCollection<Document> ranks = MongoDB.mongoDatabase.getCollection("ranks");
   private static MongoCollection<Document> players = MongoDB.mongoDatabase.getCollection("players");
 
+  /**
+   * Load the ranks from the database
+   */
   public static void loadRanks() {
 
     try {
@@ -47,11 +51,17 @@ public class RankHandler {
     }
   }
 
-  public static Rank getRank(String playerName) {
+  /**
+   * Get the rank of a player
+   *
+   * @param uuid player's uuid
+   * @return
+   */
+  public static Rank getRank(UUID uuid) {
     Rank rank = null;
 
-    if (PlayerHandler.playerExistsName(playerName)) {
-      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
+    if (PlayerHandler.playerExists(uuid)) {
+      FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
       String rnk = doc.first().getString("rank");
 
       for (Rank r : rankList) {
@@ -63,6 +73,27 @@ public class RankHandler {
     return rank;
   }
 
+  /**
+   * Convert string to a rank if it exists
+   *
+   * @param rank
+   * @return
+   */
+  public static Rank stringToRank(String rank) {
+    for (Rank r : rankList) {
+      if (r.getName().equalsIgnoreCase(rank)) {
+        return r;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Check if the rank is valid
+   *
+   * @param rank rank name as string
+   * @return
+   */
   public static boolean isValidRank(String rank) {
     for (Rank r : rankList) {
       if (r.getName().equalsIgnoreCase(rank)) {
@@ -73,49 +104,74 @@ public class RankHandler {
     return false;
   }
 
-  public static void setRank(String name, String rank) {
-    if (PlayerHandler.playerExistsName(name)) {
+  /**
+   * Set the rank of a player
+   *
+   * @param uuid player's uuid
+   * @param rank rank to set
+   */
+  public static void setRank(UUID uuid, Rank rank) {
+    if (PlayerHandler.playerExists(uuid)) {
 
       players.updateOne(
-          Filters.eq("username", name), new Document("$set", new Document("rank", rank)));
+              Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("rank", rank)));
     }
   }
 
-  public static void removeRank(String name) {
+  /**
+   * Remove the rank of a player
+   *
+   * @param uuid player's uuid
+   */
+  public static void removeRank(UUID uuid) {
 
-    if (PlayerHandler.playerExistsName(name)) {
+    if (PlayerHandler.playerExists(uuid)) {
 
       players.updateOne(
-          Filters.eq("username", name), new Document("$set", new Document("rank", "DEFAULT")));
+              Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("rank", "DEFAULT")));
     }
   }
 
-  public static String chatColors(String p) {
-    Rank rank = getRank(p);
+  /**
+   * Chat colors for a player
+   *
+   * @param uuid player's uuid
+   * @return
+   */
+  public static String chatColors(UUID uuid) {
+    Rank rank = getRank(uuid);
 
     String format = rank.getChat();
 
     return format;
   }
 
+  /**
+   * Update tab colors
+   */
   public static void tabColors() {
 
     Bukkit.getScheduler()
-        .scheduleSyncRepeatingTask(
-            plugin,
-            () -> {
-              for (Player p : Bukkit.getOnlinePlayers()) {
+            .scheduleSyncRepeatingTask(
+                    plugin,
+                    () -> {
+                      for (Player p : Bukkit.getOnlinePlayers()) {
 
-                setTabColors(p);
-              }
-            },
-            0,
-            15 * 20);
+                        setTabColors(p);
+                      }
+                    },
+                    0,
+                    15 * 20);
   }
 
+  /**
+   * Set the tab colors for a player
+   *
+   * @param player player
+   */
   public static void setTabColors(Player player) {
     String name = player.getName();
-    Rank rank = getRank(name);
+    Rank rank = getRank(player.getUniqueId());
 
     String format = rank.getTab() + name;
 

@@ -16,6 +16,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.UUID;
+
 @SuppressWarnings("deprecation")
 public class PlayerEvents implements Listener {
 
@@ -39,7 +41,7 @@ public class PlayerEvents implements Listener {
 
     event.setJoinMessage(null);
 
-    plugin.flySpeed.remove(p.getName());
+    plugin.flySpeed.remove(p.getUniqueId());
 
     p.setFlying(false);
     p.setFlySpeed(0.1f);
@@ -51,8 +53,8 @@ public class PlayerEvents implements Listener {
     RankHandler.setTabColors(p);
 
     PlayerHandler.updateIP(p);
-    PlayerHandler.updateLastConnection(p);
-    PlayerHandler.updateOnline(p, true);
+    PlayerHandler.updateLastConnection(p.getUniqueId());
+    PlayerHandler.updateOnline(p.getUniqueId(), true);
   }
 
   @EventHandler
@@ -71,7 +73,7 @@ public class PlayerEvents implements Listener {
 
     event.setQuitMessage(null);
 
-    PlayerHandler.updateOnline(p, false);
+    PlayerHandler.updateOnline(p.getUniqueId(), false);
   }
 
   @EventHandler
@@ -90,9 +92,9 @@ public class PlayerEvents implements Listener {
 
   @EventHandler
   public void onPreJoin(PlayerPreLoginEvent e) {
-    String p = e.getName();
+    UUID p = e.getUniqueId();
 
-    if (PlayerHandler.playerExistsName(p)) {
+    if (PlayerHandler.playerExists(p)) {
       if (BanHandler.isBanned(p)) {
         if (!BanHandler.getBanExpire(p).equalsIgnoreCase("false")) {
           e.disallow(

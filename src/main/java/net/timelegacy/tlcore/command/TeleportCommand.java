@@ -17,7 +17,7 @@ public class TeleportCommand implements CommandExecutor {
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
     if (sender instanceof Player) {
       final Player p = (Player) sender;
-      Rank r = RankHandler.getRank(p.getName());
+        Rank r = RankHandler.getRank(p.getUniqueId());
       if (r.getPriority() >= 9) {
 
         if (args.length == 0) {

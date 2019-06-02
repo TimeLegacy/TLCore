@@ -12,6 +12,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class MuteCommand implements CommandExecutor {
 
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
@@ -20,7 +22,7 @@ public class MuteCommand implements CommandExecutor {
 
       Player p = (Player) sender;
 
-      Rank r = RankHandler.getRank(p.getName());
+      Rank r = RankHandler.getRank(p.getUniqueId());
       if (r.getPriority() >= 7) {
         if (args.length == 0) {
           MessageUtils.sendMessage(
@@ -38,13 +40,14 @@ public class MuteCommand implements CommandExecutor {
           Punishment muteReason = PunishmentHandler.comparePunishments(args[1]);
           if (args.length == 2) {
 
-            if (PlayerHandler.playerExistsName(args[0])) {
+            if (PlayerHandler.playerExists(args[0])) {
+              UUID uuid = PlayerHandler.getUUID(args[0]);
 
-              if (!MuteHandler.isMuted(args[0])) {
+              if (!MuteHandler.isMuted(uuid)) {
 
                 String expire = "true";
 
-                MuteHandler.setMuted(args[0], expire, muteReason, sender.getName());
+                MuteHandler.setMuted(uuid, expire, muteReason, p.getUniqueId());
                 MessageUtils.sendMessage(
                     sender,
                     MessageUtils.SECOND_COLOR
@@ -62,13 +65,13 @@ public class MuteCommand implements CommandExecutor {
             }
           } else if (args.length == 3) {
 
-            if (PlayerHandler.playerExistsName(args[0])) {
-
-              if (!MuteHandler.isMuted(args[0])) {
+            if (PlayerHandler.playerExists(args[0])) {
+              UUID uuid = PlayerHandler.getUUID(args[0]);
+              if (!MuteHandler.isMuted(uuid)) {
 
                 String expire = args[2];
 
-                MuteHandler.setMuted(args[0], expire, muteReason, sender.getName());
+                MuteHandler.setMuted(uuid, expire, muteReason, p.getUniqueId());
                 MessageUtils.sendMessage(
                     sender,
                     MessageUtils.SECOND_COLOR

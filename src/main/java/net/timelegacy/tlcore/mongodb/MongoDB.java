@@ -11,8 +11,9 @@ public class MongoDB {
 
   /**
    * Connect to MongoDB using URI
+   *
+   * @param uri uri of server
    */
-
   public static boolean connect(String uri) {
 
     mongoClient = MongoClients.create(uri);
@@ -21,6 +22,11 @@ public class MongoDB {
     return true;
   }
 
+  /**
+   * Disconnect from mongodb
+   *
+   * @return
+   */
   public static boolean disconnect() {
 
     mongoClient.close();

@@ -33,15 +33,13 @@ commands:
     aliases: [who, online, players]
   GameMode:
     description: Set your GameMode
-    aliases: [gm]
+    aliases: [gm, gms, gmc, gmsp]
   MultiplierManagement:
     description: Manage multiplier settings
     aliases: [mm]
   Reboot:
     description: Reboot the server.
     aliases: [rb]
-  Perk:
-    description: Adds a perk to a player.
   Ban:
     description: Bans a player.
   UnBan:

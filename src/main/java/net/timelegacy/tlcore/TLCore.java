@@ -1,25 +1,6 @@
 package net.timelegacy.tlcore;
 
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.timelegacy.tlcore.command.BanCommand;
-import net.timelegacy.tlcore.command.ChatTypeCommand;
-import net.timelegacy.tlcore.command.CoinManagementCommand;
-import net.timelegacy.tlcore.command.CoinsCommand;
-import net.timelegacy.tlcore.command.CrateKeyCommand;
-import net.timelegacy.tlcore.command.FlyCommand;
-import net.timelegacy.tlcore.command.GamemodeCommand;
-import net.timelegacy.tlcore.command.ListCommand;
-import net.timelegacy.tlcore.command.MultiplierCommand;
-import net.timelegacy.tlcore.command.MuteCommand;
-import net.timelegacy.tlcore.command.RankManagementCommand;
-import net.timelegacy.tlcore.command.RebootCommand;
-import net.timelegacy.tlcore.command.TeleportCommand;
-import net.timelegacy.tlcore.command.TeleportHereCommand;
-import net.timelegacy.tlcore.command.TogglePhysicsCommand;
-import net.timelegacy.tlcore.command.UnBanCommand;
-import net.timelegacy.tlcore.command.UnMuteCommand;
+import net.timelegacy.tlcore.command.*;
 import net.timelegacy.tlcore.event.FilterEvents;
 import net.timelegacy.tlcore.event.PhysicsEvents;
 import net.timelegacy.tlcore.event.PlayerEvents;
@@ -31,12 +12,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class TLCore extends JavaPlugin {
 
   private static TLCore plugin = null;
   public FileConfiguration config;
   public Logger log = Bukkit.getLogger();
-  public ArrayList<String> flySpeed = new ArrayList<>();
+  public ArrayList<UUID> flySpeed = new ArrayList<>();
   public boolean physics = false;
 
   public static TLCore getPlugin() {

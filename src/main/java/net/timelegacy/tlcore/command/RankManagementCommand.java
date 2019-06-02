@@ -17,7 +17,7 @@ public class RankManagementCommand implements CommandExecutor {
 
       Player p = (Player) sender;
 
-      Rank r = RankHandler.getRank(p.getName());
+        Rank r = RankHandler.getRank(p.getUniqueId());
       if (r.getPriority() >= 9) {
 
         if (args.length < 1 || args.length > 3) {
@@ -42,12 +42,11 @@ public class RankManagementCommand implements CommandExecutor {
           if (args[0].equalsIgnoreCase("get")) {
             String player = args[1];
 
-            Rank rank = RankHandler.getRank(p.getName());
-
-            if (!PlayerHandler.playerExistsName(player)) {
+              if (!PlayerHandler.playerExists(player)) {
               MessageUtils.sendMessage(
                   sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
             } else {
+                  Rank rank = RankHandler.getRank(PlayerHandler.getUUID(player));
               MessageUtils.sendMessage(
                   sender,
                   MessageUtils.SECOND_COLOR
@@ -65,11 +64,8 @@ public class RankManagementCommand implements CommandExecutor {
 
           if (args[0].equalsIgnoreCase("remove")) {
             String player = args[1];
-            String uuid = PlayerHandler.getUUID(player);
-
-            if (PlayerHandler.playerExistsName(player)) {
-
-              RankHandler.removeRank(uuid);
+              if (PlayerHandler.playerExists(player)) {
+                  RankHandler.removeRank(PlayerHandler.getUUID(player));
               MessageUtils.sendMessage(
                   sender,
                   MessageUtils.SECOND_COLOR
@@ -87,16 +83,12 @@ public class RankManagementCommand implements CommandExecutor {
         } else if (args.length == 3) {
           if (args[0].equalsIgnoreCase("set")) {
             String player = args[1];
-            if (PlayerHandler.playerExistsName(player)) {
-
+              if (PlayerHandler.playerExists(player)) {
               String rank = args[2].toUpperCase();
-
-              // DEFAULT&f, &d&oVIP&f, &d&oVIPPLUS&f, &d&oPREMIUM&f, &d&oYOUTUBER&f,
-              // &d&oARCHITECT&f, &d&oHELPER&f, &d&oMODERATOR&f, &d&oADMIN&f, &d&oFOUNDER
 
               if (RankHandler.isValidRank(rank)) {
 
-                RankHandler.setRank(player, rank);
+                  RankHandler.setRank(PlayerHandler.getUUID(player), RankHandler.stringToRank(rank));
                 MessageUtils.sendMessage(
                     sender,
                     MessageUtils.SECOND_COLOR
