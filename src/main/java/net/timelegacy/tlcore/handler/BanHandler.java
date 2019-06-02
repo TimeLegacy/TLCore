@@ -15,10 +15,16 @@ public class BanHandler {
 
   private static MongoCollection<Document> players = MongoDB.mongoDatabase.getCollection("players");
 
-  public static boolean isBanned(String playerName) {
-    if (PlayerHandler.playerExistsName(playerName)) {
+  /**
+   * Check if a player is banned
+   *
+   * @param uuid player's uuid
+   * @return
+   */
+  public static boolean isBanned(UUID uuid) {
+    if (PlayerHandler.playerExists(uuid)) {
 
-      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
+      FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
       String banned = doc.first().getString("banned");
       if (banned.equalsIgnoreCase("true")) {
         return true;
@@ -32,9 +38,15 @@ public class BanHandler {
     return false;
   }
 
-  public static String getBanExpire(String playerName) {
-    if (isBanned(playerName)) {
-      FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
+  /**
+   * Get when a player's ban expires
+   *
+   * @param uuid player's uuid
+   * @return
+   */
+  public static String getBanExpire(UUID uuid) {
+    if (isBanned(uuid)) {
+      FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
       String banned = doc.first().getString("banned");
 
       if (!banned.equalsIgnoreCase("false") && !banned.equalsIgnoreCase("true")) {
@@ -81,8 +93,15 @@ public class BanHandler {
     return 0;
   }
 
+  /**
+   * Set a player as banned/unbanned
+   * @param bannedUUID player to be banned/unbanned
+   * @param isBanned #d/#m/#y OR true/false
+   * @param reason punishment reason
+   * @param punisherUUID player that banned the player
+   */
   public static void setBanned(
-          String playerName, String isBanned, Punishment reason, String punisherName) {
+          UUID bannedUUID, String isBanned, Punishment reason, UUID punisherUUID) {
     String banReason = "OTHER";
 
     if (!isBanned.equalsIgnoreCase("true") && !isBanned.equalsIgnoreCase("false")) {
@@ -92,38 +111,38 @@ public class BanHandler {
 
     if (!isBanned.equalsIgnoreCase("false")) {
       players.updateOne(
-          Filters.eq("username", playerName),
-          new Document("$set", new Document("banned", isBanned)));
+              Filters.eq("uuid", bannedUUID.toString()),
+              new Document("$set", new Document("banned", isBanned)));
 
       if (reason != null) {
         players.updateOne(
-            Filters.eq("username", playerName),
-            new Document("$set", new Document("ban_reason", reason.toString())));
+                Filters.eq("uuid", bannedUUID.toString()),
+                new Document("$set", new Document("ban_reason", reason.toString())));
       } else {
         players.updateOne(
-            Filters.eq("username", playerName),
-            new Document("$set", new Document("ban_reason", banReason)));
+                Filters.eq("uuid", bannedUUID.toString()),
+                new Document("$set", new Document("ban_reason", banReason)));
       }
 
       PunishmentHandler.addPunishmentLog(
-          Punishment.Type.BAN,
-          PunishmentHandler.comparePunishments(reason != null ? reason.toString() : banReason),
-          isBanned.equalsIgnoreCase("true") ? 0 : Long.parseLong(isBanned),
-          UUID.fromString(PlayerHandler.getUUID(playerName)),
-          UUID.fromString(PlayerHandler.getUUID(punisherName)));
+              Punishment.Type.BAN,
+              PunishmentHandler.comparePunishments(reason != null ? reason.toString() : banReason),
+              isBanned.equalsIgnoreCase("true") ? 0 : Long.parseLong(isBanned),
+              bannedUUID,
+              punisherUUID);
     } else {
       players.updateOne(
-          Filters.eq("username", playerName),
-          new Document("$set", new Document("banned", "false")));
+              Filters.eq("uuid", bannedUUID.toString()),
+              new Document("$set", new Document("banned", "false")));
       players.updateOne(
-          Filters.eq("username", playerName), new Document("$set", new Document("ban_reason", "")));
+              Filters.eq("uuid", bannedUUID.toString()), new Document("$set", new Document("ban_reason", "")));
 
       PunishmentHandler.addPunishmentLog(
-          Punishment.Type.UNBAN,
-          Punishment.OTHER,
-          0,
-          UUID.fromString(PlayerHandler.getUUID(playerName)),
-          UUID.fromString(PlayerHandler.getUUID(punisherName)));
+              Punishment.Type.UNBAN,
+              Punishment.OTHER,
+              0,
+              bannedUUID,
+              punisherUUID);
     }
   }
 

@@ -7,12 +7,14 @@ import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bson.Document;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class PlayerHandler {
 
   private static MongoCollection<Document> players = MongoDB.mongoDatabase.getCollection("players");
 
   public static void createPlayer(Player player) {
-    if (!playerExists(player)) {
+    if (!playerExists(player.getUniqueId())) {
 
       Document doc =
           new Document("uuid", player.getUniqueId().toString())
@@ -35,13 +37,13 @@ public class PlayerHandler {
     }
   }
 
-  public static boolean playerExists(Player player) {
+  public static boolean playerExists(UUID uuid) {
     FindIterable<Document> iterable =
-        players.find(new Document("uuid", player.getUniqueId().toString()));
+            players.find(new Document("uuid", uuid.toString()));
     return iterable.first() != null;
   }
 
-  public static boolean playerExistsName(String playerName) {
+  public static boolean playerExists(String playerName) {
     FindIterable<Document> iterable =
         players.find(new Document("username", playerName));
     return iterable.first() != null;
@@ -50,7 +52,7 @@ public class PlayerHandler {
   public static String getUUID(String playerName) {
     String uuid = null;
 
-    if (playerExistsName(playerName)) {
+    if (playerExists(playerName)) {
       FindIterable<Document> doc = players.find(Filters.eq("username", playerName));
       String uid = doc.first().getString("uuid");
 
@@ -60,7 +62,7 @@ public class PlayerHandler {
   }
 
   public static void updateUsername(Player player) {
-    if (playerExists(player)) {
+    if (playerExists(player.getUniqueId())) {
       players.updateOne(
           Filters.eq("uuid", player.getUniqueId().toString()),
           new Document("$set", new Document("username", player.getName())));
@@ -68,7 +70,7 @@ public class PlayerHandler {
   }
 
   public static void updateIP(Player player) {
-    if (playerExists(player)) {
+    if (playerExists(player.getUniqueId())) {
       players.updateOne(
           Filters.eq("uuid", player.getUniqueId().toString()),
           new Document(

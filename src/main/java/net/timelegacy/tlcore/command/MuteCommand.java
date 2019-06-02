@@ -38,7 +38,7 @@ public class MuteCommand implements CommandExecutor {
           Punishment muteReason = PunishmentHandler.comparePunishments(args[1]);
           if (args.length == 2) {
 
-            if (PlayerHandler.playerExistsName(args[0])) {
+            if (PlayerHandler.playerExists(args[0])) {
 
               if (!MuteHandler.isMuted(args[0])) {
 
@@ -62,7 +62,7 @@ public class MuteCommand implements CommandExecutor {
             }
           } else if (args.length == 3) {
 
-            if (PlayerHandler.playerExistsName(args[0])) {
+            if (PlayerHandler.playerExists(args[0])) {
 
               if (!MuteHandler.isMuted(args[0])) {
 
