@@ -24,7 +24,7 @@ public class PlayerHandler {
       Document doc =
               new Document("uuid", player.getUniqueId().toString())
                       .append("username", player.getName())
-                      .append("rank", "DEFAULT")
+                      .append("rank", "DEFAULT:GLOBAL,")
                       .append("banned", "false")
                       .append("ban_reason", "")
                       .append("muted", "false")
