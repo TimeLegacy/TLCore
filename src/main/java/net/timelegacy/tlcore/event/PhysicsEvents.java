@@ -2,6 +2,7 @@ package net.timelegacy.tlcore.event;
 
 import net.timelegacy.tlcore.TLCore;
 import org.bukkit.Effect;
+import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -23,13 +24,13 @@ public class PhysicsEvents implements Listener {
   private static TLCore plugin = TLCore.getPlugin();
 
   private static void hideAdvancementsFor(World world) {
-    world.setGameRuleValue("announceAdvancements", "false");
+    world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
   }
 
   /* Hide advancements for new worlds */
   @EventHandler
-  public void onWorldLoad(WorldLoadEvent e) {
-    hideAdvancementsFor(e.getWorld());
+  public void onWorldLoad(WorldLoadEvent event) {
+    hideAdvancementsFor(event.getWorld());
   }
 
   @EventHandler
@@ -95,7 +96,6 @@ public class PhysicsEvents implements Listener {
     }
   }
 
-  @SuppressWarnings("deprecation")
   @EventHandler
   public void onExplode(EntityExplodeEvent event) {
     if (!plugin.physics) {

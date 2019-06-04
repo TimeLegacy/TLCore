@@ -9,18 +9,18 @@ public class BungeeUtils {
 
   private static TLCore plugin = TLCore.getPlugin();
 
-    /**
-     * Kick a player from the server from bungeecord
-     *
-     * @param player  player
-     * @param message message to send to the player
-     */
-    public static void kickPlayer(Player player, String message) {
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("KickPlayer");
-        out.writeUTF(player.getName());
-        out.writeUTF(message);
+  /**
+   * Kick a player from the server from bungeecord
+   *
+   * @param player player
+   * @param message message to send to the player
+   */
+  public static void kickPlayer(Player player, String message) {
+    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+    out.writeUTF("KickPlayer");
+    out.writeUTF(player.getName());
+    out.writeUTF(message);
 
-        player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
-    }
+    player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+  }
 }

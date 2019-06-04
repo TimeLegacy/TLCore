@@ -14,37 +14,33 @@ public class TogglePhysicsCommand implements CommandExecutor {
   private TLCore plugin = TLCore.getPlugin();
 
   @Override
-  public boolean onCommand(CommandSender sender, Command cmd, String lable, String[] args) {
-    if (sender instanceof Player) {
-      final Player p = (Player) sender;
-
-      Rank r = RankHandler.getRank(p.getUniqueId());
-      if (r.getPriority() >= 9) {
-        if (plugin.physics) {
-          MessageUtils.sendMessage(
-              p, MessageUtils.ERROR_COLOR + "Physics has been disabled.", true);
-        } else {
-          MessageUtils.sendMessage(
-              p, MessageUtils.SUCCESS_COLOR + "Physics has been enabled.", true);
-        }
-
-        plugin.physics = !plugin.physics;
-      } else {
-        MessageUtils.noPerm(p);
-      }
-
-      return true;
-    } else {
+  public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    if (!(sender instanceof Player)) {
       if (plugin.physics) {
-        MessageUtils.sendMessage(
-            sender, MessageUtils.ERROR_COLOR + "Physics has been disabled.", true);
+        MessageUtils.sendMessage(sender, MessageUtils.ERROR_COLOR + "Physics has been disabled.", true);
       } else {
-        MessageUtils.sendMessage(
-            sender, MessageUtils.SUCCESS_COLOR + "Physics has been enabled.", true);
+        MessageUtils.sendMessage(sender, MessageUtils.SUCCESS_COLOR + "Physics has been enabled.", true);
       }
 
       plugin.physics = !plugin.physics;
-      return false;
+      return true;
     }
+
+    Player player = (Player) sender;
+    Rank rank = RankHandler.getRank(player.getUniqueId());
+
+    if (rank.getPriority() < 9) {
+      MessageUtils.noPerm(player);
+      return true;
+    }
+
+    if (plugin.physics) {
+      MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR + "Physics has been disabled.", true);
+    } else {
+      MessageUtils.sendMessage(player, MessageUtils.SUCCESS_COLOR + "Physics has been enabled.", true);
+    }
+
+    plugin.physics = !plugin.physics;
+    return true;
   }
 }

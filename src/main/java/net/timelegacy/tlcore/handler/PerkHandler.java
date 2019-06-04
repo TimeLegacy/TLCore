@@ -3,12 +3,12 @@ package net.timelegacy.tlcore.handler;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
-import net.timelegacy.tlcore.mongodb.MongoDB;
-import org.bson.Document;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import net.timelegacy.tlcore.mongodb.MongoDB;
+import org.bson.Document;
 
 public class PerkHandler {
 
@@ -21,19 +21,18 @@ public class PerkHandler {
    * @param perk perk node (ex: "LOBBY.HAT.GIFT") as string
    */
   public static void addPerk(UUID uuid, String perk) {
-    if (PlayerHandler.playerExists(uuid)) {
-
-      if (perksString(uuid) == null) {
-        players.updateOne(
-                Filters.eq("uuid", uuid.toString()),
-            new Document("$set", new Document("perks", perk.toUpperCase() + ",")));
-      } else {
-        players.updateOne(
-                Filters.eq("uuid", uuid.toString()),
-            new Document("$set",
-                    new Document("perks", perksString(uuid) + perk.toUpperCase() + ",")));
-      }
+    if (!PlayerHandler.playerExists(uuid)) {
+      return;
     }
+
+    if (perksString(uuid) == null) {
+      players.updateOne(
+          Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("perks", perk.toUpperCase() + ",")));
+    } else {
+      players.updateOne(Filters.eq("uuid", uuid.toString()),
+          new Document("$set", new Document("perks", perksString(uuid) + perk.toUpperCase() + ",")));
+    }
+
   }
 
   private static String perksString(UUID uuid) {
@@ -44,6 +43,7 @@ public class PerkHandler {
 
       perkList = doc.first().getString("perks");
     }
+
     return perkList;
   }
 
@@ -52,7 +52,6 @@ public class PerkHandler {
    * Get a list of a player's perks
    *
    * @param uuid uuid of a player
-   * @return
    */
   public static List<String> getPerks(UUID uuid) {
     List<String> perkList = new ArrayList<>();
@@ -62,10 +61,7 @@ public class PerkHandler {
 
       String[] perks = doc.first().getString("perks").split(",");
 
-
-      for (String perk : perks) {
-        perkList.add(perk);
-      }
+      Collections.addAll(perkList, perks);
     }
     return perkList;
   }
@@ -75,7 +71,6 @@ public class PerkHandler {
    *
    * @param uuid player's uuid
    * @param perk perk node (ex: "LOBBY.HAT.GIFT") as string
-   * @return
    */
   public static boolean hasPerk(UUID uuid, String perk) {
     return perksString(uuid).contains(perk);
@@ -88,16 +83,18 @@ public class PerkHandler {
    * @param perk perk node (ex: "LOBBY.HAT.GIFT") as string
    */
   public static void removePerk(UUID uuid, String perk) {
-    if (PlayerHandler.playerExists(uuid)) {
-
-      if (perksString(uuid) != null) {
-        if (hasPerk(uuid, perk)) {
-          players.updateOne(
-                  Filters.eq("uuid", uuid.toString()),
-                  new Document("$set",
-                          new Document("perks", perksString(uuid).replace(perk + ",", ""))));
-        }
-      }
+    if (!PlayerHandler.playerExists(uuid)) {
+      return;
     }
+
+    if (perksString(uuid) == null) {
+      return;
+    }
+
+    if (hasPerk(uuid, perk)) {
+      players.updateOne(Filters.eq("uuid", uuid.toString()),
+          new Document("$set", new Document("perks", perksString(uuid).replace(perk + ",", ""))));
+    }
+
   }
 }

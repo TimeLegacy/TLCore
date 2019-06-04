@@ -17,21 +17,21 @@ public class MessageUtils {
   /**
    * No permission error message
    *
-   * @param p player
+   * @param player player
    */
-  public static void noPerm(Player p) {
-    sendMessage(p, noPermission, false);
+  public static void noPerm(Player player) {
+    sendMessage(player, noPermission, false);
   }
 
   /**
    * Send message
    *
-   * @param p player
+   * @param player player
    * @param message message
    * @param usePrefix to use prefix
    */
-  public static void sendMessage(Player p, String message, Boolean usePrefix) {
-    if (p == null || message == null) {
+  public static void sendMessage(Player player, String message, Boolean usePrefix) {
+    if (player == null || message == null) {
       return;
     }
 
@@ -39,48 +39,48 @@ public class MessageUtils {
       message = messagePrefix + message;
     }
 
-    p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+    player.sendMessage(colorize(message));
   }
 
   /**
    * Send message
    *
-   * @param p player
+   * @param player player
    * @param message message
    * @param prefix custom prefix
    */
-  public static void sendMessage(Player p, String message, String prefix) {
-    if (p == null || message == null) {
+  public static void sendMessage(Player player, String message, String prefix) {
+    if (player == null || message == null) {
       return;
     }
 
-    p.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + message));
+    player.sendMessage(colorize(prefix + message));
   }
 
   /**
    * Send message
    *
-   * @param p commandsender
+   * @param sender commandsender
    * @param message message
    * @param prefix prefix of message
    */
-  public static void sendMessage(CommandSender p, String message, String prefix) {
-    if (p == null || message == null) {
+  public static void sendMessage(CommandSender sender, String message, String prefix) {
+    if (sender == null || message == null) {
       return;
     }
 
-    p.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + message));
+    sender.sendMessage(colorize(prefix + message));
   }
 
   /**
    * Send message
    *
-   * @param p commandsender
+   * @param sender commandsender
    * @param message message
    * @param usePrefix to use normal prefix
    */
-  public static void sendMessage(CommandSender p, String message, Boolean usePrefix) {
-    if (p == null || message == null) {
+  public static void sendMessage(CommandSender sender, String message, Boolean usePrefix) {
+    if (sender == null || message == null) {
       return;
     }
 
@@ -88,14 +88,13 @@ public class MessageUtils {
       message = messagePrefix + message;
     }
 
-    p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+    sender.sendMessage(colorize(message));
   }
 
   /**
    * Colorize text
    *
    * @param input input to be colorized
-   * @return
    */
   public static String colorize(String input) {
     return ChatColor.translateAlternateColorCodes('&', input);
@@ -104,58 +103,57 @@ public class MessageUtils {
   /**
    * Help Menu
    *
-   * @param p player
+   * @param player player
    * @param command command
    * @param desc description
    */
-  public static void helpMenu(Player p, String command, String desc) {
-    sendMessage(p, "&f" + command, false);
-    sendMessage(p, " &7&o" + desc, false);
+  public static void helpMenu(Player player, String command, String desc) {
+    sendMessage(player, "&f" + command, false);
+    sendMessage(player, " &7&o" + desc, false);
   }
 
   /**
    * Help Menu
    *
-   * @param p commandsender
+   * @param sender commandsender
    * @param command command
    * @param desc description
    */
-  public static void helpMenu(CommandSender p, String command, String desc) {
-    sendMessage(p, "&f" + command, false);
-    sendMessage(p, " &7&o" + desc, false);
+  public static void helpMenu(CommandSender sender, String command, String desc) {
+    sendMessage(sender, "&f" + command, false);
+    sendMessage(sender, " &7&o" + desc, false);
   }
 
   /**
    * Help Menu
    *
-   * @param p commandsender
+   * @param sender commandsender
    * @param command command
    * @param desc description
    * @param prefix prefix for message
    */
-  public static void helpMenu(CommandSender p, String command, String desc, String prefix) {
-    sendMessage(p, "&f" + command, prefix);
-    sendMessage(p, " &7&o" + desc, prefix);
+  public static void helpMenu(CommandSender sender, String command, String desc, String prefix) {
+    sendMessage(sender, "&f" + command, prefix);
+    sendMessage(sender, " &7&o" + desc, prefix);
   }
 
   /**
    * Help Menu
    *
-   * @param p player
+   * @param player player
    * @param command command
    * @param desc description
    * @param prefix prefix for message
    */
-  public static void helpMenu(Player p, String command, String desc, String prefix) {
-    sendMessage(p, "&f" + command, prefix);
-    sendMessage(p, " &7&o" + desc, prefix);
+  public static void helpMenu(Player player, String command, String desc, String prefix) {
+    sendMessage(player, "&f" + command, prefix);
+    sendMessage(player, " &7&o" + desc, prefix);
   }
 
   /**
    * Help Menu
    *
    * @param text friendlyify text
-   * @return
    */
   public static String friendlyify(String text) {
     String n = text;

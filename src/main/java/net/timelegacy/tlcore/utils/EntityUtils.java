@@ -1,10 +1,9 @@
 package net.timelegacy.tlcore.utils;
 
+import java.util.HashSet;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
-
-import java.util.HashSet;
 
 public class EntityUtils {
 
@@ -12,8 +11,7 @@ public class EntityUtils {
    * Get nearby entities
    *
    * @param location location to have radius around
-   * @param radius   radius to check
-   * @return
+   * @param radius radius to check
    */
   public static Entity[] getNearbyEntities(Location location, int radius) {
     int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16)) / 16;
@@ -22,12 +20,8 @@ public class EntityUtils {
     for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
       for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
         int x = (int) location.getX(), y = (int) location.getY(), z = (int) location.getZ();
-        for (Entity e :
-                new Location(location.getWorld(), x + (chX * 16), y, z + (chZ * 16))
-                        .getChunk()
-                        .getEntities()) {
-          if (e.getLocation().distance(location) <= radius
-                  && e.getLocation().getBlock() != location.getBlock()) {
+        for (Entity e : new Location(location.getWorld(), x + (chX * 16), y, z + (chZ * 16)).getChunk().getEntities()) {
+          if (e.getLocation().distance(location) <= radius && e.getLocation().getBlock() != location.getBlock()) {
             radiusEntities.add(e);
           }
         }

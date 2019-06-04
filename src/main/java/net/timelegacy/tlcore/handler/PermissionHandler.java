@@ -1,36 +1,36 @@
 package net.timelegacy.tlcore.handler;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
-
-import java.util.HashMap;
-import java.util.UUID;
 
 public class PermissionHandler {
 
   private static TLCore plugin = TLCore.getPlugin();
 
-  private static HashMap<UUID, PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
+  private static Map<UUID, PermissionAttachment> perms = new HashMap<>();
 
   /**
    * Detach permissions from a player
    *
-   * @param p player
+   * @param player player
    */
-  public static void detachPermissions(Player p) {
-    p.removeAttachment(perms.get(p.getUniqueId()));
+  public static void detachPermissions(Player player) {
+    player.removeAttachment(perms.get(player.getUniqueId()));
   }
 
   /**
    * Remove permission from a player
    *
-   * @param p player
+   * @param player player
    * @param permission normal bukkit permission for plugins
    */
-  public static void removePermission(Player p, String permission) {
-    if (p.hasPermission(permission)) {
-      perms.get(p.getUniqueId()).unsetPermission(permission);
+  public static void removePermission(Player player, String permission) {
+    if (player.hasPermission(permission)) {
+      perms.get(player.getUniqueId()).unsetPermission(permission);
     }
   }
 
@@ -44,21 +44,21 @@ public class PermissionHandler {
   /**
    * Attach the permissions to a player
    *
-   * @param p player
+   * @param player player
    */
-  public static void attachPermissions(Player p) {
-    PermissionAttachment attachment = p.addAttachment(plugin);
-    perms.put(p.getUniqueId(), attachment);
+  public static void attachPermissions(Player player) {
+    PermissionAttachment attachment = player.addAttachment(plugin);
+    perms.put(player.getUniqueId(), attachment);
   }
 
   /**
    * Add a permission from a player
    *
-   * @param p          player
+   * @param player player
    * @param permission normal bukkit permission for plugins
    */
-  public static void addPermission(Player p, String permission) {
-    PermissionAttachment pperms = perms.get(p.getUniqueId());
+  public static void addPermission(Player player, String permission) {
+    PermissionAttachment pperms = perms.get(player.getUniqueId());
     pperms.setPermission(permission, true);
   }
 }
