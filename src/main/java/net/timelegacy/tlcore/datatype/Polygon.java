@@ -1,7 +1,5 @@
 package net.timelegacy.tlcore.datatype;
 
-import org.bukkit.Bukkit;
-
 import java.util.ArrayList;
 
 public class Polygon {
@@ -49,13 +47,7 @@ public class Polygon {
     }
 
     private void addPartMath(AABB3D poly) {
-//        if (AABB3D.inside(poly, edgeShell)) {
-//            polyParts.add(poly);
-//        } else {
-            polyParts.add(poly);
+        polyParts.add(poly);
         edgeShell = AABB3D.expand(edgeShell, poly);
-        Bukkit.getLogger().info(edgeShell.toString());
-//        }
-
     }
 }
