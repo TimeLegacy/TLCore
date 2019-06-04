@@ -54,7 +54,7 @@ public class ServerHandler {
     if (!serverExists()) {
 
       Document doc =
-              new Document("uuid", getServerUUID())
+              new Document("uuid", getServerUUID().toString())
                       .append("ip", Bukkit.getServer().getIp())
                       .append("port", Bukkit.getServer().getPort())
                       .append("type", "NONE")
