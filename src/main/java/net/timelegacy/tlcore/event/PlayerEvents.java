@@ -71,8 +71,8 @@ public class PlayerEvents implements Listener {
     PlayerHandler.updateOnline(player.getUniqueId(), false);
     for (Player p : Bukkit.getOnlinePlayers()) {
       p.sendMessage("§7§l(§c-§7§l) "
-          + RankHandler.chatColors(p.getUniqueId())
-          .replace("%username% &8%arrows%", p.getName())
+          + RankHandler.chatColors(player.getUniqueId())
+          .replace("%username% &8%arrows%", player.getName())
           .replace("&", "§")); // TODO Cleanup
     }
   }
