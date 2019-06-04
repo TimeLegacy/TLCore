@@ -156,7 +156,7 @@ public class ServerHandler {
    */
   public static boolean serverExists() {
     FindIterable<Document> iterable =
-            servers.find(new Document("uuid", getServerUUID()));
+            servers.find(new Document("uuid", getServerUUID().toString()));
     return iterable.first() != null;
   }
 }
