@@ -6,6 +6,7 @@ import net.timelegacy.tlcore.handler.BanHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,10 +27,14 @@ public class PlayerEvents implements Listener {
   public void PlayerJoinEvent(PlayerJoinEvent event) {
     Player player = event.getPlayer();
 
-    player.sendMessage("");
-    player.sendMessage("");
-
     event.setJoinMessage(null);
+
+    for (Player p : Bukkit.getOnlinePlayers()) {
+      p.sendMessage("§7§l(§a+§7§l) "
+          + RankHandler.chatColors(player.getUniqueId())
+          .replace("%username% &8%arrows%", player.getName())
+          .replace("&", "§")); // TODO Cleanup
+    }
 
     plugin.flySpeed.remove(player.getUniqueId());
 
@@ -64,6 +69,12 @@ public class PlayerEvents implements Listener {
     event.setQuitMessage(null);
 
     PlayerHandler.updateOnline(player.getUniqueId(), false);
+    for (Player p : Bukkit.getOnlinePlayers()) {
+      p.sendMessage("§7§l(§c-§7§l) "
+          + RankHandler.chatColors(p.getUniqueId())
+          .replace("%username% &8%arrows%", p.getName())
+          .replace("&", "§")); // TODO Cleanup
+    }
   }
 
   @EventHandler
