@@ -1,5 +1,6 @@
 package net.timelegacy.tlcore.event;
 
+import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.BanHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
@@ -16,8 +17,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.potion.PotionEffect;
 
-import java.util.UUID;
-
 @SuppressWarnings("deprecation")
 public class PlayerEvents implements Listener {
 
@@ -25,88 +24,86 @@ public class PlayerEvents implements Listener {
 
   @EventHandler
   public void PlayerJoinEvent(PlayerJoinEvent event) {
-    Player p = event.getPlayer();
+    Player player = event.getPlayer();
 
-    p.sendMessage("");
-    p.sendMessage("");
+    player.sendMessage("");
+    player.sendMessage("");
 
     event.setJoinMessage(null);
 
-    plugin.flySpeed.remove(p.getUniqueId());
+    plugin.flySpeed.remove(player.getUniqueId());
 
-    p.setFlying(false);
-    p.setFlySpeed(0.1f);
-    p.setAllowFlight(false);
+    player.setFlying(false);
+    player.setFlySpeed(0.1f);
+    player.setAllowFlight(false);
 
-    PlayerHandler.updateUsername(p);
+    PlayerHandler.updateUsername(player);
 
-    PlayerHandler.createPlayer(p);
-    RankHandler.setTabColors(p);
+    PlayerHandler.createPlayer(player);
+    RankHandler.setTabColors(player);
 
-    PlayerHandler.updateIP(p);
-    PlayerHandler.updateLastConnection(p.getUniqueId());
-    PlayerHandler.updateOnline(p.getUniqueId(), true);
+    PlayerHandler.updateIP(player);
+    PlayerHandler.updateLastConnection(player.getUniqueId());
+    PlayerHandler.updateOnline(player.getUniqueId(), true);
   }
 
   @EventHandler
   public void PlayerQuitEvent(PlayerQuitEvent event) {
-    Player p = event.getPlayer();
+    Player player = event.getPlayer();
 
-    p.getInventory().clear();
+    player.getInventory().clear();
 
-    for (PotionEffect effect : p.getActivePotionEffects()) {
-      p.removePotionEffect(effect.getType());
+    for (PotionEffect effect : player.getActivePotionEffects()) {
+      player.removePotionEffect(effect.getType());
     }
 
-    p.setHealth(20D);
-    p.setFoodLevel(20);
-    p.setFlying(false);
+    player.setHealth(20D);
+    player.setFoodLevel(20);
+    player.setFlying(false);
 
     event.setQuitMessage(null);
 
-    PlayerHandler.updateOnline(p.getUniqueId(), false);
+    PlayerHandler.updateOnline(player.getUniqueId(), false);
   }
 
   @EventHandler
-  public void onResourcePackStatus(PlayerResourcePackStatusEvent e) {
-    Player p = e.getPlayer();
+  public void onResourcePackStatus(PlayerResourcePackStatusEvent event) {
+    Player player = event.getPlayer();
 
-    if (e.getStatus() == PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED) {
-      MessageUtils.sendMessage(
-          p, MessageUtils.SUCCESS_COLOR + "Successful loaded the resource pack.", false);
-    } else if (e.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD) {
-
-      MessageUtils.sendMessage(
-          p, MessageUtils.ERROR_COLOR + "Error. Failed download resource pack.", false);
+    if (event.getStatus() == PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED) {
+      MessageUtils.sendMessage(player, MessageUtils.SUCCESS_COLOR + "Successful loaded the resource pack.", false);
+    } else if (event.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD) {
+      MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR + "Error. Failed download resource pack.", false);
     }
   }
 
   @EventHandler
-  public void onPreJoin(PlayerPreLoginEvent e) {
-    UUID p = e.getUniqueId();
+  public void onPreJoin(PlayerPreLoginEvent event) {
+    UUID uuid = event.getUniqueId();
 
-    if (PlayerHandler.playerExists(p)) {
-      if (BanHandler.isBanned(p)) {
-        if (!BanHandler.getBanExpire(p).equalsIgnoreCase("false")) {
-          e.disallow(
-              Result.KICK_BANNED,
-              ChatColor.translateAlternateColorCodes(
-                  '&',
-                  MessageUtils.messagePrefix
-                      + "&4You have been banned. &cReason: &f&o"
-                      + BanHandler.getBanReason(p)
-                      + " &cExpires: &f&o"
-                      + BanHandler.getBanExpire(p)));
-        } else {
-          e.disallow(
-              Result.KICK_BANNED,
-              ChatColor.translateAlternateColorCodes(
-                  '&',
-                  MessageUtils.messagePrefix
-                      + "&4You have been banned. &cReason: &f&o"
-                      + BanHandler.getBanReason(p)));
-        }
-      }
+    if (!PlayerHandler.playerExists(uuid)) {
+      return;
     }
+
+    if (!BanHandler.isBanned(uuid)) {
+      return;
+    }
+
+    if (BanHandler.getBanExpire(uuid).equalsIgnoreCase("false")) {
+      event.disallow(Result.KICK_BANNED, ChatColor.translateAlternateColorCodes('&',
+          MessageUtils.messagePrefix
+              + "&4You have been banned. &cReason: &f&o"
+              + BanHandler.getBanReason(uuid)
+              + " &cExpires: &f&o"
+              + BanHandler.getBanExpire(uuid)));
+      return;
+    }
+
+    event.disallow(Result.KICK_BANNED, ChatColor.translateAlternateColorCodes('&',
+        MessageUtils.messagePrefix
+            + "&4You have been banned. &cReason: &f&o"
+            + BanHandler.getBanReason(uuid)));
+
+
   }
 }

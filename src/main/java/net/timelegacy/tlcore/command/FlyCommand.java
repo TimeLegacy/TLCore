@@ -16,93 +16,92 @@ public class FlyCommand implements CommandExecutor {
 
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-    if (sender instanceof Player) {
-      final Player p = (Player) sender;
-      Rank r = RankHandler.getRank(p.getUniqueId());
-      if (r.getPriority() >= 7) {
+    if (!(sender instanceof Player)) {
+      return true;
+    }
 
-        if (plugin.flySpeed.contains(p.getUniqueId())) {
-          plugin.flySpeed.remove(p.getUniqueId());
-          p.setFlying(false);
-          p.setFlySpeed(0.1f);
-          p.setAllowFlight(false);
-          MessageUtils.sendMessage(
-              p, MessageUtils.ERROR_COLOR + "Flymode disabled.", true);
-        } else {
-          if (args.length == 0) {
-            MessageUtils.sendMessage(
-                p, MessageUtils.SUCCESS_COLOR + "Flymode enabled at default speed.", true);
-            p.setAllowFlight(true);
-            p.setFlying(true);
-            p.setAllowFlight(true);
-            plugin.flySpeed.add(p.getUniqueId());
-          } else {
-            String posnum = args[0];
+    Player player = (Player) sender;
+    Rank rank = RankHandler.getRank(player.getUniqueId());
 
-            int speed = 1;
+    if (rank.getPriority() < 7) {
+      MessageUtils.noPerm(player);
+      return true;
+    }
 
-            try {
-              speed = Integer.parseInt(posnum);
+    if (plugin.flySpeed.contains(player.getUniqueId())) {
+      plugin.flySpeed.remove(player.getUniqueId());
+      player.setFlying(false);
+      player.setFlySpeed(0.1f);
+      player.setAllowFlight(false);
+      MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR + "Flymode disabled.", true);
+      return true;
+    }
 
-              if (speed < 1 || speed > 10) {
-                MessageUtils.sendMessage(
-                    p, MessageUtils.ERROR_COLOR + "Usage: /fly [speed (1-10)]", true);
-              } else {
-                if (speed == 1) {
-                  p.setFlySpeed(0.1f);
-                }
-                if (speed == 2) {
-                  p.setFlySpeed(0.2f);
-                }
-                if (speed == 3) {
-                  p.setFlySpeed(0.3f);
-                }
-                if (speed == 4) {
-                  p.setFlySpeed(0.4f);
-                }
-                if (speed == 5) {
-                  p.setFlySpeed(0.5f);
-                }
-                if (speed == 6) {
-                  p.setFlySpeed(0.6f);
-                }
-                if (speed == 7) {
-                  p.setFlySpeed(0.7f);
-                }
-                if (speed == 8) {
-                  p.setFlySpeed(0.8f);
-                }
-                if (speed == 9) {
-                  p.setFlySpeed(0.9f);
-                }
-                if (speed == 10) {
-                  p.setFlySpeed(1.0f);
-                }
+    if (args.length == 0) {
+      MessageUtils.sendMessage(player, MessageUtils.SUCCESS_COLOR + "Flymode enabled at default speed.", true);
+      player.setAllowFlight(true);
+      player.setFlying(true);
+      player.setAllowFlight(true);
+      plugin.flySpeed.add(player.getUniqueId());
+      return true;
+    }
+    
+    String posnum = args[0];
 
-                MessageUtils.sendMessage(
-                    p,
-                    MessageUtils.MAIN_COLOR
-                        + "Flymode enabled at speed "
-                        + MessageUtils.SECOND_COLOR
-                        + speed
-                        + MessageUtils.MAIN_COLOR
-                        + ".",
-                    true);
-                p.setAllowFlight(true);
-                p.setFlying(true);
-                p.setAllowFlight(true);
-                plugin.flySpeed.add(p.getUniqueId());
-              }
-            } catch (NumberFormatException ex) {
-              MessageUtils.sendMessage(
-                  p, MessageUtils.ERROR_COLOR + "Usage: /fly [speed (1-10)]", true);
-              return true;
-            }
-          }
-        }
+    int speed;
+
+    try {
+      speed = Integer.parseInt(posnum);
+
+      if (speed < 1 || speed > 10) {
+        MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR + "Usage: /fly [speed (1-10)]", true);
       } else {
-        MessageUtils.noPerm(p);
+        if (speed == 1) {
+          player.setFlySpeed(0.1f);
+        }
+        if (speed == 2) {
+          player.setFlySpeed(0.2f);
+        }
+        if (speed == 3) {
+          player.setFlySpeed(0.3f);
+        }
+        if (speed == 4) {
+          player.setFlySpeed(0.4f);
+        }
+        if (speed == 5) {
+          player.setFlySpeed(0.5f);
+        }
+        if (speed == 6) {
+          player.setFlySpeed(0.6f);
+        }
+        if (speed == 7) {
+          player.setFlySpeed(0.7f);
+        }
+        if (speed == 8) {
+          player.setFlySpeed(0.8f);
+        }
+        if (speed == 9) {
+          player.setFlySpeed(0.9f);
+        }
+        if (speed == 10) {
+          player.setFlySpeed(1.0f);
+        }
+
+        MessageUtils.sendMessage(player, MessageUtils.MAIN_COLOR
+                + "Flymode enabled at speed "
+                + MessageUtils.SECOND_COLOR
+                + speed
+                + MessageUtils.MAIN_COLOR
+                + ".",
+            true);
+        player.setAllowFlight(true);
+        player.setFlying(true);
+        player.setAllowFlight(true);
+        plugin.flySpeed.add(player.getUniqueId());
       }
+    } catch (NumberFormatException ex) {
+      MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR + "Usage: /fly [speed (1-10)]", true);
+      return true;
     }
 
     return false;

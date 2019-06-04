@@ -15,22 +15,16 @@ public class MongoDB {
    * @param uri uri of server
    */
   public static boolean connect(String uri) {
-
     mongoClient = MongoClients.create(uri);
     mongoDatabase = mongoClient.getDatabase("mineaqua");
-
     return true;
   }
 
   /**
    * Disconnect from mongodb
-   *
-   * @return
    */
   public static boolean disconnect() {
-
     mongoClient.close();
-
     return true;
   }
 }

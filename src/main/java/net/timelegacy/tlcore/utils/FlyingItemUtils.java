@@ -40,6 +40,7 @@ public class FlyingItemUtils {
       this.location.setY(this.location.getY() + this.height);
       h = true;
     }
+
     armorstand = this.location.getWorld().spawn(this.location, ArmorStand.class);
     armorstand.setGravity(false);
     armorstand.setVisible(false);
@@ -49,6 +50,7 @@ public class FlyingItemUtils {
       i.setCustomName(this.text);
       i.setCustomNameVisible(true);
     }
+
     armorstand.setPassenger(i);
   }
 

@@ -22,7 +22,7 @@ public class FilterEvents implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void commandPreProcessEvent(PlayerCommandPreprocessEvent event) {
-    Player p = event.getPlayer();
+    Player player = event.getPlayer();
 
     if (event.getMessage().toLowerCase().contains("/pl")
         || event.getMessage().toLowerCase().contains("/plugins")
@@ -31,60 +31,56 @@ public class FilterEvents implements Listener {
         || event.getMessage().toLowerCase().contains("/bukkit:")) {
       event.setCancelled(true);
 
-      Rank r = RankHandler.getRank(p.getUniqueId());
+      Rank rank = RankHandler.getRank(player.getUniqueId());
 
-      if (r.getPriority() >= 9) {
-        MessageUtils.sendMessage(p, MessageUtils.MAIN_COLOR + "&lPlugins", false);
-        for (Plugin pp : Bukkit.getPluginManager().getPlugins()) {
-          MessageUtils.sendMessage(
-              p,
-              MessageUtils.SECOND_COLOR
-                  + pp.getName()
-                  + " v"
-                  + pp.getDescription().getVersion(),
-              false);
-        }
-      } else {
-        MessageUtils.noPerm(p);
+      if (rank.getPriority() < 9) {
+        MessageUtils.noPerm(player);
+        return;
+      }
+
+      MessageUtils.sendMessage(player, MessageUtils.MAIN_COLOR + "&lPlugins", false);
+      for (Plugin pp : Bukkit.getPluginManager().getPlugins()) {
+        MessageUtils.sendMessage(player,
+            MessageUtils.SECOND_COLOR
+                + pp.getName()
+                + " v"
+                + pp.getDescription().getVersion(),
+            false);
       }
     } else if (event.getMessage().toLowerCase().startsWith("/me ")) {
       event.setCancelled(true);
-      MessageUtils.noPerm(p);
+      MessageUtils.noPerm(player);
     } else if (event.getMessage().toLowerCase().equals("/me")) {
       event.setCancelled(true);
-      MessageUtils.noPerm(p);
+      MessageUtils.noPerm(player);
     }
   }
 
   @EventHandler
-  public void onPlayerChat(AsyncPlayerChatEvent e) {
-    Player p = e.getPlayer();
+  public void onPlayerChat(AsyncPlayerChatEvent event) {
+    Player player = event.getPlayer();
 
-    e.setCancelled(true);
+    event.setCancelled(true);
 
-    String message =
-        ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', e.getMessage()));
+    String message = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
 
-    String username = p.getName();
+    String username = player.getName();
     if (username.equalsIgnoreCase("Chriskadetv")) {
       username = "Chisrkdaevt";
     } else if (username.equalsIgnoreCase("Verade")) {
       username = "Vredae";
     }
 
-    String format =
-        MessageUtils.colorize(
-            "&r"
-                + RankHandler
-                    .chatColors(p.getUniqueId())
-                .replace("%username%", username)
-                .replace("%line%", "\u2758 ")
-                .replace("%arrows%", "\u00BB")
-                + " &r");
+    String format = MessageUtils.colorize("&r" + RankHandler
+        .chatColors(player.getUniqueId())
+        .replace("%username%", username)
+        .replace("%line%", "\u2758 ")
+        .replace("%arrows%", "\u00BB")
+        + " &r");
 
-    System.out.println("[CHAT] " + p.getUniqueId() + " > " + message);
+    System.out.println("[CHAT] " + player.getUniqueId() + " > " + message);
 
-    if (!MuteHandler.isMuted(p.getUniqueId())) {
+    if (!MuteHandler.isMuted(player.getUniqueId())) {
 
       for (Player sp : Bukkit.getOnlinePlayers()) {
         //TextComponent textComponent = new TextComponent(core.perkHandler.getPerks(sp).contains("CHAT.MATURE") ? message : cleanMessage);
@@ -95,17 +91,17 @@ public class FilterEvents implements Listener {
                     MessageUtils.MAIN_COLOR
                         + "&oCoins: "
                         + MessageUtils.SECOND_COLOR
-                        + core.coinHandler.getBalance(p.getUniqueId())),
+                        + core.coinHandler.getBalance(player.getUniqueId())),
                 MessageUtils.c(
                     MessageUtils.MAIN_COLOR
                         + "&oKills: "
                         + MessageUtils.SECOND_COLOR
-                        + core.statsHandler.getKills(p)),
+                        + core.statsHandler.getKills(player)),
                 MessageUtils.c(
                     MessageUtils.MAIN_COLOR
                         + "&oWins: "
                         + MessageUtils.SECOND_COLOR
-                        + core.statsHandler.getWins(p)))
+                        + core.statsHandler.getWins(player)))
             .then();
         msg.send(sp);*/
 
@@ -116,22 +112,19 @@ public class FilterEvents implements Listener {
         sp.sendMessage(format + message);
       }
     } else {
-      if (!(MuteHandler.getMuteExpire(p.getUniqueId()).equalsIgnoreCase("false")
-              || MuteHandler.getMuteExpire(p.getUniqueId()).equalsIgnoreCase("true"))) {
+      if (!(MuteHandler.getMuteExpire(player.getUniqueId()).equalsIgnoreCase("false")
+          || MuteHandler.getMuteExpire(player.getUniqueId()).equalsIgnoreCase("true"))) {
 
-        MessageUtils.sendMessage(
-            p,
+        MessageUtils.sendMessage(player,
             "&4You have been muted. &cReason: &f&o"
-                    + MuteHandler.getMuteReason(p.getUniqueId())
+                + MuteHandler.getMuteReason(player.getUniqueId())
                 + " &cExpire: &f&o"
-                    + MuteHandler.getMuteExpire(p.getUniqueId()),
+                + MuteHandler.getMuteExpire(player.getUniqueId()),
             true);
       } else {
 
-        MessageUtils.sendMessage(
-            p,
-                "&4You have been muted. &cReason: &f&o" + MuteHandler.getMuteReason(p.getUniqueId()),
-            true);
+        MessageUtils.sendMessage(player,
+            "&4You have been muted. &cReason: &f&o" + MuteHandler.getMuteReason(player.getUniqueId()), true);
       }
     }
   }
@@ -140,18 +133,15 @@ public class FilterEvents implements Listener {
     // https://dec0de.xyz/api/swearfilter/?message=fuck
 
     try {
-
       //TODO fix
-
-      String response =
-          WebRequestUtils.executePost(
-              "http://nossl.dec0de.xyz/api/swearfilter/?message=" + message.replace(" ", "%20"),
-              "");
+      String response = WebRequestUtils.executePost(
+          "http://nossl.dec0de.xyz/api/swearfilter/?message=" + message.replace(" ", "%20"), "");
       return response;
 
     } catch (Exception e) {
-      System.out.println(e);
+      e.printStackTrace();
     }
+
     return message;
   }
 

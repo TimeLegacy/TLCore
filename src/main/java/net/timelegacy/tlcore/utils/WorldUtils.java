@@ -1,5 +1,17 @@
 package net.timelegacy.tlcore.utils;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import net.timelegacy.tlcore.TLCore;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -8,14 +20,6 @@ import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class WorldUtils {
 
@@ -30,6 +34,7 @@ public class WorldUtils {
     if (Bukkit.getWorld(world) != null) {
       System.out.println("Couldn't load world ''" + world + "'' since it all ready exists");
     }
+
     Bukkit.createWorld(new WorldCreator(world));
   }
 
@@ -44,6 +49,7 @@ public class WorldUtils {
       for (Player p : w.getPlayers()) {
         p.teleport(Bukkit.getWorld("world").getSpawnLocation());
       }
+
       Bukkit.unloadWorld(w, true);
     }
   }
@@ -68,53 +74,48 @@ public class WorldUtils {
    * Delete world by file
    *
    * @param path path to world
-   * @return
    */
   public static boolean deleteWorld(final File path) {
-    Bukkit.getScheduler()
-            .runTaskAsynchronously(
-                    plugin,
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        if (path.exists()) {
-                          File[] files = path.listFiles();
-                          assert files != null;
-                          for (File file : files) {
-                            if (file.isDirectory()) {
-                              deleteWorld(file);
-                            } else {
-                              file.delete();
-                            }
-                          }
-                        }
-                      }
-                    });
+    Bukkit.getScheduler().runTaskAsynchronously(plugin,
+        new Runnable() {
+          @Override
+          public void run() {
+            if (path.exists()) {
+              File[] files = path.listFiles();
+              assert files != null;
+              for (File file : files) {
+                if (file.isDirectory()) {
+                  deleteWorld(file);
+                } else {
+                  file.delete();
+                }
+              }
+            }
+          }
+        });
     return (path.delete());
   }
 
   /**
    * Circle as locations
    *
-   * @param loc    location
-   * @param r      radius
-   * @param h      height
+   * @param loc location
+   * @param r radius
+   * @param h height
    * @param hollow hollow
    * @param sphere sphere
    * @param plus_y plus y
-   * @return
    */
-  public static List<Location> circle(
-          Location loc, Integer r, Integer h, Boolean hollow, Boolean sphere, int plus_y) {
-    List<Location> circleblocks = new ArrayList<Location>();
+  public static List<Location> circle(Location loc, Integer r, Integer h, Boolean hollow, Boolean sphere, int plus_y) {
+    List<Location> circleblocks = new ArrayList<>();
     int cx = loc.getBlockX();
     int cy = loc.getBlockY();
     int cz = loc.getBlockZ();
+
     for (int x = cx - r; x <= cx + r; x++) {
       for (int z = cz - r; z <= cz + r; z++) {
         for (int y = (sphere ? cy - r : cy); y < (sphere ? cy + r : cy + h); y++) {
-          double dist =
-                  (cx - x) * (cx - x) + (cz - z) * (cz - z) + (sphere ? (cy - y) * (cy - y) : 0);
+          double dist = (cx - x) * (cx - x) + (cz - z) * (cz - z) + (sphere ? (cy - y) * (cy - y) : 0);
           if (dist < r * r && !(hollow && dist < (r - 1) * (r - 1))) {
             Location l = new Location(loc.getWorld(), x, y + plus_y, z);
             circleblocks.add(l);
@@ -132,59 +133,53 @@ public class WorldUtils {
    * @param config config file
    * @param world bukkit world
    * @param key config key
-   * @return
    */
-
   public static Location locationFromConfig(ConfigurationSection config, World world, String key) {
-    return new Location(
-            world,
-            config.getDouble(key + ".x"),
-            config.getDouble(key + ".y"),
-            config.getDouble(key + ".z"),
-            (float) config.getDouble(key + ".yaw", 0),
-            (float) config.getDouble(key + ".pitch", 0));
+    return new Location(world,
+        config.getDouble(key + ".x"),
+        config.getDouble(key + ".y"),
+        config.getDouble(key + ".z"),
+        (float) config.getDouble(key + ".yaw", 0),
+        (float) config.getDouble(key + ".pitch", 0));
   }
 
   private static void downloadFile(final String fileURL, final String fileName, final String saveDir)
-          throws IOException {
+      throws IOException {
     final URL url = new URL(fileURL);
-    Bukkit.getScheduler()
-            .runTaskAsynchronously(
-                    plugin,
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        HttpURLConnection httpConn = null;
-                        try {
-                          httpConn = (HttpURLConnection) url.openConnection();
-                          int responseCode = httpConn.getResponseCode();
-                          if (responseCode == 200) {
-                            InputStream inputStream = httpConn.getInputStream();
-                            String saveFilePath = saveDir + File.separator + fileName;
-                            FileOutputStream outputStream = new FileOutputStream(saveFilePath);
-                            byte[] buffer = new byte[4096];
+    Bukkit.getScheduler().runTaskAsynchronously(plugin,
+        new Runnable() {
+          @Override
+          public void run() {
+            HttpURLConnection httpConn = null;
+            try {
+              httpConn = (HttpURLConnection) url.openConnection();
+              int responseCode = httpConn.getResponseCode();
+              if (responseCode == 200) {
+                InputStream inputStream = httpConn.getInputStream();
+                String saveFilePath = saveDir + File.separator + fileName;
+                FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+                byte[] buffer = new byte[4096];
 
-                            int bytesRead1;
-                            while ((bytesRead1 = inputStream.read(buffer)) != -1) {
-                              outputStream.write(buffer, 0, bytesRead1);
-                            }
+                int bytesRead1;
+                while ((bytesRead1 = inputStream.read(buffer)) != -1) {
+                  outputStream.write(buffer, 0, bytesRead1);
+                }
 
-                            outputStream.close();
-                            inputStream.close();
-                          } else {
-                            System.out.println("Failed to download map, returned ERROR: " + responseCode);
-                          }
-                        } catch (IOException e) {
-                          e.printStackTrace();
-                        }
-                        assert httpConn != null;
-                        httpConn.disconnect();
-                      }
-                    });
+                outputStream.close();
+                inputStream.close();
+              } else {
+                System.out.println("Failed to download map, returned ERROR: " + responseCode);
+              }
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+            assert httpConn != null;
+            httpConn.disconnect();
+          }
+        });
   }
 
   public static void downloadMap(String link, String zip_name, String world_name) {
-
     if (Bukkit.getWorld(world_name) != null) {
       deleteWorld(world_name);
     }
@@ -201,7 +196,7 @@ public class WorldUtils {
     }
 
     loadWorld(world);
-    (new File(file_path)).delete();
+    new File(file_path).delete();
     System.out.println("DOWNLOADED map `" + world + "`.");
 
     for (Entity entity : Bukkit.getWorld(world).getEntities()) {
@@ -243,6 +238,7 @@ public class WorldUtils {
     while ((read1 = zipIn.read(bytesIn)) != -1) {
       bos.write(bytesIn, 0, read1);
     }
+
     bos.close();
   }
 }

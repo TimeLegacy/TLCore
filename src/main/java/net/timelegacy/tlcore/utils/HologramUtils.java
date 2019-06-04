@@ -10,7 +10,7 @@ public class HologramUtils {
   /**
    * Create a hologram
    *
-   * @param l    location to create
+   * @param l location to create
    * @param text text of hologram
    */
   public static void createHologram(Location l, String text) {
@@ -24,8 +24,6 @@ public class HologramUtils {
 
   /**
    * Remove all holograms in the world
-   *
-   * @param w
    */
   public static void removeAllHolograms(World w) {
     for (Entity e : w.getEntities()) {

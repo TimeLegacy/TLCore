@@ -1,20 +1,13 @@
 package net.timelegacy.tlcore.utils;
 
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffectType;
 
 public class PotionUtils {
 
   /**
-   * Clear all potions
-   *
-   * @param p
+   * Clear all potions that a player has.
    */
-  public static void clearPotions(Player p) {
-    for (PotionEffectType e : PotionEffectType.values()) {
-      if (e != null && p.hasPotionEffect(e)) {
-        p.removePotionEffect(e);
-      }
-    }
+  public static void clearPotions(Player player) {
+    player.getActivePotionEffects().clear();
   }
 }

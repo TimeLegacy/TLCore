@@ -14,47 +14,42 @@ public class TeleportHereCommand implements CommandExecutor {
 
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-    if (sender instanceof Player) {
-      final Player p = (Player) sender;
+    if (!(sender instanceof Player)) {
+      return true;
+    }
 
-      Rank r = RankHandler.getRank(p.getUniqueId());
-      if (r.getPriority() >= 9) {
+    Player player = (Player) sender;
+    Rank rank = RankHandler.getRank(player.getUniqueId());
 
-        if (args.length == 0) {
-          MessageUtils.sendMessage(
-              p, MessageUtils.ERROR_COLOR + "Usage: /tphere [player]", true);
-          return true;
-        }
+    if (rank.getPriority() < 9) {
+      MessageUtils.noPerm(player);
+      return true;
+    }
 
-        if (args.length == 1) {
-          Player t = Bukkit.getPlayer(args[0]);
+    if (args.length == 0) {
+      MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR + "Usage: /tphere [player]", true);
+      return true;
+    }
 
-          if (t == null) {
-            MessageUtils.sendMessage(
-                p, MessageUtils.ERROR_COLOR + "Player not found.", true);
-          } else {
-            t.teleport(p);
-            MessageUtils.sendMessage(
-                p,
-                MessageUtils.MAIN_COLOR
-                    + "Summoning "
-                    + MessageUtils.SECOND_COLOR
-                    + t.getName(),
-                true);
-          }
+    if (args.length == 1) {
+      Player target = Bukkit.getPlayer(args[0]);
 
-          return true;
-        }
-
-        MessageUtils.sendMessage(
-            p, MessageUtils.ERROR_COLOR + "Usage: /tphere [player]", true);
+      if (target == null) {
+        MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR + "Player not found.", true);
       } else {
-        MessageUtils.noPerm(p);
+        target.teleport(player);
+        MessageUtils.sendMessage(player,
+            MessageUtils.MAIN_COLOR
+                + "Summoning "
+                + MessageUtils.SECOND_COLOR
+                + target.getName(),
+            true);
       }
 
       return true;
-    } else {
-      return false;
     }
+
+    MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR + "Usage: /tphere [player]", true);
+    return true;
   }
 }

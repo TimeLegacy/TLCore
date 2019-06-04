@@ -12,47 +12,44 @@ public class CoinsCommand implements CommandExecutor {
 
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-    if (sender instanceof Player) {
-      final Player p = (Player) sender;
-
-      int coins = 0;
-      coins = CoinHandler.getBalance(p.getUniqueId());
-
-      if (coins == 1) {
-        MessageUtils.sendMessage(
-            p,
-            MessageUtils.MAIN_COLOR
-                + "You have "
-                + MessageUtils.SECOND_COLOR
-                + coins
-                + MessageUtils.MAIN_COLOR
-                + " coin.",
-            true);
-      } else if (coins > 1) {
-        MessageUtils.sendMessage(
-            p,
-            MessageUtils.MAIN_COLOR
-                + "You have "
-                + MessageUtils.SECOND_COLOR
-                + coins
-                + MessageUtils.MAIN_COLOR
-                + " coins.",
-            true);
-      } else if (coins < 1) {
-        MessageUtils.sendMessage(
-            p,
-            MessageUtils.MAIN_COLOR
-                + "You have "
-                + MessageUtils.SECOND_COLOR
-                + coins
-                + MessageUtils.MAIN_COLOR
-                + " coins.",
-            true);
-      }
-
+    if (!(sender instanceof Player)) {
       return true;
-    } else {
-      return false;
     }
+
+    Player player = (Player) sender;
+
+    int coins = CoinHandler.getBalance(player.getUniqueId());
+
+    if (coins == 1) {
+      MessageUtils.sendMessage(player,
+          MessageUtils.MAIN_COLOR
+              + "You have "
+              + MessageUtils.SECOND_COLOR
+              + coins
+              + MessageUtils.MAIN_COLOR
+              + " coin.",
+          true);
+    } else if (coins > 1) {
+      MessageUtils.sendMessage(player,
+          MessageUtils.MAIN_COLOR
+              + "You have "
+              + MessageUtils.SECOND_COLOR
+              + coins
+              + MessageUtils.MAIN_COLOR
+              + " coins.",
+          true);
+    } else if (coins < 1) {
+      MessageUtils.sendMessage(player,
+          MessageUtils.MAIN_COLOR
+              + "You have "
+              + MessageUtils.SECOND_COLOR
+              + coins
+              + MessageUtils.MAIN_COLOR
+              + " coins.",
+          true);
+    }
+
+    return true;
+
   }
 }

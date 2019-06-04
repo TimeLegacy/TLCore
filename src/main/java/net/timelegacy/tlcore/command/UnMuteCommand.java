@@ -1,5 +1,6 @@
 package net.timelegacy.tlcore.command;
 
+import java.util.UUID;
 import net.timelegacy.tlcore.datatype.Punishment;
 import net.timelegacy.tlcore.datatype.Rank;
 import net.timelegacy.tlcore.handler.MuteHandler;
@@ -12,54 +13,50 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
-import java.util.UUID;
-
 public class UnMuteCommand implements CommandExecutor {
 
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-
-    if (sender instanceof Player) {
-
-      Player p = (Player) sender;
-
-      Rank r = RankHandler.getRank(p.getUniqueId());
-      if (r.getPriority() >= 8) {
-
-        if (args.length == 0) {
-          MessageUtils.sendMessage(
-              p, MessageUtils.ERROR_COLOR + "Usage: /unmute [player]", true);
-        } else if (args.length == 1) {
-
-          if (PlayerHandler.playerExists(args[0])) {
-            UUID uuid = PlayerHandler.getUUID(args[0]);
-
-            if (MuteHandler.isMuted(uuid)) {
-
-              MuteHandler.setMuted(uuid, "false", Punishment.NULL, p.getUniqueId());
-              MessageUtils.sendMessage(
-                  sender,
-                  MessageUtils.SECOND_COLOR
-                      + args[0]
-                      + MessageUtils.MAIN_COLOR
-                      + " is now unmuted.",
-                  true);
-            } else {
-              MessageUtils.sendMessage(
-                  sender, MessageUtils.ERROR_COLOR + "Player isn't muted.", true);
-            }
-          } else {
-            MessageUtils.sendMessage(
-                sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
-          }
-        } else {
-          MessageUtils.sendMessage(
-              p, MessageUtils.ERROR_COLOR + "Usage: /unmute [player]", true);
-        }
-      } else {
-        MessageUtils.noPerm(p);
-      }
+    if (!(sender instanceof Player)) {
+      return true;
     }
+
+    Player player = (Player) sender;
+    Rank rank = RankHandler.getRank(player.getUniqueId());
+
+    if (rank.getPriority() < 8) {
+      MessageUtils.noPerm(player);
+      return true;
+    }
+
+    if (args.length == 0) {
+      MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR + "Usage: /unmute [player]", true);
+      return true;
+    }
+
+    if (args.length != 1) {
+      MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR + "Usage: /unmute [player]", true);
+      return true;
+    }
+
+    if (!PlayerHandler.playerExists(args[0])) {
+      MessageUtils.sendMessage(sender, MessageUtils.ERROR_COLOR + "Player not found.", true);
+      return true;
+    }
+
+    UUID uuid = PlayerHandler.getUUID(args[0]);
+
+    if (!MuteHandler.isMuted(uuid)) {
+      MessageUtils.sendMessage(sender, MessageUtils.ERROR_COLOR + "Player isn't muted.", true);
+      return true;
+    }
+
+    MuteHandler.setMuted(uuid, "false", Punishment.NULL, player.getUniqueId());
+    MessageUtils.sendMessage(sender, MessageUtils.SECOND_COLOR
+            + args[0]
+            + MessageUtils.MAIN_COLOR
+            + " is now unmuted.",
+        true);
 
     return false;
   }

@@ -193,8 +193,7 @@ public class MathUtils {
   }
 
   /**
-   * Returns the next power of two. Returns the specified value if the value is already a power of
-   * two.
+   * Returns the next power of two. Returns the specified value if the value is already a power of two.
    */
   public static int nextPowerOfTwo(int value) {
     if (value == 0) {
@@ -245,48 +244,47 @@ public class MathUtils {
   }
 
   /**
-   * Returns the largest integer less than or equal to the specified float. This method will only
-   * properly floor floats from -(2^14) to (Float.MAX_VALUE - 2^14).
+   * Returns the largest integer less than or equal to the specified float. This method will only properly floor floats
+   * from -(2^14) to (Float.MAX_VALUE - 2^14).
    */
   public static int floor(float x) {
     return (int) (x + BIG_ENOUGH_FLOOR) - BIG_ENOUGH_INT;
   }
 
   /**
-   * Returns the largest integer less than or equal to the specified float. This method will only
-   * properly floor floats that are positive. Note this method simply casts the float to int.
+   * Returns the largest integer less than or equal to the specified float. This method will only properly floor floats
+   * that are positive. Note this method simply casts the float to int.
    */
   public static int floorPositive(float x) {
     return (int) x;
   }
 
   /**
-   * Returns the smallest integer greater than or equal to the specified float. This method will
-   * only properly ceil floats from -(2^14) to (Float.MAX_VALUE - 2^14).
+   * Returns the smallest integer greater than or equal to the specified float. This method will only properly ceil
+   * floats from -(2^14) to (Float.MAX_VALUE - 2^14).
    */
   public static int ceil(float x) {
     return (int) (x + BIG_ENOUGH_CEIL) - BIG_ENOUGH_INT;
   }
 
   /**
-   * Returns the smallest integer greater than or equal to the specified float. This method will
-   * only properly ceil floats that are positive.
+   * Returns the smallest integer greater than or equal to the specified float. This method will only properly ceil
+   * floats that are positive.
    */
   public static int ceilPositive(float x) {
     return (int) (x + CEIL);
   }
 
   /**
-   * Returns the closest integer to the specified float. This method will only properly round floats
-   * from -(2^14) to (Float.MAX_VALUE - 2^14).
+   * Returns the closest integer to the specified float. This method will only properly round floats from -(2^14) to
+   * (Float.MAX_VALUE - 2^14).
    */
   public static int round(float x) {
     return (int) (x + BIG_ENOUGH_ROUND) - BIG_ENOUGH_INT;
   }
 
   /**
-   * Returns the closest integer to the specified float. This method will only properly round floats
-   * that are positive.
+   * Returns the closest integer to the specified float. This method will only properly round floats that are positive.
    */
   public static int roundPositive(float x) {
     return (int) (x + 0.5f);
@@ -309,8 +307,7 @@ public class MathUtils {
   }
 
   /**
-   * Returns true if a is nearly equal to b. The function uses the default floating error
-   * tolerance.
+   * Returns true if a is nearly equal to b. The function uses the default floating error tolerance.
    *
    * @param a the first value.
    * @param b the second value.
