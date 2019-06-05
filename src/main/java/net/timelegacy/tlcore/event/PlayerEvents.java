@@ -1,5 +1,7 @@
 package net.timelegacy.tlcore.event;
 
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.BanHandler;
@@ -34,6 +36,18 @@ public class PlayerEvents implements Listener {
           + RankHandler.chatColors(player.getUniqueId())
           .replace("%username% &8%arrows%", player.getName())
           .replace("&", "§")); // TODO Cleanup
+    }
+    // Tab Menu
+
+    PacketContainer pc = TLCore.protocolManager
+        .createPacket(com.comphenix.protocol.PacketType.Play.Server.PLAYER_LIST_HEADER_FOOTER);
+
+    pc.getChatComponents().write(0, WrappedChatComponent.fromText(MessageUtils.colorize("&c&lTIME LEGACY")))
+        .write(1, WrappedChatComponent.fromText(MessageUtils.colorize("&eplay.timelegacy.net")));
+    try {
+      TLCore.protocolManager.sendServerPacket(event.getPlayer(), pc);
+    } catch (Exception ex) {
+      ex.printStackTrace();
     }
 
     plugin.flySpeed.remove(player.getUniqueId());

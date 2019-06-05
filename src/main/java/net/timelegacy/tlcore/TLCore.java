@@ -1,5 +1,7 @@
 package net.timelegacy.tlcore;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -36,6 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class TLCore extends JavaPlugin {
 
   private static TLCore plugin = null;
+  public static ProtocolManager protocolManager;
 
   public FileConfiguration config;
   public Logger logger = Bukkit.getLogger();
@@ -48,6 +51,7 @@ public class TLCore extends JavaPlugin {
 
   @Override
   public void onEnable() {
+    protocolManager = ProtocolLibrary.getProtocolManager();
     plugin = this;
     config = this.getConfig();
 
