@@ -37,18 +37,6 @@ public class PlayerEvents implements Listener {
           .replace("%username% &8%arrows%", player.getName())
           .replace("&", "§")); // TODO Cleanup
     }
-    // Tab Menu
-
-    PacketContainer pc = TLCore.protocolManager
-        .createPacket(com.comphenix.protocol.PacketType.Play.Server.PLAYER_LIST_HEADER_FOOTER);
-
-    pc.getChatComponents().write(0, WrappedChatComponent.fromText(MessageUtils.colorize("&c&lTIME LEGACY")))
-        .write(1, WrappedChatComponent.fromText(MessageUtils.colorize("&eplay.timelegacy.net")));
-    try {
-      TLCore.protocolManager.sendServerPacket(event.getPlayer(), pc);
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
 
     plugin.flySpeed.remove(player.getUniqueId());
 
@@ -64,6 +52,18 @@ public class PlayerEvents implements Listener {
     PlayerHandler.updateIP(player);
     PlayerHandler.updateLastConnection(player.getUniqueId());
     PlayerHandler.updateOnline(player.getUniqueId(), true);
+
+    // Tab Menu
+    PacketContainer pc = TLCore.protocolManager
+        .createPacket(com.comphenix.protocol.PacketType.Play.Server.PLAYER_LIST_HEADER_FOOTER);
+
+    pc.getChatComponents().write(0, WrappedChatComponent.fromText(MessageUtils.colorize("&c&lTIME LEGACY")))
+        .write(1, WrappedChatComponent.fromText(MessageUtils.colorize("&eplay.timelegacy.net")));
+    try {
+      TLCore.protocolManager.sendServerPacket(event.getPlayer(), pc);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
   }
 
   @EventHandler
