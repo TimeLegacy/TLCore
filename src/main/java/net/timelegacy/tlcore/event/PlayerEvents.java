@@ -1,11 +1,14 @@
 package net.timelegacy.tlcore.event;
 
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.BanHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,10 +29,14 @@ public class PlayerEvents implements Listener {
   public void PlayerJoinEvent(PlayerJoinEvent event) {
     Player player = event.getPlayer();
 
-    player.sendMessage("");
-    player.sendMessage("");
-
     event.setJoinMessage(null);
+
+    for (Player p : Bukkit.getOnlinePlayers()) {
+      p.sendMessage("§7§l(§a+§7§l) "
+          + RankHandler.chatColors(player.getUniqueId())
+          .replace("%username% &8%arrows%", player.getName())
+          .replace("&", "§")); // TODO Cleanup
+    }
 
     plugin.flySpeed.remove(player.getUniqueId());
 
@@ -45,12 +52,24 @@ public class PlayerEvents implements Listener {
     PlayerHandler.updateIP(player);
     PlayerHandler.updateLastConnection(player.getUniqueId());
     PlayerHandler.updateOnline(player.getUniqueId(), true);
+
+    // Tab Menu
+    PacketContainer pc = TLCore.protocolManager
+        .createPacket(com.comphenix.protocol.PacketType.Play.Server.PLAYER_LIST_HEADER_FOOTER);
+
+    pc.getChatComponents().write(0, WrappedChatComponent.fromText(MessageUtils.colorize("&c&lTIME LEGACY")))
+        .write(1, WrappedChatComponent.fromText(MessageUtils.colorize("&eplay.timelegacy.net")));
+    try {
+      TLCore.protocolManager.sendServerPacket(event.getPlayer(), pc);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
   }
 
   @EventHandler
   public void PlayerQuitEvent(PlayerQuitEvent event) {
     Player player = event.getPlayer();
-
+    RankHandler.removeTabColors(player);
     player.getInventory().clear();
 
     for (PotionEffect effect : player.getActivePotionEffects()) {
@@ -64,6 +83,12 @@ public class PlayerEvents implements Listener {
     event.setQuitMessage(null);
 
     PlayerHandler.updateOnline(player.getUniqueId(), false);
+    for (Player p : Bukkit.getOnlinePlayers()) {
+      p.sendMessage("§7§l(§c-§7§l) "
+          + RankHandler.chatColors(player.getUniqueId())
+          .replace("%username% &8%arrows%", player.getName())
+          .replace("&", "§")); // TODO Cleanup
+    }
   }
 
   @EventHandler

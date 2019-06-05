@@ -10,12 +10,14 @@ import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.datatype.Rank;
 import net.timelegacy.tlcore.mongodb.MongoDB;
-import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class RankHandler {
+
+  private static ArrayList<String> commandsToRunAfterStartUp = new ArrayList<>();
 
   public static List<Rank> rankList = new ArrayList<>();
 
@@ -42,12 +44,24 @@ public class RankHandler {
         String tab = doc.getString("tab_format");
 
         rankList.add(new Rank(name, priority, chat, primary_color, secondary_color, tab));
+        commandsToRunAfterStartUp.add("team add " + name + " \"" + name + "\"");
+        commandsToRunAfterStartUp.add("team modify " + name + " prefix " + tab);
+        //TODO setup color once database is setup that way
       }
 
       cursor.close();
 
     } catch (Exception ignored) {
     }
+
+    new BukkitRunnable() {
+      @Override
+      public void run() {
+        runStartupCommands();
+        cancel();
+      }
+    }.runTaskTimer(TLCore.getPlugin(), 0, 1);
+
   }
 
   /**
@@ -194,32 +208,26 @@ public class RankHandler {
   }
 
   /**
-   * Update tab colors
-   */
-  public static void tabColors() {
-    Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-      for (Player p : Bukkit.getOnlinePlayers()) {
-
-        setTabColors(p);
-      }
-    }, 0, 15 * 20);
-  }
-
-  /**
    * Set the tab colors for a player
    *
    * @param player player
    */
   public static void setTabColors(Player player) {
-    String name = player.getName();
     Rank rank = getRank(player.getUniqueId());
+    Bukkit.getServer()
+        .dispatchCommand(Bukkit.getConsoleSender(), "team leave " + player.getName());
 
-    String format = rank.getTab() + name;
+    Bukkit.getServer()
+        .dispatchCommand(Bukkit.getConsoleSender(), "team join " + rank.getName() + " " + player.getName());
+  }
 
-    if (format.length() > 15) {
-      format = format.substring(0, 16);
+  public static void removeTabColors(Player player) {
+    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "team leave " + player.getName());
+  }
+
+  private static void runStartupCommands() {
+    for (String s : commandsToRunAfterStartUp) {
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), s);
     }
-
-    player.setPlayerListName(MessageUtils.colorize(format));
   }
 }
