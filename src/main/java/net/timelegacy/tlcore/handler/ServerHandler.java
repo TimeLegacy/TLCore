@@ -56,7 +56,8 @@ public class ServerHandler {
         .append("port", Bukkit.getServer().getPort())
         .append("type", "NONE")
         .append("online_players", 0)
-        .append("max_players", 0);
+        .append("max_players", 0)
+        .append("online", true);
 
     servers.insertOne(doc);
   }
@@ -125,6 +126,27 @@ public class ServerHandler {
     Integer onlinePlayers = doc.first().getInteger("online_players");
 
     return onlinePlayers;
+  }
+
+  /**
+   * Set the online status of a server
+   *
+   * @param online true/false
+   */
+  public static void setOnline(UUID uuid, boolean online) {
+    servers.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("online", online)));
+  }
+
+  /**
+   * Get the status of the server
+   *
+   * @param uuid server's uuid
+   */
+  public static boolean isOnline(UUID uuid) {
+    FindIterable<Document> doc = servers.find(Filters.eq("uuid", uuid.toString()));
+    boolean online = doc.first().getBoolean("online");
+
+    return online;
   }
 
   /**
