@@ -55,7 +55,7 @@ public class PlayerEvents implements Listener {
   @EventHandler
   public void PlayerQuitEvent(PlayerQuitEvent event) {
     Player player = event.getPlayer();
-
+    RankHandler.removeTabColors(player);
     player.getInventory().clear();
 
     for (PotionEffect effect : player.getActivePotionEffects()) {

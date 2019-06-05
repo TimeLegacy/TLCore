@@ -87,7 +87,6 @@ public class TLCore extends JavaPlugin {
     getServer().getPluginManager().registerEvents(new PhysicsEvents(), plugin);
 
     RankHandler.loadRanks();
-    RankHandler.tabColors();
   }
 
   @Override
