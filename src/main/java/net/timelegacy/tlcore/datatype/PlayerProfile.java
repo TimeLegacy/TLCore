@@ -43,21 +43,21 @@ public class PlayerProfile {
           .append("twitch", "");
 
       profiles.insertOne(doc);
+    } else {
+
+      FindIterable<Document> doc = profiles.find(Filters.eq("uuid", uuid));
+      this.status = Status.valueOf(doc.first().getString("status"));
+      this.chatFilter = ChatFilter.valueOf(doc.first().getString("chat_filter"));
+      this.nickname = doc.first().getString("nickname");
+      this.gender = Gender.valueOf(doc.first().getString("gender"));
+      this.favouriteColour = doc.first().getString("favourite_colour");
+      this.friends = doc.first().getString("friends");
+      this.friendsPending = doc.first().getString("friends_pending");
+      this.twitter = doc.first().getString("twitter");
+      this.instagram = doc.first().getString("instagram");
+      this.youtube = doc.first().getString("youtube");
+      this.twitch = doc.first().getString("twitch");
     }
-
-    FindIterable<Document> doc = profiles.find(Filters.eq("uuid", uuid));
-    this.status = Status.valueOf(doc.first().getString("status"));
-    this.chatFilter = ChatFilter.valueOf(doc.first().getString("chat_filter"));
-    this.nickname = doc.first().getString("nickname");
-    this.gender = Gender.valueOf(doc.first().getString("gender"));
-    this.favouriteColour = doc.first().getString("favourite_colour");
-    this.friends = doc.first().getString("friends");
-    this.friendsPending = doc.first().getString("friends_pending");
-    this.twitter = doc.first().getString("twitter");
-    this.instagram = doc.first().getString("instagram");
-    this.youtube = doc.first().getString("youtube");
-    this.twitch = doc.first().getString("twitch");
-
   }
 
   private boolean profileExists(UUID uuid) {
