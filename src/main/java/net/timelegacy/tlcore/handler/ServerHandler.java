@@ -56,7 +56,8 @@ public class ServerHandler {
         .append("port", Bukkit.getServer().getPort())
         .append("type", "NONE")
         .append("online_players", 0)
-        .append("max_players", 0);
+        .append("max_players", 0)
+        .append("online", true);
 
     servers.insertOne(doc);
   }
@@ -107,6 +108,7 @@ public class ServerHandler {
    * Get the max count of players on the server
    *
    * @param uuid server's uuid
+   * @return
    */
   public static Integer getMaxPlayers(UUID uuid) {
     FindIterable<Document> doc = servers.find(Filters.eq("uuid", uuid.toString()));
@@ -119,6 +121,7 @@ public class ServerHandler {
    * Get the online players
    *
    * @param uuid server's uuid
+   * @return
    */
   public static Integer getOnlinePlayers(UUID uuid) {
     FindIterable<Document> doc = servers.find(Filters.eq("uuid", uuid.toString()));
@@ -128,9 +131,32 @@ public class ServerHandler {
   }
 
   /**
+   * Set the online status of a server
+   *
+   * @param online true/false
+   */
+  public static void setOnline(UUID uuid, boolean online) {
+    servers.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("online", online)));
+  }
+
+  /**
+   * Get the status of the server
+   *
+   * @param uuid server's uuid
+   * @return
+   */
+  public static boolean isOnline(UUID uuid) {
+    FindIterable<Document> doc = servers.find(Filters.eq("uuid", uuid.toString()));
+    boolean online = doc.first().getBoolean("online");
+
+    return online;
+  }
+
+  /**
    * Check if a server exists
    *
    * @param uuid server's uuid
+   * @return
    */
   public static boolean serverExists(UUID uuid) {
     FindIterable<Document> iterable = servers.find(new Document("uuid", uuid.toString()));
@@ -139,6 +165,7 @@ public class ServerHandler {
 
   /**
    * Check if server exists
+   * @return
    */
   public static boolean serverExists() {
     FindIterable<Document> iterable = servers.find(new Document("uuid", getServerUUID().toString()));
