@@ -3,7 +3,6 @@ package net.timelegacy.tlcore.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import net.timelegacy.tlcore.utils.Chat.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -84,11 +83,11 @@ public class ItemUtils {
     ItemStack is = i;
     is.setAmount(amount);
     ItemMeta im = is.getItemMeta();
-    im.setDisplayName(ChatUtils.colorChat(name));
+    im.setDisplayName(MessageUtils.colorize(name));
 
     List<String> newLore = new ArrayList<>();
     for (String l : lore) {
-      newLore.add(ChatUtils.colorChat(l));
+      newLore.add(MessageUtils.colorize(l));
     }
 
     im.setLore(newLore);
@@ -149,9 +148,9 @@ public class ItemUtils {
     ItemStack is = item.clone();
     ItemMeta ism = is.getItemMeta();
     List<String> newLore = new ArrayList<>();
-    ism.setDisplayName(ChatUtils.colorChat(name));
+    ism.setDisplayName(MessageUtils.colorize(name));
     for (String s : lore) {
-      newLore.add(ChatUtils.colorChat(s));
+      newLore.add(MessageUtils.colorize(s));
     }
 
     ism.setLore(newLore);
@@ -162,7 +161,7 @@ public class ItemUtils {
   public static ItemStack createItem(Material material, int amount, String name) {
     ItemStack item = new ItemStack(material, amount);
     ItemMeta meta = item.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(name));
+    meta.setDisplayName(MessageUtils.colorize(name));
     item.setItemMeta(meta);
     return item;
   }
@@ -181,7 +180,7 @@ public class ItemUtils {
   public static ItemStack createItem(Material material, String name) {
     ItemStack item = new ItemStack(material, 1);
     ItemMeta meta = item.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(name));
+    meta.setDisplayName(MessageUtils.colorize(name));
     item.setItemMeta(meta);
     return item;
   }
@@ -189,10 +188,10 @@ public class ItemUtils {
   public static ItemStack createItem(Material material, String name, List<String> lore) {
     ItemStack item = new ItemStack(material, 1);
     ItemMeta meta = item.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(name));
+    meta.setDisplayName(MessageUtils.colorize(name));
     List<String> newLore = new ArrayList<>();
     for (String s : lore) {
-      newLore.add(ChatUtils.colorChat(s));
+      newLore.add(MessageUtils.colorize(s));
     }
 
     meta.setLore(newLore);
@@ -203,7 +202,7 @@ public class ItemUtils {
   public static ItemStack createItem(ItemStack item, String name) {
     ItemStack is = item.clone();
     ItemMeta meta = is.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(name));
+    meta.setDisplayName(MessageUtils.colorize(name));
     is.setItemMeta(meta);
     return is;
   }
@@ -220,7 +219,7 @@ public class ItemUtils {
     ItemStack is = new ItemStack(Material.PLAYER_HEAD);
     SkullMeta meta = (SkullMeta) is.getItemMeta();
     meta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
-    meta.setDisplayName(ChatUtils.colorChat(displayName));
+    meta.setDisplayName(MessageUtils.colorize(displayName));
     is.setItemMeta(meta);
     return is;
   }
@@ -229,10 +228,10 @@ public class ItemUtils {
     ItemStack is = new ItemStack(Material.PLAYER_HEAD);
     SkullMeta meta = (SkullMeta) is.getItemMeta();
     meta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
-    meta.setDisplayName(ChatUtils.colorChat(displayName));
+    meta.setDisplayName(MessageUtils.colorize(displayName));
     List<String> newLore = new ArrayList<>();
     for (String s : lore) {
-      newLore.add(ChatUtils.colorChat(s));
+      newLore.add(MessageUtils.colorize(s));
     }
 
     meta.setLore(newLore);
@@ -243,7 +242,7 @@ public class ItemUtils {
   public static ItemStack createSkullItem(ItemStack item, String displayName) {
     ItemStack is = new ItemStack(item);
     SkullMeta meta = (SkullMeta) is.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(displayName));
+    meta.setDisplayName(MessageUtils.colorize(displayName));
     is.setItemMeta(meta);
     return is;
   }
@@ -264,7 +263,7 @@ public class ItemUtils {
   public static ItemStack createItemNoAttrib(ItemStack item, String displayName) {
     ItemStack is = item.clone();
     ItemMeta meta = is.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(displayName));
+    meta.setDisplayName(MessageUtils.colorize(displayName));
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
     meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
@@ -278,7 +277,7 @@ public class ItemUtils {
   public static ItemStack createItemNoAttrib(ItemStack item, String displayName, List<String> lore) {
     ItemStack is = item.clone();
     ItemMeta meta = is.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(displayName));
+    meta.setDisplayName(MessageUtils.colorize(displayName));
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
     meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
@@ -288,7 +287,7 @@ public class ItemUtils {
 
     List<String> newLore = new ArrayList<>();
     for (String s : lore) {
-      newLore.add(ChatUtils.colorChat(s));
+      newLore.add(MessageUtils.colorize(s));
     }
 
     meta.setLore(newLore);
@@ -299,7 +298,7 @@ public class ItemUtils {
   public static ItemStack createItemNoAttrib(Material material, String displayName) {
     ItemStack is = new ItemStack(material);
     ItemMeta meta = is.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(displayName));
+    meta.setDisplayName(MessageUtils.colorize(displayName));
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
     meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
@@ -313,7 +312,7 @@ public class ItemUtils {
   public static ItemStack createItemNoAttrib(Material material, String displayName, List<String> lore) {
     ItemStack is = new ItemStack(material);
     ItemMeta meta = is.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(displayName));
+    meta.setDisplayName(MessageUtils.colorize(displayName));
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
     meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
@@ -323,7 +322,7 @@ public class ItemUtils {
 
     List<String> newLore = new ArrayList<>();
     for (String s : lore) {
-      newLore.add(ChatUtils.colorChat(s));
+      newLore.add(MessageUtils.colorize(s));
     }
 
     meta.setLore(newLore);
@@ -336,7 +335,7 @@ public class ItemUtils {
     LeatherArmorMeta meta = (LeatherArmorMeta) is.getItemMeta();
     meta.setColor(Color.fromRGB(r, g, b));
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-    meta.setDisplayName(ChatUtils.colorChat(displayName));
+    meta.setDisplayName(MessageUtils.colorize(displayName));
     is.setItemMeta(meta);
     return is;
   }
@@ -346,7 +345,7 @@ public class ItemUtils {
     LeatherArmorMeta meta = (LeatherArmorMeta) is.getItemMeta();
     meta.setColor(Color.fromRGB(r, g, b));
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-    meta.setDisplayName(ChatUtils.colorChat(displayName));
+    meta.setDisplayName(MessageUtils.colorize(displayName));
     is.setItemMeta(meta);
     return is;
   }
@@ -354,7 +353,7 @@ public class ItemUtils {
   public static ItemStack createTippedArrow(String name, PotionType potionType) {
     ItemStack is = new ItemStack(Material.TIPPED_ARROW);
     PotionMeta meta = (PotionMeta) is.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(name));
+    meta.setDisplayName(MessageUtils.colorize(name));
     meta.setBasePotionData(new PotionData(potionType));
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
@@ -365,7 +364,7 @@ public class ItemUtils {
   public static ItemStack createPotion(String name, PotionType potionType) {
     ItemStack is = new ItemStack(Material.POTION);
     PotionMeta meta = (PotionMeta) is.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(name));
+    meta.setDisplayName(MessageUtils.colorize(name));
     meta.setBasePotionData(new PotionData(potionType));
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
@@ -376,14 +375,14 @@ public class ItemUtils {
   public static ItemStack createPotion(PotionType potionType, String name, List<String> lore) {
     ItemStack is = new ItemStack(Material.POTION);
     PotionMeta meta = (PotionMeta) is.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(name));
+    meta.setDisplayName(MessageUtils.colorize(name));
     meta.setBasePotionData(new PotionData(potionType));
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 
     List<String> newLore = new ArrayList<>();
     for (String s : lore) {
-      newLore.add(ChatUtils.colorChat(s));
+      newLore.add(MessageUtils.colorize(s));
     }
 
     meta.setLore(newLore);
@@ -394,7 +393,7 @@ public class ItemUtils {
   public static ItemStack createLingeringPotion(String name, PotionType potionType) {
     ItemStack is = new ItemStack(Material.LINGERING_POTION);
     PotionMeta meta = (PotionMeta) is.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(name));
+    meta.setDisplayName(MessageUtils.colorize(name));
     meta.setBasePotionData(new PotionData(potionType));
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
@@ -405,7 +404,7 @@ public class ItemUtils {
   public static ItemStack createDragonBreathPotion(String name) {
     ItemStack is = new ItemStack(Material.DRAGON_BREATH);
     ItemMeta meta = is.getItemMeta();
-    meta.setDisplayName(ChatUtils.colorChat(name));
+    meta.setDisplayName(MessageUtils.colorize(name));
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
     is.setItemMeta(meta);
