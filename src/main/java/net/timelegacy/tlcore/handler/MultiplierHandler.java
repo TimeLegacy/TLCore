@@ -21,6 +21,8 @@ public class MultiplierHandler {
 
   /**
    * Get the multiplier amount
+   *
+   * @return
    */
   public static Integer getMultiplier() {
     FindIterable<Document> doc = settings.find(Filters.eq("name", "multiplier"));
@@ -40,6 +42,8 @@ public class MultiplierHandler {
 
   /**
    * Check if multiplier is on
+   *
+   * @return
    */
   public static Boolean isMultiplierEnabled() {
     FindIterable<Document> doc = settings.find(Filters.eq("name", "multiplier"));
