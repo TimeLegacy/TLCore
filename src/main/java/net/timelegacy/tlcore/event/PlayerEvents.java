@@ -8,11 +8,14 @@ import net.timelegacy.tlcore.handler.BanHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
+import net.timelegacy.tlcore.utils.XPBarUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent.Result;
@@ -48,6 +51,7 @@ public class PlayerEvents implements Listener {
 
     PlayerHandler.createPlayer(player);
     RankHandler.setTabColors(player);
+    XPBarUtils.playerJoin(player);
 
     PlayerHandler.updateIP(player);
     PlayerHandler.updateLastConnection(player.getUniqueId());
@@ -66,10 +70,17 @@ public class PlayerEvents implements Listener {
     }
   }
 
+  @EventHandler(priority = EventPriority.LOWEST)
+  public void onPlayerXPEvent(PlayerExpChangeEvent event) {
+    XPBarUtils.xpEvent(event);
+  }
+
   @EventHandler
   public void PlayerQuitEvent(PlayerQuitEvent event) {
     Player player = event.getPlayer();
     RankHandler.removeTabColors(player);
+    XPBarUtils.playerLeave(player);
+
     player.getInventory().clear();
 
     for (PotionEffect effect : player.getActivePotionEffects()) {
