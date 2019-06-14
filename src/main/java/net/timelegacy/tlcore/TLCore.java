@@ -30,6 +30,8 @@ import net.timelegacy.tlcore.event.PlayerEvents;
 import net.timelegacy.tlcore.handler.PermissionHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.handler.ServerHandler;
+import net.timelegacy.tlcore.menus.FriendsMenu;
+import net.timelegacy.tlcore.menus.FriendsPendingMenu;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -89,6 +91,9 @@ public class TLCore extends JavaPlugin {
     getServer().getPluginManager().registerEvents(new FilterEvents(), plugin);
     getServer().getPluginManager().registerEvents(new PlayerEvents(), plugin);
     getServer().getPluginManager().registerEvents(new PhysicsEvents(), plugin);
+
+    getServer().getPluginManager().registerEvents(new FriendsMenu(), plugin);
+    getServer().getPluginManager().registerEvents(new FriendsPendingMenu(), plugin);
 
     RankHandler.loadRanks();
   }

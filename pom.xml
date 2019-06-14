@@ -64,6 +64,12 @@
       <groupId>de.erethon</groupId>
       <version>3.0.1</version>
     </dependency>
+    <!-- Anvil GUI 1.13 -->
+    <dependency>
+      <artifactId>anvilgui</artifactId>
+      <groupId>net.wesjd</groupId>
+      <version>1.2.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
   <repositories>
@@ -82,6 +88,10 @@
     <repository>
       <id>dre-repo</id>
       <url>https://erethon.de/repo/</url>
+    </repository>
+    <repository>
+      <id>wesjd-repo</id>
+      <url>https://nexus.wesjd.net/repository/thirdparty/</url>
     </repository>
   </repositories>
 
