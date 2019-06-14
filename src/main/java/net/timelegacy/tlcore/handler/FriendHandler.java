@@ -52,7 +52,8 @@ public class FriendHandler {
         && !getPendingFriends(sender).contains(receiver)
         && !getPendingFriends(receiver).contains(sender)) {
       PlayerProfile profile = new PlayerProfile(receiver);
-      profile.setFriendsPending(profile.getFriends() + sender.toString() + ",");
+      profile.setFriendsPending(profile.getFriendsPending() == null ? sender.toString() + ","
+          : profile.getFriendsPending() + sender.toString() + ",");
     }
   }
 
@@ -82,7 +83,8 @@ public class FriendHandler {
       profile.setFriendsPending(profile.getFriendsPending().replace(receiver.toString() + ",", ""));
       profile.setFriends(profile.getFriends() + receiver.toString() + ",");
       PlayerProfile profileReceiver = new PlayerProfile(receiver);
-      profileReceiver.setFriends(profileReceiver.getFriends() + sender.toString() + ",");
+      profile.setFriends(profile.getFriends() == null ? sender.toString() + "," : profile.getFriends()
+          + sender.toString() + ",");
     }
   }
 
