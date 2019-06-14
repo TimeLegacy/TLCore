@@ -47,7 +47,7 @@ public class FriendHandler {
    * @param sender uuid of player that sends friend request
    * @param receiver uuid of player to receive the friend request
    */
-  public void sendRequest(UUID sender, UUID receiver) {
+  public static void sendRequest(UUID sender, UUID receiver) {
     if (!getFriends(sender).contains(receiver)
         && !getPendingFriends(sender).contains(receiver)
         && !getPendingFriends(receiver).contains(sender)) {
@@ -62,7 +62,7 @@ public class FriendHandler {
    * @param sender player that is denying the request
    * @param receiver player that is being denied
    */
-  public void denyRequest(UUID sender, UUID receiver) {
+  public static void denyRequest(UUID sender, UUID receiver) {
     if (!getPendingFriends(sender).contains(receiver)) {
       PlayerProfile profile = new PlayerProfile(sender);
       profile.setFriendsPending(profile.getFriends().replace(receiver.toString() + ",", ""));
@@ -75,7 +75,7 @@ public class FriendHandler {
    * @param sender player that is accepting a request
    * @param receiver player that their request is being accepted
    */
-  public void acceptRequest(UUID sender, UUID receiver) {
+  public static void acceptRequest(UUID sender, UUID receiver) {
     if (!getFriends(sender).contains(receiver)
         && getPendingFriends(sender).contains(receiver)) {
       PlayerProfile profile = new PlayerProfile(sender);
@@ -92,7 +92,7 @@ public class FriendHandler {
    * @param sender player that is removing their friend
    * @param receiver player that is being removed
    */
-  public void removeFriend(UUID sender, UUID receiver) {
+  public static void removeFriend(UUID sender, UUID receiver) {
     if (!getFriends(sender).contains(receiver)) {
       PlayerProfile profile = new PlayerProfile(sender);
       profile.setFriends(profile.getFriends().replace(receiver.toString() + ",", ""));

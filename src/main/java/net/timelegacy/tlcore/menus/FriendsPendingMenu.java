@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.FriendHandler;
+import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.utils.ItemUtils;
 import net.timelegacy.tlcore.utils.MenuUtils;
 import net.timelegacy.tlcore.utils.MessageUtils;
@@ -127,12 +128,18 @@ public class FriendsPendingMenu implements Listener {
             .getDisplayName()
             .equals(MessageUtils.colorize("&bSend Request"))) {
 
-          new AnvilGUI(plugin, p, "What is the meaning of li fe?", (player, reply) -> {
-            if (reply.equalsIgnoreCase("you")) {
-              player.sendMessage("You have magical powers!");
+          AnvilGUI anvilGUI = new AnvilGUI(plugin, p, "Username", (player, reply) -> {
+            if (PlayerHandler
+                .playerExists(reply)) {
+              UUID request = PlayerHandler.getUUID(reply);
+              FriendHandler.sendRequest(p.getUniqueId(), request);
+              MessageUtils.sendMessage(p,
+                  MessageUtils.SUCCESS_COLOR + "You have sent a friend request to &o" + reply, "");
               return null;
             }
-            return "Incorrect.";
+            MessageUtils.sendMessage(p,
+                MessageUtils.ERROR_COLOR + "Player not found.", "");
+            return "Player not found.";
           });
 
           return;
