@@ -8,7 +8,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.timelegacy.tlcore.command.BanCommand;
-import net.timelegacy.tlcore.command.ChatTypeCommand;
 import net.timelegacy.tlcore.command.CoinManagementCommand;
 import net.timelegacy.tlcore.command.CoinsCommand;
 import net.timelegacy.tlcore.command.CrateKeyCommand;
@@ -17,6 +16,7 @@ import net.timelegacy.tlcore.command.GamemodeCommand;
 import net.timelegacy.tlcore.command.ListCommand;
 import net.timelegacy.tlcore.command.MultiplierCommand;
 import net.timelegacy.tlcore.command.MuteCommand;
+import net.timelegacy.tlcore.command.ProfileCommand;
 import net.timelegacy.tlcore.command.RankManagementCommand;
 import net.timelegacy.tlcore.command.RebootCommand;
 import net.timelegacy.tlcore.command.TeleportCommand;
@@ -30,6 +30,8 @@ import net.timelegacy.tlcore.event.PlayerEvents;
 import net.timelegacy.tlcore.handler.PermissionHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.handler.ServerHandler;
+import net.timelegacy.tlcore.menus.FriendsMenu;
+import net.timelegacy.tlcore.menus.FriendsPendingMenu;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -84,11 +86,14 @@ public class TLCore extends JavaPlugin {
     getCommand("unban").setExecutor(new UnBanCommand());
     getCommand("mute").setExecutor(new MuteCommand());
     getCommand("unmute").setExecutor(new UnMuteCommand());
-    getCommand("chat").setExecutor(new ChatTypeCommand());
+    getCommand("profile").setExecutor(new ProfileCommand());
 
     getServer().getPluginManager().registerEvents(new FilterEvents(), plugin);
     getServer().getPluginManager().registerEvents(new PlayerEvents(), plugin);
     getServer().getPluginManager().registerEvents(new PhysicsEvents(), plugin);
+
+    getServer().getPluginManager().registerEvents(new FriendsMenu(), plugin);
+    getServer().getPluginManager().registerEvents(new FriendsPendingMenu(), plugin);
 
     RankHandler.loadRanks();
   }

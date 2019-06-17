@@ -29,7 +29,7 @@ public class PlayerProfile {
     this.uuid = uuid;
 
     if (PlayerHandler.playerExists(uuid) && !profileExists(uuid)) {
-      Document doc = new Document("uuid", uuid)
+      Document doc = new Document("uuid", uuid.toString())
           .append("status", Status.ACTIVE.toString())
           .append("chat_filter", ChatFilter.CHILD.toString())
           .append("nickname", "")
@@ -43,9 +43,10 @@ public class PlayerProfile {
           .append("twitch", "");
 
       profiles.insertOne(doc);
-    } else {
+    }
 
-      FindIterable<Document> doc = profiles.find(Filters.eq("uuid", uuid));
+    if (profileExists(uuid)) {
+      FindIterable<Document> doc = profiles.find(Filters.eq("uuid", uuid.toString()));
       this.status = Status.valueOf(doc.first().getString("status"));
       this.chatFilter = ChatFilter.valueOf(doc.first().getString("chat_filter"));
       this.nickname = doc.first().getString("nickname");
@@ -70,7 +71,7 @@ public class PlayerProfile {
   }
 
   public void setStatus(Status status) {
-    profiles.updateOne(Filters.eq("uuid", this.uuid),
+    profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
         new Document("$set", new Document("status", status.toString())));
     this.status = status;
   }
@@ -80,7 +81,7 @@ public class PlayerProfile {
   }
 
   public void setChatFilter(ChatFilter chatFilter) {
-    profiles.updateOne(Filters.eq("uuid", this.uuid),
+    profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
         new Document("$set", new Document("chat_filter", chatFilter.toString())));
     this.chatFilter = chatFilter;
   }
@@ -90,7 +91,7 @@ public class PlayerProfile {
   }
 
   public void setNickname(String nickname) {
-    profiles.updateOne(Filters.eq("uuid", this.uuid),
+    profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
         new Document("$set", new Document("nickname", nickname)));
     this.nickname = nickname;
   }
@@ -100,7 +101,7 @@ public class PlayerProfile {
   }
 
   public void setGender(Gender gender) {
-    profiles.updateOne(Filters.eq("uuid", this.uuid),
+    profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
         new Document("$set", new Document("chat_filter", gender.toString())));
     this.gender = gender;
   }
@@ -110,7 +111,7 @@ public class PlayerProfile {
   }
 
   public void setFavouriteColour(String favouriteColour) {
-    profiles.updateOne(Filters.eq("uuid", this.uuid),
+    profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
         new Document("$set", new Document("favourite_colour", favouriteColour)));
     this.favouriteColour = favouriteColour;
   }
@@ -120,7 +121,7 @@ public class PlayerProfile {
   }
 
   public void setFriends(String friends) {
-    profiles.updateOne(Filters.eq("uuid", this.uuid),
+    profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
         new Document("$set", new Document("friends", friends)));
     this.friends = friends;
   }
@@ -130,7 +131,7 @@ public class PlayerProfile {
   }
 
   public void setFriendsPending(String friendsPending) {
-    profiles.updateOne(Filters.eq("uuid", this.uuid),
+    profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
         new Document("$set", new Document("friends_pending", friendsPending)));
     this.friendsPending = friendsPending;
   }
@@ -140,7 +141,7 @@ public class PlayerProfile {
   }
 
   public void setTwitter(String twitter) {
-    profiles.updateOne(Filters.eq("uuid", this.uuid),
+    profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
         new Document("$set", new Document("twitter", twitter)));
     this.twitter = twitter;
   }
@@ -150,7 +151,7 @@ public class PlayerProfile {
   }
 
   public void setInstagram(String instagram) {
-    profiles.updateOne(Filters.eq("uuid", this.uuid),
+    profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
         new Document("$set", new Document("instagram", instagram)));
     this.instagram = instagram;
   }
@@ -160,7 +161,7 @@ public class PlayerProfile {
   }
 
   public void setYoutube(String youtube) {
-    profiles.updateOne(Filters.eq("uuid", this.uuid),
+    profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
         new Document("$set", new Document("youtube", youtube)));
     this.youtube = youtube;
   }
@@ -170,7 +171,7 @@ public class PlayerProfile {
   }
 
   public void setTwitch(String twitch) {
-    profiles.updateOne(Filters.eq("uuid", this.uuid),
+    profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
         new Document("$set", new Document("twitch", twitch)));
     this.twitch = twitch;
   }
