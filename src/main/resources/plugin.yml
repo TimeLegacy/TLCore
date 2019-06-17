@@ -49,5 +49,5 @@ commands:
     description: Mutes a player.
   UnMute:
     description: Unmutes a muted player.
-  Chat:
-    description: Child or Mature chat.
+  Profile:
+    description: View your player profile.

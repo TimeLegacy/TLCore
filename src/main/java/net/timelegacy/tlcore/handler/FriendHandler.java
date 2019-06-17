@@ -16,9 +16,12 @@ public class FriendHandler {
     List<UUID> friends = new ArrayList<>();
 
     PlayerProfile profile = new PlayerProfile(uuid);
-    String[] friend = profile.getFriends().split(",");
-    for (String id : friend) {
-      friends.add(UUID.fromString(id));
+
+    if (!profile.getFriends().isEmpty()) {
+      String[] friend = profile.getFriends().split(",");
+      for (String id : friend) {
+        friends.add(UUID.fromString(id));
+      }
     }
 
     return friends;
@@ -33,9 +36,11 @@ public class FriendHandler {
     List<UUID> pendingFriends = new ArrayList<>();
 
     PlayerProfile profile = new PlayerProfile(uuid);
-    String[] pending = profile.getFriendsPending().split(",");
-    for (String id : pending) {
-      pendingFriends.add(UUID.fromString(id));
+    if (!profile.getFriends().isEmpty()) {
+      String[] pending = profile.getFriendsPending().split(",");
+      for (String id : pending) {
+        pendingFriends.add(UUID.fromString(id));
+      }
     }
 
     return pendingFriends;
@@ -52,8 +57,7 @@ public class FriendHandler {
         && !getPendingFriends(sender).contains(receiver)
         && !getPendingFriends(receiver).contains(sender)) {
       PlayerProfile profile = new PlayerProfile(receiver);
-      profile.setFriendsPending(profile.getFriendsPending() == null ? sender.toString() + ","
-          : profile.getFriendsPending() + sender.toString() + ",");
+      profile.setFriendsPending(profile.getFriendsPending() + sender.toString() + ",");
     }
   }
 
@@ -83,7 +87,7 @@ public class FriendHandler {
       profile.setFriendsPending(profile.getFriendsPending().replace(receiver.toString() + ",", ""));
       profile.setFriends(profile.getFriends() + receiver.toString() + ",");
       PlayerProfile profileReceiver = new PlayerProfile(receiver);
-      profile.setFriends(profile.getFriends() == null ? sender.toString() + "," : profile.getFriends()
+      profile.setFriends(profile.getFriends()
           + sender.toString() + ",");
     }
   }

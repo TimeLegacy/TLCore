@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.FriendHandler;
+import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.utils.ItemUtils;
 import net.timelegacy.tlcore.utils.MenuUtils;
 import net.timelegacy.tlcore.utils.MessageUtils;
@@ -24,6 +25,7 @@ public class FriendsMenu implements Listener {
   private static TLCore plugin = TLCore.getPlugin();
 
   public static void openMenu(Player player, int page) {
+
     Inventory menu = Bukkit.createInventory(player, 54, MessageUtils.colorize("&8&lFriends >> &8&nPage " + page));
 
     // Row 5
@@ -37,7 +39,6 @@ public class FriendsMenu implements Listener {
     player.openInventory(menu);
 
     List<UUID> friends = FriendHandler.getFriends(player.getUniqueId());
-
 
     new BukkitRunnable() {
 
@@ -58,7 +59,9 @@ public class FriendsMenu implements Listener {
             continue;
           }
 
-          ItemStack itemStack = ItemUtils.createSkullItem(friends.get(current).toString());
+          String friendUsername = PlayerHandler.getUsername(friends.get(current));
+
+          ItemStack itemStack = ItemUtils.createSkullItem(friendUsername, "&b" + friendUsername);
           ItemStack is = itemStack.clone();
           menu.setItem(i, is);
           player.updateInventory();

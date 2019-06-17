@@ -29,7 +29,7 @@ public class PlayerProfile {
     this.uuid = uuid;
 
     if (PlayerHandler.playerExists(uuid) && !profileExists(uuid)) {
-      Document doc = new Document("uuid", uuid)
+      Document doc = new Document("uuid", uuid.toString())
           .append("status", Status.ACTIVE.toString())
           .append("chat_filter", ChatFilter.CHILD.toString())
           .append("nickname", "")
@@ -43,9 +43,10 @@ public class PlayerProfile {
           .append("twitch", "");
 
       profiles.insertOne(doc);
-    } else {
+    }
 
-      FindIterable<Document> doc = profiles.find(Filters.eq("uuid", uuid));
+    if (profileExists(uuid)) {
+      FindIterable<Document> doc = profiles.find(Filters.eq("uuid", uuid.toString()));
       this.status = Status.valueOf(doc.first().getString("status"));
       this.chatFilter = ChatFilter.valueOf(doc.first().getString("chat_filter"));
       this.nickname = doc.first().getString("nickname");

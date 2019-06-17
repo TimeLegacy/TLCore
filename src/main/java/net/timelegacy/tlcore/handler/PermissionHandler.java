@@ -11,7 +11,7 @@ public class PermissionHandler {
 
   private static TLCore plugin = TLCore.getPlugin();
 
-  private static Map<UUID, PermissionAttachment> perms = new HashMap<>();
+  public static Map<UUID, PermissionAttachment> perms = new HashMap<>();
 
   /**
    * Detach permissions from a player

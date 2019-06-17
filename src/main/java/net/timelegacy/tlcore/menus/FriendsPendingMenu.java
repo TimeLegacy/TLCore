@@ -60,7 +60,9 @@ public class FriendsPendingMenu implements Listener {
             continue;
           }
 
-          ItemStack itemStack = ItemUtils.createSkullItem(pendingFriends.get(current).toString());
+          String friendUsername = PlayerHandler.getUsername(pendingFriends.get(current));
+
+          ItemStack itemStack = ItemUtils.createSkullItem(friendUsername, "&b" + friendUsername);
           ItemStack is = itemStack.clone();
           menu.setItem(i, is);
           player.updateInventory();
@@ -141,6 +143,15 @@ public class FriendsPendingMenu implements Listener {
                 MessageUtils.ERROR_COLOR + "Player not found.", "");
             return "Player not found.";
           });
+
+          return;
+        } else if (event
+            .getCurrentItem()
+            .getItemMeta()
+            .getDisplayName()
+            .equals(MessageUtils.colorize("&eReturn to Friends"))) {
+          p.closeInventory();
+          FriendsMenu.openMenu(p, 1);
 
           return;
         } else {
