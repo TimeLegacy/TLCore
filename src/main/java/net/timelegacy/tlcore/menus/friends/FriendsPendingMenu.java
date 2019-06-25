@@ -1,4 +1,4 @@
-package net.timelegacy.tlcore.menus;
+package net.timelegacy.tlcore.menus.friends;
 
 import de.erethon.headlib.HeadLib;
 import java.util.List;
