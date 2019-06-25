@@ -1,4 +1,4 @@
-package net.timelegacy.tlcore.menus.profile.settings;
+package net.timelegacy.tlcore.menus.profile;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -140,7 +140,7 @@ public class YourSettingsMenu implements Listener {
         String name = ChatColor.stripColor(is.getItemMeta().getDisplayName());
 
         if (name.equals("State Settings")) {
-          //YourStateSettingsMenu.
+          YourStateSettingsMenu.openMenu(p);
           return;
         }
       }

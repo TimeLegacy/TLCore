@@ -1,4 +1,4 @@
-package net.timelegacy.tlcore.menus.profile.settings;
+package net.timelegacy.tlcore.menus.profile;
 
 import java.util.Arrays;
 import java.util.Collections;

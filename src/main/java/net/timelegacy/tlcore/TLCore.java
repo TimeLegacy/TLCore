@@ -32,6 +32,9 @@ import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.handler.ServerHandler;
 import net.timelegacy.tlcore.menus.friends.FriendsMenu;
 import net.timelegacy.tlcore.menus.friends.FriendsPendingMenu;
+import net.timelegacy.tlcore.menus.profile.GenderSelectorMenu;
+import net.timelegacy.tlcore.menus.profile.YourSettingsMenu;
+import net.timelegacy.tlcore.menus.profile.YourStateSettingsMenu;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -94,6 +97,9 @@ public class TLCore extends JavaPlugin {
 
     getServer().getPluginManager().registerEvents(new FriendsMenu(), plugin);
     getServer().getPluginManager().registerEvents(new FriendsPendingMenu(), plugin);
+    getServer().getPluginManager().registerEvents(new GenderSelectorMenu(), plugin);
+    getServer().getPluginManager().registerEvents(new YourSettingsMenu(), plugin);
+    getServer().getPluginManager().registerEvents(new YourStateSettingsMenu(), plugin);
 
     RankHandler.loadRanks();
   }
