@@ -49,7 +49,7 @@ public class ProfileMenu implements Listener {
             "&7By default, you are set to",
             "&7the &b&lACTIVE&7 state.")));
 
-    Timestamp tsJoin = new Timestamp(Long.parseLong(PlayerHandler.getDateJoined(player.getUniqueId())));
+    Timestamp tsJoin = new Timestamp(PlayerHandler.getDateJoined(player.getUniqueId()));
     Date dateJoin = new Date(tsJoin.getTime());
 
     inv.setItem(

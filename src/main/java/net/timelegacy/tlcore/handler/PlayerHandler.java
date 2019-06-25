@@ -160,9 +160,9 @@ public class PlayerHandler {
    *
    * @param uuid player's uuid
    */
-  public static String getDateJoined(UUID uuid) {
+  public static long getDateJoined(UUID uuid) {
     FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
-    String date_joined = doc.first().getString("date_joined");
+    Long date_joined = doc.first().getLong("date_joined");
     return date_joined;
   }
 
