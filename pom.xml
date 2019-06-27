@@ -98,7 +98,7 @@
   <distributionManagement>
    <snapshotRepository>
      <id>snapshots</id>
-      <url>${env.NEXUS_REPO_URL}snapshots/</url>
+      <url>${env.NEXUS_REPO_URL}timelegacy-snapshots/</url>
    </snapshotRepository>
 </distributionManagement>
 </project>
