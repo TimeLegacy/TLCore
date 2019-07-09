@@ -4,6 +4,7 @@ import de.erethon.headlib.HeadLib;
 import java.util.List;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.datatype.PlayerProfile;
 import net.timelegacy.tlcore.handler.FriendHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.utils.ItemUtils;
@@ -63,8 +64,11 @@ public class FriendsPendingMenu implements Listener {
           String friendUsername = PlayerHandler.getUsername(pendingFriends.get(current));
 
           ItemStack itemStack = ItemUtils.createSkullItem(friendUsername, "&b" + friendUsername);
-          ItemStack is = itemStack.clone();
-          menu.setItem(i, is);
+          menu.setItem(i, ItemUtils.createItem(itemStack, 1, "&b" + friendUsername,
+              "&7Left click to &a&lACCEPT",
+              "&7Right click to &c&lIGNORE",
+              "",
+              "&7this friend request."));
           player.updateInventory();
         }
       }
@@ -130,19 +134,54 @@ public class FriendsPendingMenu implements Listener {
             .getDisplayName()
             .equals(MessageUtils.colorize("&bSend Request"))) {
 
-          AnvilGUI anvilGUI = new AnvilGUI(plugin, p, "Username", (player, reply) -> {
-            if (PlayerHandler
-                .playerExists(reply)) {
-              UUID request = PlayerHandler.getUUID(reply);
-              FriendHandler.sendRequest(p.getUniqueId(), request);
-              MessageUtils.sendMessage(p,
-                  MessageUtils.SUCCESS_COLOR + "You have sent a friend request to &o" + reply, "");
-              return null;
-            }
-            MessageUtils.sendMessage(p,
-                MessageUtils.ERROR_COLOR + "Player not found.", "");
-            return "Player not found.";
-          });
+          AnvilGUI anvilGUI =
+              new AnvilGUI(
+                  plugin,
+                  p,
+                  "Username",
+                  (player, reply) -> {
+                    if (PlayerHandler.playerExists(reply)) {
+                      UUID request = PlayerHandler.getUUID(reply);
+                      PlayerProfile profile = new PlayerProfile(request);
+
+                      PlayerProfile pp = new PlayerProfile(p.getUniqueId());
+
+                      if (FriendHandler.getFriends(p.getUniqueId()).size() < 32) {
+                        if (pp.getFriends().contains(request.toString())) {
+                          MessageUtils.sendMessage(
+                              p,
+                              MessageUtils.ERROR_COLOR + "You are already friends with &o" + reply,
+                              "");
+                        } else {
+                          if (!profile.getFriendsPending().contains(p.getUniqueId().toString())) {
+                            MessageUtils.sendMessage(
+                                p,
+                                MessageUtils.SUCCESS_COLOR
+                                    + "You have sent a friend request to &o"
+                                    + reply,
+                                "");
+                            FriendHandler.sendRequest(p.getUniqueId(), request);
+                          } else {
+                            MessageUtils.sendMessage(
+                                p,
+                                MessageUtils.ERROR_COLOR
+                                    + "You already have a pending request to &o"
+                                    + reply,
+                                "");
+                          }
+                        }
+                      } else {
+                        MessageUtils.sendMessage(
+                            p,
+                            MessageUtils.ERROR_COLOR
+                                + "You have reached the maximum amount of friends. (This will be changed in the next update. Yay!)",
+                            "");
+                      }
+                      return null;
+                    }
+                    MessageUtils.sendMessage(p, MessageUtils.ERROR_COLOR + "Player not found.", "");
+                    return "Player not found.";
+                  });
 
           return;
         } else if (event
@@ -156,31 +195,24 @@ public class FriendsPendingMenu implements Listener {
           return;
         } else {
 
-          /*for (Cosmetic cosmetic : CosmeticHandler.getCosmetics()) {
-            if (cosmetic.getCosmeticType().equalsIgnoreCase("PET")) {
-              if (ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName())
-                  .equalsIgnoreCase(
-                      ChatColor.stripColor(
-                          cosmetic.getItemStack().getItemMeta().getDisplayName()))) {
-                CosmeticHandler.setPet(p, cosmetic.getCosmeticIdentifier());
+          if (event.getCurrentItem().getType().equals(Material.PLAYER_HEAD)) {
+            String username = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
+            UUID receiver = PlayerHandler.getUUID(username);
 
-                p.closeInventory();
-
-                MessageUtils.sendMessage(
-                    p,
-                    MessageUtils.MAIN_COLOR
-                        + "You have set your pet as "
-                        + MessageUtils.SECOND_COLOR
-                        + MessageUtils
-                        .friendlyify(cosmetic.getCosmeticIdentifier().replace("_", " ")),
-                    true);
-
-                break;
-              }
+            if (event.getClick().isRightClick()) {
+              FriendHandler.denyRequest(p.getUniqueId(), receiver);
+              MessageUtils.sendMessage(p,
+                  MessageUtils.ERROR_COLOR + "You have ignored the friends request of &o" + username, "");
+            } else if (event.getClick().isLeftClick()) {
+              FriendHandler.acceptRequest(p.getUniqueId(), receiver);
+              MessageUtils.sendMessage(p,
+                  MessageUtils.SUCCESS_COLOR + "You are now friends with &o" + username, "");
             }
-          }*/
 
-          //TODO friend removing functionality.
+            p.closeInventory();
+            FriendsMenu.openMenu(p, 1);
+            return;
+          }
         }
       }
     }

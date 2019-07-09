@@ -134,31 +134,7 @@ public class FriendsMenu implements Listener {
           return;
         } else {
 
-          /*for (Cosmetic cosmetic : CosmeticHandler.getCosmetics()) {
-            if (cosmetic.getCosmeticType().equalsIgnoreCase("PET")) {
-              if (ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName())
-                  .equalsIgnoreCase(
-                      ChatColor.stripColor(
-                          cosmetic.getItemStack().getItemMeta().getDisplayName()))) {
-                CosmeticHandler.setPet(p, cosmetic.getCosmeticIdentifier());
-
-                p.closeInventory();
-
-                MessageUtils.sendMessage(
-                    p,
-                    MessageUtils.MAIN_COLOR
-                        + "You have set your pet as "
-                        + MessageUtils.SECOND_COLOR
-                        + MessageUtils
-                        .friendlyify(cosmetic.getCosmeticIdentifier().replace("_", " ")),
-                    true);
-
-                break;
-              }
-            }
-          }*/
-
-          //TODO friend removing functionality.
+          //add removing of friends & confirmation to remove them.
         }
       }
     }

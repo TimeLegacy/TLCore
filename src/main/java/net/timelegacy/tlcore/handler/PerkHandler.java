@@ -25,12 +25,18 @@ public class PerkHandler {
       return;
     }
 
-    if (perksString(uuid) == null) {
-      players.updateOne(
-          Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("perks", perk.toUpperCase() + ",")));
-    } else {
-      players.updateOne(Filters.eq("uuid", uuid.toString()),
-          new Document("$set", new Document("perks", perksString(uuid) + perk.toUpperCase() + ",")));
+    if (!hasPerk(uuid, perk)) {
+
+      if (perksString(uuid) == null) {
+        players.updateOne(
+            Filters.eq("uuid", uuid.toString()),
+            new Document("$set", new Document("perks", perk.toUpperCase() + ",")));
+      } else {
+        players.updateOne(
+            Filters.eq("uuid", uuid.toString()),
+            new Document(
+                "$set", new Document("perks", perksString(uuid) + perk.toUpperCase() + ",")));
+      }
     }
 
   }

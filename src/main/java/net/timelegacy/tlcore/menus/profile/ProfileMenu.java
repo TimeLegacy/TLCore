@@ -34,20 +34,17 @@ public class ProfileMenu implements Listener {
     inv.setItem(10, ItemUtils.createItem(new ItemStack(Material.EXPERIENCE_BOTTLE), "&eYour Character",
         Arrays.asList(
             "&7Below is your character, for now",
-            "&7It only shows the current playtime",
-            "&7You have gathered on the server so far.")));
-    inv.setItem(13, ItemUtils.createItem(new ItemStack(Material.EXPERIENCE_BOTTLE), "&eProperties",
+            "&7It only shows the &bDate you Joined,",
+            "&7your &bCoins&7, &bNickname&7, and &bGender.")));
+    inv.setItem(13, ItemUtils.createItem(new ItemStack(Material.EXPERIENCE_BOTTLE), "&eSocial",
         Arrays.asList(
-            "&7Below you will find three items.",
-            "&bConversation&7, &bGender&7, and &bFriends.")));
-    inv.setItem(16, ItemUtils.createItem(new ItemStack(Material.EXPERIENCE_BOTTLE), "&eCurrent State",
+            "&7Below you will find one item.",
+            "&bFriends.")));
+    inv.setItem(16, ItemUtils.createItem(new ItemStack(Material.EXPERIENCE_BOTTLE), "&eSettings",
         Arrays.asList(
-            "&7Below is your &b&lSTATE&7. States are different",
-            "&7ways of showing your activity. They also effect",
-            "&7how you interact with the server.",
-            "",
-            "&7By default, you are set to",
-            "&7the &b&lACTIVE&7 state.")));
+            "&7Here is where you can change",
+            "&7multiple settings such as",
+            "&bGender&7, &bStatus, &band more!")));
 
     Timestamp tsJoin = new Timestamp(PlayerHandler.getDateJoined(player.getUniqueId()));
     Date dateJoin = new Date(tsJoin.getTime());
@@ -60,9 +57,10 @@ public class ProfileMenu implements Listener {
             Arrays.asList(
                 "&bJoin Date&7: &a" + dateJoin,
                 "&bCoins&7: &a" + CoinHandler.getBalance(player.getUniqueId()),
-                "&bNickname&7: &a" + (playerProfile.getNickname().isEmpty() ? "N/A" : playerProfile.getNickname()))));
+                "&bNickname&7: &a" + (playerProfile.getNickname().isEmpty() ? "N/A" : playerProfile.getNickname()),
+                "&bGender&7: &a" + playerProfile.getGender().toString())));
 
-    inv.setItem(21, ItemUtils.createItem(new ItemStack(Material.PAPER), "&aParties",
+    inv.setItem(20, ItemUtils.createItem(new ItemStack(Material.PAPER), "&aStatus",
         Arrays.asList(
             "&7This allows for you to create parties",
             "&7while you are in the hub for you and",
@@ -70,16 +68,7 @@ public class ProfileMenu implements Listener {
             "",
             "&b&lComing Soon!")));
 
-    inv.setItem(22, ItemUtils.createItem(new ItemStack(Material.GRAY_DYE, 1),
-        "&aGender",
-        Arrays.asList(
-            "&7Choose between being a &b&lMALE&7,",
-            "&d&lFEMALE, &7&lOTHER&7.",
-            "",
-            "&7&oThis doesn't affect anything.",
-            "&7&oIt's just here for Role-playing aspects.")));
-
-    inv.setItem(23, ItemUtils.createItem(new ItemStack(Material.EMERALD), "&aFriends",
+    inv.setItem(22, ItemUtils.createItem(new ItemStack(Material.EMERALD), "&aFriends",
         Arrays.asList(
             "&7This allows you to manage your",
             "&7friends list. Check requests, remove",
