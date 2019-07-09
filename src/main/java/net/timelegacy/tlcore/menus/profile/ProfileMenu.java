@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
 import net.timelegacy.tlcore.datatype.PlayerProfile;
-import net.timelegacy.tlcore.datatype.PlayerProfile.Gender;
 import net.timelegacy.tlcore.handler.CoinHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.menus.friends.FriendsMenu;
@@ -59,14 +58,6 @@ public class ProfileMenu implements Listener {
                 "&bCoins&7: &a" + CoinHandler.getBalance(player.getUniqueId()),
                 "&bNickname&7: &a" + (playerProfile.getNickname().isEmpty() ? "N/A" : playerProfile.getNickname()),
                 "&bGender&7: &a" + playerProfile.getGender().toString())));
-
-    inv.setItem(20, ItemUtils.createItem(new ItemStack(Material.PAPER), "&aStatus",
-        Arrays.asList(
-            "&7This allows for you to create parties",
-            "&7while you are in the hub for you and",
-            "&7your friends to venture out on TimeLegacy!",
-            "",
-            "&b&lComing Soon!")));
 
     inv.setItem(22, ItemUtils.createItem(new ItemStack(Material.EMERALD), "&aFriends",
         Arrays.asList(
@@ -140,7 +131,7 @@ public class ProfileMenu implements Listener {
 
     inv.setItem(
         40,
-        ItemUtils.createItem(texturedSkull, MessageUtils.colorize("&eSocial Media")));
+        ItemUtils.createItem(texturedSkull, 1, MessageUtils.colorize("&eSocial Media"), "&b&lComing Soon"));
 
     player.openInventory(inv);
   }
@@ -163,7 +154,6 @@ public class ProfileMenu implements Listener {
         }
 
         String name = ChatColor.stripColor(is.getItemMeta().getDisplayName());
-        PlayerProfile playerProfile = new PlayerProfile(p.getUniqueId());
 
         if (name.equals("Gender")) {
           GenderSelectorMenu.openMenu(p);
@@ -176,7 +166,7 @@ public class ProfileMenu implements Listener {
         }
 
         if (name.equals("Settings")) {
-          playerProfile.setGender(Gender.OTHER);
+          YourSettingsMenu.openMenu(p);
           return;
         }
 

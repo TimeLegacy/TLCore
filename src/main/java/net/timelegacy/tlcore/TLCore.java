@@ -91,10 +91,10 @@ public class TLCore extends JavaPlugin {
     getServer().getPluginManager().registerEvents(new FilterEvents(), plugin);
     getServer().getPluginManager().registerEvents(new PlayerEvents(), plugin);
 
-    getServer().getPluginManager().registerEvents(new ProfileMenu(), plugin);
-
     getServer().getPluginManager().registerEvents(new FriendsMenu(), plugin);
     getServer().getPluginManager().registerEvents(new FriendsPendingMenu(), plugin);
+
+    getServer().getPluginManager().registerEvents(new ProfileMenu(), plugin);
 
     getServer().getPluginManager().registerEvents(new GenderSelectorMenu(), plugin);
     getServer().getPluginManager().registerEvents(new YourSettingsMenu(), plugin);

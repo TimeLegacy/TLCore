@@ -27,7 +27,7 @@ public class YourStateSettingsMenu implements Listener {
     Inventory inv = Bukkit.createInventory(null, 9 * 6, guiName);
 
     String checkmark = "\u2713";
-    String x = "\u274C";
+    String x = "\u00D7";
 
     // Row 1
 
@@ -89,17 +89,17 @@ public class YourStateSettingsMenu implements Listener {
       case "ACTIVE":
         inv.setItem(38, ItemUtils.createItem(new ItemStack(Material.LIME_DYE, 1), "&a&lACTIVE",
             Collections.singletonList("&7Click to change state!")));
-        inv.setItem(40, ItemUtils.createItem(new ItemStack(Material.INK_SAC, 1), "&e&lAWAY",
+        inv.setItem(40, ItemUtils.createItem(new ItemStack(Material.GRAY_DYE, 1), "&e&lAWAY",
             Collections.singletonList("&7Click to change state!")));
-        inv.setItem(42, ItemUtils.createItem(new ItemStack(Material.INK_SAC, 1), "&c&lDO NOT DISTURB",
+        inv.setItem(42, ItemUtils.createItem(new ItemStack(Material.GRAY_DYE, 1), "&c&lDO NOT DISTURB",
             Collections.singletonList("&7Click to change state!")));
         break;
       case "AWAY":
-        inv.setItem(38, ItemUtils.createItem(new ItemStack(Material.INK_SAC, 1), "&a&lACTIVE",
+        inv.setItem(38, ItemUtils.createItem(new ItemStack(Material.GRAY_DYE, 1), "&a&lACTIVE",
             Collections.singletonList("&7Click to change state!")));
         inv.setItem(40, ItemUtils.createItem(new ItemStack(Material.LIME_DYE, 1), "&e&lAWAY",
             Collections.singletonList("&7Click to change state!")));
-        inv.setItem(42, ItemUtils.createItem(new ItemStack(Material.INK_SAC, 1), "&c&lDO NOT DISTURB",
+        inv.setItem(42, ItemUtils.createItem(new ItemStack(Material.GRAY_DYE, 1), "&c&lDO NOT DISTURB",
             Collections.singletonList("&7Click to change state!")));
         break;
       case "DND":
@@ -137,16 +137,21 @@ public class YourStateSettingsMenu implements Listener {
 
         if (name.equals("ACTIVE")) {
           playerProfile.setStatus(Status.ACTIVE);
+          YourSettingsMenu.openMenu(p);
           return;
         }
 
         if (name.equals("AWAY")) {
           playerProfile.setStatus(Status.AWAY);
+          YourSettingsMenu.openMenu(p);
+          openMenu(p);
           return;
         }
 
         if (name.equals("DO NOT DISTURB")) {
           playerProfile.setStatus(Status.DND);
+          YourSettingsMenu.openMenu(p);
+          openMenu(p);
           return;
         }
 

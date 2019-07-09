@@ -1,6 +1,7 @@
 package net.timelegacy.tlcore.menus.friends;
 
 import de.erethon.headlib.HeadLib;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
@@ -70,6 +71,17 @@ public class FriendsMenu implements Listener {
     }.runTaskAsynchronously(plugin);
   }
 
+  public static void displayRemovalConfirm(Inventory inv, int slot, String username, ItemStack originalHead) {
+    ItemStack removalConfirm = ItemUtils.createItem(Material.GUNPOWDER, "&b" + username, Arrays.asList(
+        "&7Click to &c&lREMOVE",
+        "&b" + username + "&7 as a friend.",
+        "",
+        "&7This will disappear in 10 seconds."));
+
+    inv.setItem(slot, removalConfirm);
+    Bukkit.getScheduler().runTaskLater(plugin, () -> inv.setItem(slot, originalHead), 10 * 20);
+  }
+
   @EventHandler
   public void onInventoryClick(InventoryClickEvent event) {
     Player p = (Player) event.getWhoClicked();
@@ -134,7 +146,19 @@ public class FriendsMenu implements Listener {
           return;
         } else {
 
-          //add removing of friends & confirmation to remove them.
+          if (event.getCurrentItem().getType() == Material.PLAYER_HEAD) {
+            ItemStack head = event.getCurrentItem();
+            String username = ChatColor.stripColor(head.getItemMeta().getDisplayName());
+
+            displayRemovalConfirm(event.getClickedInventory(), event.getSlot(), username, head);
+          } else if (event.getCurrentItem().getType() == Material.GUNPOWDER) {
+            UUID uuid = PlayerHandler
+                .getUUID(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
+
+            FriendHandler.removeFriend(p.getUniqueId(), uuid);
+          }
+
+          openMenu(p, 1);
         }
       }
     }

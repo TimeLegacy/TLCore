@@ -48,8 +48,24 @@ public class YourSettingsMenu implements Listener {
         break;
     }
 
+    ItemStack male = ItemUtils.createItem(new ItemStack(Material.LIGHT_BLUE_DYE, 1), "&aGender Settings");
+    ItemStack female = ItemUtils.createItem(new ItemStack(Material.PINK_DYE, 1), "&aGender Settings");
+    ItemStack other = ItemUtils.createItem(new ItemStack(Material.PURPLE_DYE, 1), "&aGender Settings");
+
+    switch (playerProfile.getGender().toString()) {
+      case "MALE":
+        inv.setItem(15, male);
+        break;
+      case "FEMALE":
+        inv.setItem(15, female);
+        break;
+      case "OTHER":
+        inv.setItem(15, other);
+        break;
+    }
+
     // inv.setItem(14, ItemUtils.createItem(Material.BANNER, "&aState Settings"));
-    inv.setItem(15, ItemUtils.createItem(Material.PAPER, "&aChat Settings"));
+    // inv.setItem(15, ItemUtils.createItem(Material.GRAY_DYE, "&aGender Settings"));
     inv.setItem(16, ItemUtils.createItem(Material.BARRIER, "&aPrivacy Settings"));
 
     // Row 3
@@ -62,61 +78,12 @@ public class YourSettingsMenu implements Listener {
 
     inv.setItem(23, ItemUtils.createItem(new ItemStack(Material.INK_SAC, 1, (byte) 14), "&aState Settings",
         Collections.singletonList("&eClick to edit settings!")));
-    inv.setItem(24, ItemUtils.createItem(new ItemStack(Material.INK_SAC, 1, (byte) 14), "&aChat Settings",
-        Collections.singletonList("&b&lComing Soon")));
-    inv.setItem(25, ItemUtils.createItem(new ItemStack(Material.INK_SAC, 1, (byte) 14), "&aPrivacy Settings",
+    inv.setItem(24, ItemUtils.createItem(new ItemStack(Material.INK_SAC, 1, (byte) 14), "&aGender Settings",
         Collections.singletonList("&eClick to edit settings!")));
+    inv.setItem(25, ItemUtils.createItem(new ItemStack(Material.INK_SAC, 1, (byte) 14), "&aPrivacy Settings",
+        Collections.singletonList("&b&lComing Soon")));
 
     player.openInventory(inv);
-
-    //    ItemStack playerVisibility = new ItemStack(Material.EYE_OF_ENDER, 1);
-    //    ItemMeta playerVisibilityMeta = playerVisibility.getItemMeta();
-    //
-    ////    if (Database.getVisibility(player)) {
-    ////      playerVisibilityMeta.setDisplayName(MessageUtils.colorize("&aPlayer Visibility"));
-    ////      playerVisibility.setItemMeta(playerVisibilityMeta);
-    ////    } else {
-    ////      playerVisibilityMeta.setDisplayName(MessageUtils.colorize("&cPlayer Visibility"));
-    ////      playerVisibility.setItemMeta(playerVisibilityMeta);
-    ////    }
-    //
-    //    inv.setItem(10, playerVisibility);
-    //
-    //    ItemStack petVisibility = new ItemStack(Material.BONE, 1);
-    //    inv.setItem(11, petVisibility);
-    //
-    //    ItemStack autoSpawnPet = new ItemStack(Material.MOB_SPAWNER, 1);
-    //    inv.setItem(12, autoSpawnPet);
-    //
-    //
-    //    ItemStack currentState = new ItemStack(Material.BANNER, 1);
-    //    inv.setItem(14, currentState);
-    //
-    //    ItemStack chatSettings = new ItemStack(Material.PAPER, 1);
-    //    inv.setItem(15, chatSettings);
-    //
-    //    ItemStack privacySettings = new ItemStack(Material.PAPER, 1);
-    //    inv.setItem(16, privacySettings);
-    //
-    //
-    //    ItemStack playerVisibilityEnabled = new ItemStack(Material.INK_SACK, 1, (byte) 10);
-    //    inv.setItem(19, playerVisibilityEnabled);
-    //
-    //    ItemStack petVisibilityEnabled = new ItemStack(Material.INK_SACK, 1, (byte) 8);
-    //    inv.setItem(20, petVisibilityEnabled);
-    //
-    //    ItemStack autoSpawnPetEnabled = new ItemStack(Material.INK_SACK, 1, (byte) 8);
-    //    inv.setItem(21, autoSpawnPetEnabled);
-    //
-    //
-    //    ItemStack currentStateSettings = new ItemStack(Material.INK_SACK, 1, (byte) 14);
-    //    inv.setItem(23, currentStateSettings);
-    //
-    //    ItemStack editChatSettings = new ItemStack(Material.INK_SACK, 1, (byte) 14);
-    //    inv.setItem(24, editChatSettings);
-    //
-    //    ItemStack editPrivacySettings = new ItemStack(Material.INK_SACK, 1, (byte) 14);
-    //    inv.setItem(25, editPrivacySettings);
 
   }
 
@@ -141,6 +108,12 @@ public class YourSettingsMenu implements Listener {
 
         if (name.equals("State Settings")) {
           YourStateSettingsMenu.openMenu(p);
+          return;
+        }
+
+        if (name.equals("Gender Settings")) {
+          GenderSelectorMenu
+              .openMenu(p);
           return;
         }
       }

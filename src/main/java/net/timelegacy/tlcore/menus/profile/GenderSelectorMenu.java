@@ -75,16 +75,19 @@ public class GenderSelectorMenu implements Listener {
 
         if (name.equals("Male")) {
           playerProfile.setGender(Gender.MALE);
+          YourSettingsMenu.openMenu(p);
           return;
         }
 
         if (name.equals("Female")) {
           playerProfile.setGender(Gender.FEMALE);
+          YourSettingsMenu.openMenu(p);
           return;
         }
 
         if (name.equals("Other")) {
           playerProfile.setGender(Gender.OTHER);
+          YourSettingsMenu.openMenu(p);
           return;
         }
 

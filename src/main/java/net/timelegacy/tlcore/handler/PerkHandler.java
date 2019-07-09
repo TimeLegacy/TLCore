@@ -30,12 +30,12 @@ public class PerkHandler {
       if (perksString(uuid) == null) {
         players.updateOne(
             Filters.eq("uuid", uuid.toString()),
-            new Document("$set", new Document("perks", perk.toUpperCase() + ",")));
+            new Document("$set", new Document("perks", perk.toLowerCase() + ",")));
       } else {
         players.updateOne(
             Filters.eq("uuid", uuid.toString()),
             new Document(
-                "$set", new Document("perks", perksString(uuid) + perk.toUpperCase() + ",")));
+                "$set", new Document("perks", perksString(uuid) + perk.toLowerCase() + ",")));
       }
     }
 
@@ -79,7 +79,7 @@ public class PerkHandler {
    * @param perk perk node (ex: "LOBBY.HAT.GIFT") as string
    */
   public static boolean hasPerk(UUID uuid, String perk) {
-    return perksString(uuid).contains(perk);
+    return perksString(uuid).contains(perk.toLowerCase());
   }
 
   /**
