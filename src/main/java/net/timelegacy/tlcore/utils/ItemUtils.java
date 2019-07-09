@@ -3,10 +3,14 @@ package net.timelegacy.tlcore.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import net.minecraft.server.v1_13_R2.NBTTagCompound;
+import net.minecraft.server.v1_13_R2.NBTTagList;
+import net.minecraft.server.v1_13_R2.NBTTagString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -199,6 +203,22 @@ public class ItemUtils {
     return item;
   }
 
+  public static ItemStack createItem(Material material, String name, List<String> lore, String localizedName) {
+    ItemStack item = new ItemStack(material);
+    ItemMeta meta = item.getItemMeta();
+    meta.setDisplayName(MessageUtils.colorize(name));
+
+    List<String> newLore = new ArrayList<>();
+    for (String s : lore) {
+      newLore.add(MessageUtils.colorize(s));
+    }
+
+    meta.setLore(newLore);
+    meta.setLocalizedName(localizedName);
+    item.setItemMeta(meta);
+    return item;
+  }
+
   public static ItemStack createItem(ItemStack item, String name) {
     ItemStack is = item.clone();
     ItemMeta meta = is.getItemMeta();
@@ -245,6 +265,32 @@ public class ItemUtils {
     meta.setDisplayName(MessageUtils.colorize(displayName));
     is.setItemMeta(meta);
     return is;
+  }
+
+  public static ItemStack createNMSSkullItem(ItemStack item, String textureValue, String localizedName) {
+    net.minecraft.server.v1_13_R2.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+
+    NBTTagCompound compound = nmsStack.getTag();
+    if (compound == null) {
+      compound = new NBTTagCompound();
+      nmsStack.setTag(compound);
+      compound = nmsStack.getTag();
+    }
+
+    NBTTagCompound skullOwner = new NBTTagCompound();
+    skullOwner.set("Id", new NBTTagString(UUID.randomUUID().toString()));
+    NBTTagCompound properties = new NBTTagCompound();
+    NBTTagList textures = new NBTTagList();
+    NBTTagCompound value = new NBTTagCompound();
+    value.set("Value", new NBTTagString(textureValue));
+    textures.add(value);
+    properties.set("textures", textures);
+    skullOwner.set("Properties", properties);
+
+    compound.set("SkullOwner", skullOwner);
+    nmsStack.setTag(compound);
+
+    return addLocalizedName(CraftItemStack.asBukkitCopy(nmsStack), localizedName);
   }
 
   public static ItemStack createItemNoAttrib(Material material) {
@@ -295,6 +341,28 @@ public class ItemUtils {
     return is;
   }
 
+  public static ItemStack createItemNoAttrib(ItemStack item, String displayName, List<String> lore, String localizedName) {
+    ItemStack is = item.clone();
+    ItemMeta meta = is.getItemMeta();
+    meta.setDisplayName(MessageUtils.colorize(displayName));
+    meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+    meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+    meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+    meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+    meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+
+    List<String> newLore = new ArrayList<>();
+    for (String s : lore) {
+      newLore.add(MessageUtils.colorize(s));
+    }
+
+    meta.setLore(newLore);
+    meta.setLocalizedName(localizedName);
+    is.setItemMeta(meta);
+    return is;
+  }
+
   public static ItemStack createItemNoAttrib(Material material, String displayName) {
     ItemStack is = new ItemStack(material);
     ItemMeta meta = is.getItemMeta();
@@ -326,6 +394,28 @@ public class ItemUtils {
     }
 
     meta.setLore(newLore);
+    is.setItemMeta(meta);
+    return is;
+  }
+
+  public static ItemStack createItemNoAttrib(Material material, String displayName, List<String> lore, String localizedName) {
+    ItemStack is = new ItemStack(material);
+    ItemMeta meta = is.getItemMeta();
+    meta.setDisplayName(MessageUtils.colorize(displayName));
+    meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+    meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+    meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+    meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+    meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+
+    List<String> newLore = new ArrayList<>();
+    for (String s : lore) {
+      newLore.add(MessageUtils.colorize(s));
+    }
+
+    meta.setLore(newLore);
+    meta.setLocalizedName(localizedName);
     is.setItemMeta(meta);
     return is;
   }
@@ -407,6 +497,16 @@ public class ItemUtils {
     meta.setDisplayName(MessageUtils.colorize(name));
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+    is.setItemMeta(meta);
+    return is;
+  }
+
+  public static ItemStack addLocalizedName(ItemStack item, String name) {
+    ItemStack is = item.clone();
+    ItemMeta meta = item.getItemMeta();
+
+    meta.setLocalizedName(name);
+
     is.setItemMeta(meta);
     return is;
   }
