@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 import net.timelegacy.tlcore.datatype.PlayerProfile;
 import net.timelegacy.tlcore.handler.CoinHandler;
+import net.timelegacy.tlcore.handler.FriendHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.menus.friends.FriendsMenu;
 import net.timelegacy.tlcore.utils.ItemUtils;
@@ -59,7 +60,11 @@ public class ProfileMenu implements Listener {
                 "&bNickname&7: &a" + (playerProfile.getNickname().isEmpty() ? "N/A" : playerProfile.getNickname()),
                 "&bGender&7: &a" + playerProfile.getGender().toString())));
 
-    inv.setItem(22, ItemUtils.createItem(new ItemStack(Material.EMERALD), "&aFriends",
+    int friendsCount = FriendHandler.getFriends(player.getUniqueId()).isEmpty() ?
+        1 : FriendHandler.getFriends(player.getUniqueId()).size() > 64 ?
+        64 : FriendHandler.getFriends(player.getUniqueId()).size();
+
+    inv.setItem(22, ItemUtils.createItem(new ItemStack(Material.EMERALD, friendsCount), "&aFriends",
         Arrays.asList(
             "&7This allows you to manage your",
             "&7friends list. Check requests, remove",

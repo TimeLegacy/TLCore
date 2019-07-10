@@ -7,6 +7,7 @@ import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.FriendHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
+import net.timelegacy.tlcore.menus.profile.ProfileMenu;
 import net.timelegacy.tlcore.utils.ItemUtils;
 import net.timelegacy.tlcore.utils.MenuUtils;
 import net.timelegacy.tlcore.utils.MessageUtils;
@@ -33,6 +34,8 @@ public class FriendsMenu implements Listener {
     menu.setItem(39, ItemUtils.createItem(Material.ARROW, 1, "&aPrevious Page"));
     menu.setItem(40, ItemUtils.createItem(HeadLib.WOODEN_EXCLAMATION_MARK.toItemStack(), 1, "&bPending Friends"));
     menu.setItem(41, ItemUtils.createItem(Material.ARROW, 1, "&aNext Page"));
+
+    menu.setItem(49, ItemUtils.createItem(Material.ENCHANTING_TABLE, 1, "&eReturn to Your Profile"));
 
     // Row 6
     //menu.setItem(49, ItemUtils.createItem(Material.ENCHANTING_TABLE, 1, "&eReturn to Cosmetics"));
@@ -150,15 +153,17 @@ public class FriendsMenu implements Listener {
             ItemStack head = event.getCurrentItem();
             String username = ChatColor.stripColor(head.getItemMeta().getDisplayName());
 
-            displayRemovalConfirm(event.getClickedInventory(), event.getSlot(), username, head);
+            displayRemovalConfirm(event.getInventory(), event.getSlot(), username, head);
           } else if (event.getCurrentItem().getType() == Material.GUNPOWDER) {
             UUID uuid = PlayerHandler
                 .getUUID(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
 
             FriendHandler.removeFriend(p.getUniqueId(), uuid);
-          }
 
-          openMenu(p, 1);
+            openMenu(p, 1);
+          } else if (event.getCurrentItem().getType() == Material.ENCHANTING_TABLE) {
+            ProfileMenu.openMenu(p);
+          }
         }
       }
     }

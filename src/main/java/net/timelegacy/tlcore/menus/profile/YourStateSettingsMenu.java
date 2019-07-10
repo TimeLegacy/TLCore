@@ -144,14 +144,12 @@ public class YourStateSettingsMenu implements Listener {
         if (name.equals("AWAY")) {
           playerProfile.setStatus(Status.AWAY);
           YourSettingsMenu.openMenu(p);
-          openMenu(p);
           return;
         }
 
         if (name.equals("DO NOT DISTURB")) {
           playerProfile.setStatus(Status.DND);
           YourSettingsMenu.openMenu(p);
-          openMenu(p);
           return;
         }
 

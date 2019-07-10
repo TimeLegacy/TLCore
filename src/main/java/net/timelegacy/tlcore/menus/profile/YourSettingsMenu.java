@@ -32,6 +32,8 @@ public class YourSettingsMenu implements Listener {
     inv.setItem(12, ItemUtils.createItem(Material.SPAWNER, "&aAuto Spawn Pet",
         Collections.singletonList("&b&lComing Soon")));
 
+    inv.setItem(31, ItemUtils.createItem(Material.ENCHANTING_TABLE, 1, "&eReturn to Your Profile"));
+
     ItemStack active = ItemUtils.createItem(Material.GREEN_BANNER, MessageUtils.colorize("&aState Settings"));
     ItemStack away = ItemUtils.createItem(Material.YELLOW_BANNER, MessageUtils.colorize("&aState Settings"));
     ItemStack doNotDisturb = ItemUtils.createItem(Material.RED_BANNER, MessageUtils.colorize("&aState Settings"));
@@ -115,6 +117,10 @@ public class YourSettingsMenu implements Listener {
           GenderSelectorMenu
               .openMenu(p);
           return;
+        }
+
+        if (event.getCurrentItem().getType() == Material.ENCHANTING_TABLE) {
+          ProfileMenu.openMenu(p);
         }
       }
     }

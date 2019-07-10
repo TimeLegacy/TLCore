@@ -153,7 +153,14 @@ public class FriendsPendingMenu implements Listener {
                               MessageUtils.ERROR_COLOR + "You are already friends with &o" + reply,
                               "");
                         } else {
-                          if (!profile.getFriendsPending().contains(p.getUniqueId().toString())) {
+                          if (pp.getFriendsPending().contains(request.toString())) {
+                            FriendHandler.acceptRequest(player.getUniqueId(), request);
+                            MessageUtils.sendMessage(
+                                p,
+                                MessageUtils.SUCCESS_COLOR + "You already have a request from &o" + reply +
+                                    "&r" + MessageUtils.SUCCESS_COLOR + " and it has been accepted.",
+                                "");
+                          } else if (!profile.getFriendsPending().contains(p.getUniqueId().toString())) {
                             MessageUtils.sendMessage(
                                 p,
                                 MessageUtils.SUCCESS_COLOR
