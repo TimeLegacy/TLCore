@@ -1,10 +1,14 @@
 package net.timelegacy.tlcore.menus.friends;
 
 import de.erethon.headlib.HeadLib;
+import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.datatype.PlayerProfile;
+import net.timelegacy.tlcore.handler.CoinHandler;
 import net.timelegacy.tlcore.handler.FriendHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.menus.profile.ProfileMenu;
@@ -29,6 +33,23 @@ public class FriendsMenu implements Listener {
   public static void openMenu(Player player, int page) {
 
     Inventory menu = Bukkit.createInventory(player, 54, MessageUtils.colorize("&8&lFriends >> &8&nPage " + page));
+
+    //Row 1
+    PlayerProfile playerProfile = new PlayerProfile(player.getUniqueId());
+
+    Timestamp tsJoin = new Timestamp(PlayerHandler.getDateJoined(player.getUniqueId()));
+    Date dateJoin = new Date(tsJoin.getTime());
+
+    menu.setItem(
+        4,
+        ItemUtils.createSkullItem(
+            player.getName(),
+            "&e" + player.getName(),
+            Arrays.asList(
+                "&bJoin Date&7: &a" + dateJoin,
+                "&bCoins&7: &a" + CoinHandler.getBalance(player.getUniqueId()),
+                "&bNickname&7: &a" + (playerProfile.getNickname().isEmpty() ? "N/A" : playerProfile.getNickname()),
+                "&bGender&7: &a" + playerProfile.getGender().toString())));
 
     // Row 5
     menu.setItem(39, ItemUtils.createItem(Material.ARROW, 1, "&aPrevious Page"));
