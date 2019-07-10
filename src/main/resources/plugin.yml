@@ -48,3 +48,7 @@ commands:
     description: Unmutes a muted player.
   Profile:
     description: View your player profile.
+  spawn:
+    description: Teleport to the world's spawn point.
+  setspawn:
+    description: Set the world spawn.
