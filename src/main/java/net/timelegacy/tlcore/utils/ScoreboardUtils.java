@@ -16,6 +16,8 @@ public class ScoreboardUtils {
       Scoreboard board = manager.getNewScoreboard();
       scoreboards.put(player, board);
 
+      player.setScoreboard(board);
+
       return board;
     } else {
       return scoreboards.get(player);
