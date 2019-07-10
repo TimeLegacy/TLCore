@@ -86,7 +86,9 @@ public class FriendsMenu implements Listener {
 
           String friendUsername = PlayerHandler.getUsername(friends.get(current));
 
-          ItemStack itemStack = ItemUtils.createSkullItem(friendUsername, "&b" + friendUsername);
+          ItemStack itemStack = ItemUtils.createSkullItem(friendUsername, "&b" + friendUsername, Arrays.asList(
+              "&7Click to &c&lREMOVE",
+              "&7them as a friend."));
           ItemStack is = itemStack.clone();
           menu.setItem(i, is);
           player.updateInventory();
@@ -98,7 +100,7 @@ public class FriendsMenu implements Listener {
   public static void displayRemovalConfirm(Inventory inv, int slot, String username, ItemStack originalHead) {
     ItemStack removalConfirm = ItemUtils.createItem(Material.GUNPOWDER, "&b" + username, Arrays.asList(
         "&7Click to &c&lREMOVE",
-        "&b" + username + "&7 as a friend.",
+        "&7them as a friend.",
         "",
         "&7This will disappear in 10 seconds."));
 
