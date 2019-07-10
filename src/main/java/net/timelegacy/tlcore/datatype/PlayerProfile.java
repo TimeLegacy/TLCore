@@ -102,7 +102,7 @@ public class PlayerProfile {
 
   public void setGender(Gender gender) {
     profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
-        new Document("$set", new Document("chat_filter", gender.toString())));
+        new Document("$set", new Document("gender", gender.toString())));
     this.gender = gender;
   }
 

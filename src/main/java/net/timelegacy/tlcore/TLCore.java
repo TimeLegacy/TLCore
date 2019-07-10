@@ -21,17 +21,19 @@ import net.timelegacy.tlcore.command.RankManagementCommand;
 import net.timelegacy.tlcore.command.RebootCommand;
 import net.timelegacy.tlcore.command.TeleportCommand;
 import net.timelegacy.tlcore.command.TeleportHereCommand;
-import net.timelegacy.tlcore.command.TogglePhysicsCommand;
 import net.timelegacy.tlcore.command.UnBanCommand;
 import net.timelegacy.tlcore.command.UnMuteCommand;
 import net.timelegacy.tlcore.event.FilterEvents;
-import net.timelegacy.tlcore.event.PhysicsEvents;
 import net.timelegacy.tlcore.event.PlayerEvents;
 import net.timelegacy.tlcore.handler.PermissionHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.handler.ServerHandler;
-import net.timelegacy.tlcore.menus.FriendsMenu;
-import net.timelegacy.tlcore.menus.FriendsPendingMenu;
+import net.timelegacy.tlcore.menus.friends.FriendsMenu;
+import net.timelegacy.tlcore.menus.friends.FriendsPendingMenu;
+import net.timelegacy.tlcore.menus.profile.GenderSelectorMenu;
+import net.timelegacy.tlcore.menus.profile.ProfileMenu;
+import net.timelegacy.tlcore.menus.profile.YourSettingsMenu;
+import net.timelegacy.tlcore.menus.profile.YourStateSettingsMenu;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -45,7 +47,6 @@ public class TLCore extends JavaPlugin {
   public FileConfiguration config;
   public Logger logger = Bukkit.getLogger();
   public List<UUID> flySpeed = new ArrayList<>();
-  public boolean physics = false;
 
   public static TLCore getPlugin() {
     return plugin;
@@ -75,7 +76,6 @@ public class TLCore extends JavaPlugin {
     getCommand("teleporthere").setExecutor(new TeleportHereCommand());
     getCommand("coinmanagement").setExecutor(new CoinManagementCommand());
     getCommand("fly").setExecutor(new FlyCommand());
-    getCommand("togglephysics").setExecutor(new TogglePhysicsCommand());
     getCommand("list").setExecutor(new ListCommand());
     getCommand("gamemode").setExecutor(new GamemodeCommand());
     getCommand("multipliermanagement").setExecutor(new MultiplierCommand());
@@ -90,10 +90,15 @@ public class TLCore extends JavaPlugin {
 
     getServer().getPluginManager().registerEvents(new FilterEvents(), plugin);
     getServer().getPluginManager().registerEvents(new PlayerEvents(), plugin);
-    getServer().getPluginManager().registerEvents(new PhysicsEvents(), plugin);
 
     getServer().getPluginManager().registerEvents(new FriendsMenu(), plugin);
     getServer().getPluginManager().registerEvents(new FriendsPendingMenu(), plugin);
+
+    getServer().getPluginManager().registerEvents(new ProfileMenu(), plugin);
+
+    getServer().getPluginManager().registerEvents(new GenderSelectorMenu(), plugin);
+    getServer().getPluginManager().registerEvents(new YourSettingsMenu(), plugin);
+    getServer().getPluginManager().registerEvents(new YourStateSettingsMenu(), plugin);
 
     RankHandler.loadRanks();
   }

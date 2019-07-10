@@ -2,8 +2,12 @@ package net.timelegacy.tlcore.handler;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.mongodb.MongoDB;
@@ -170,5 +174,47 @@ public class ServerHandler {
   public static boolean serverExists() {
     FindIterable<Document> iterable = servers.find(new Document("uuid", getServerUUID().toString()));
     return iterable.first() != null;
+  }
+
+  /**
+   * Get servers of a type
+   *
+   * @return servers;
+   */
+
+  public static List<UUID> getServers(String type) {
+    FindIterable<Document> doc = servers.find(Filters.eq("type", type));
+
+    List<UUID> servers = new ArrayList<>();
+
+    MongoCursor<Document> cursor = doc.iterator();
+
+    while (cursor.hasNext()) {
+      Document document = cursor.next();
+      servers.add(UUID.fromString(document.getString("uuid")));
+    }
+
+    return servers;
+  }
+
+  /**
+   * Get servers
+   *
+   * @return servers & type;
+   */
+
+  public static HashMap<UUID, String> getServers() {
+    FindIterable<Document> doc = servers.find();
+
+    HashMap<UUID, String> servers = new HashMap<>();
+
+    MongoCursor<Document> cursor = doc.iterator();
+
+    while (cursor.hasNext()) {
+      Document document = cursor.next();
+      servers.put(UUID.fromString(document.getString("uuid")), document.getString("type"));
+    }
+
+    return servers;
   }
 }

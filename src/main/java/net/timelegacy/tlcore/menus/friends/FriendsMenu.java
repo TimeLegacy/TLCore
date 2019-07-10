@@ -1,15 +1,16 @@
-package net.timelegacy.tlcore.menus;
+package net.timelegacy.tlcore.menus.friends;
 
 import de.erethon.headlib.HeadLib;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.FriendHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
+import net.timelegacy.tlcore.menus.profile.ProfileMenu;
 import net.timelegacy.tlcore.utils.ItemUtils;
 import net.timelegacy.tlcore.utils.MenuUtils;
 import net.timelegacy.tlcore.utils.MessageUtils;
-import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,25 +22,27 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class FriendsPendingMenu implements Listener {
+public class FriendsMenu implements Listener {
 
   private static TLCore plugin = TLCore.getPlugin();
 
   public static void openMenu(Player player, int page) {
-    Inventory menu = Bukkit
-        .createInventory(player, 54, MessageUtils.colorize("&8&lPending Friends >> &8&nPage " + page));
+
+    Inventory menu = Bukkit.createInventory(player, 54, MessageUtils.colorize("&8&lFriends >> &8&nPage " + page));
 
     // Row 5
     menu.setItem(39, ItemUtils.createItem(Material.ARROW, 1, "&aPrevious Page"));
-    menu.setItem(40, ItemUtils.createItem(HeadLib.WOODEN_PLUS.toItemStack(), 1, "&bSend Request"));
+    menu.setItem(40, ItemUtils.createItem(HeadLib.WOODEN_EXCLAMATION_MARK.toItemStack(), 1, "&bPending Friends"));
     menu.setItem(41, ItemUtils.createItem(Material.ARROW, 1, "&aNext Page"));
 
+    menu.setItem(49, ItemUtils.createItem(Material.ENCHANTING_TABLE, 1, "&eReturn to Your Profile"));
+
     // Row 6
-    menu.setItem(49, ItemUtils.createItem(Material.ENCHANTING_TABLE, 1, "&eReturn to Friends"));
+    //menu.setItem(49, ItemUtils.createItem(Material.ENCHANTING_TABLE, 1, "&eReturn to Cosmetics"));
 
     player.openInventory(menu);
 
-    List<UUID> pendingFriends = FriendHandler.getPendingFriends(player.getUniqueId());
+    List<UUID> friends = FriendHandler.getFriends(player.getUniqueId());
 
     new BukkitRunnable() {
 
@@ -56,11 +59,11 @@ public class FriendsPendingMenu implements Listener {
 
           int current = ((i - 10) + start) - forgotten;
 
-          if (current >= pendingFriends.size()) {
+          if (current >= friends.size()) {
             continue;
           }
 
-          String friendUsername = PlayerHandler.getUsername(pendingFriends.get(current));
+          String friendUsername = PlayerHandler.getUsername(friends.get(current));
 
           ItemStack itemStack = ItemUtils.createSkullItem(friendUsername, "&b" + friendUsername);
           ItemStack is = itemStack.clone();
@@ -71,6 +74,17 @@ public class FriendsPendingMenu implements Listener {
     }.runTaskAsynchronously(plugin);
   }
 
+  public static void displayRemovalConfirm(Inventory inv, int slot, String username, ItemStack originalHead) {
+    ItemStack removalConfirm = ItemUtils.createItem(Material.GUNPOWDER, "&b" + username, Arrays.asList(
+        "&7Click to &c&lREMOVE",
+        "&b" + username + "&7 as a friend.",
+        "",
+        "&7This will disappear in 10 seconds."));
+
+    inv.setItem(slot, removalConfirm);
+    Bukkit.getScheduler().runTaskLater(plugin, () -> inv.setItem(slot, originalHead), 10 * 20);
+  }
+
   @EventHandler
   public void onInventoryClick(InventoryClickEvent event) {
     Player p = (Player) event.getWhoClicked();
@@ -79,7 +93,7 @@ public class FriendsPendingMenu implements Listener {
 
       String title = ChatColor.stripColor(event.getInventory().getTitle()).replace(" ", "");
 
-      if (title.startsWith("PendingFriends>>Page")) {
+      if (title.startsWith("Friends>>Page")) {
         event.setCancelled(true);
 
         int i = 0;
@@ -128,59 +142,28 @@ public class FriendsPendingMenu implements Listener {
             .getCurrentItem()
             .getItemMeta()
             .getDisplayName()
-            .equals(MessageUtils.colorize("&bSend Request"))) {
-
-          AnvilGUI anvilGUI = new AnvilGUI(plugin, p, "Username", (player, reply) -> {
-            if (PlayerHandler
-                .playerExists(reply)) {
-              UUID request = PlayerHandler.getUUID(reply);
-              FriendHandler.sendRequest(p.getUniqueId(), request);
-              MessageUtils.sendMessage(p,
-                  MessageUtils.SUCCESS_COLOR + "You have sent a friend request to &o" + reply, "");
-              return null;
-            }
-            MessageUtils.sendMessage(p,
-                MessageUtils.ERROR_COLOR + "Player not found.", "");
-            return "Player not found.";
-          });
-
-          return;
-        } else if (event
-            .getCurrentItem()
-            .getItemMeta()
-            .getDisplayName()
-            .equals(MessageUtils.colorize("&eReturn to Friends"))) {
+            .equals(MessageUtils.colorize("&bPending Friends"))) {
           p.closeInventory();
-          FriendsMenu.openMenu(p, 1);
+          FriendsPendingMenu.openMenu(p, 1);
 
           return;
         } else {
 
-          /*for (Cosmetic cosmetic : CosmeticHandler.getCosmetics()) {
-            if (cosmetic.getCosmeticType().equalsIgnoreCase("PET")) {
-              if (ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName())
-                  .equalsIgnoreCase(
-                      ChatColor.stripColor(
-                          cosmetic.getItemStack().getItemMeta().getDisplayName()))) {
-                CosmeticHandler.setPet(p, cosmetic.getCosmeticIdentifier());
+          if (event.getCurrentItem().getType() == Material.PLAYER_HEAD) {
+            ItemStack head = event.getCurrentItem();
+            String username = ChatColor.stripColor(head.getItemMeta().getDisplayName());
 
-                p.closeInventory();
+            displayRemovalConfirm(event.getInventory(), event.getSlot(), username, head);
+          } else if (event.getCurrentItem().getType() == Material.GUNPOWDER) {
+            UUID uuid = PlayerHandler
+                .getUUID(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
 
-                MessageUtils.sendMessage(
-                    p,
-                    MessageUtils.MAIN_COLOR
-                        + "You have set your pet as "
-                        + MessageUtils.SECOND_COLOR
-                        + MessageUtils
-                        .friendlyify(cosmetic.getCosmeticIdentifier().replace("_", " ")),
-                    true);
+            FriendHandler.removeFriend(p.getUniqueId(), uuid);
 
-                break;
-              }
-            }
-          }*/
-
-          //TODO friend removing functionality.
+            openMenu(p, 1);
+          } else if (event.getCurrentItem().getType() == Material.ENCHANTING_TABLE) {
+            ProfileMenu.openMenu(p);
+          }
         }
       }
     }

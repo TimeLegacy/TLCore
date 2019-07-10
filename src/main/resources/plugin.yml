@@ -26,9 +26,6 @@ commands:
   Fly:
     description: Toggle fly mode
     aliases: [f]
-  TogglePhysics:
-    description: Turn physics on or off!
-    aliases: [tphysics]
   List:
     description: List the online players
     aliases: [who, online, players]

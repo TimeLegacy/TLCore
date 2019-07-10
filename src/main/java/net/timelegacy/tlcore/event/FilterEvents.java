@@ -1,5 +1,6 @@
 package net.timelegacy.tlcore.event;
 
+import net.timelegacy.tlcore.datatype.PlayerProfile;
 import net.timelegacy.tlcore.datatype.Rank;
 import net.timelegacy.tlcore.handler.MuteHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
@@ -71,9 +72,11 @@ public class FilterEvents implements Listener {
       username = "Vredae";
     }
 
+    PlayerProfile profile = new PlayerProfile(player.getUniqueId());
+
     String format = MessageUtils.colorize("&r" + RankHandler
         .chatColors(player.getUniqueId())
-        .replace("%username%", username)
+        .replace("%username%", profile.getNickname().isEmpty() ? username : profile.getNickname())
         .replace("%line%", "\u2758 ")
         .replace("%arrows%", "\u00BB")
         + " &r");

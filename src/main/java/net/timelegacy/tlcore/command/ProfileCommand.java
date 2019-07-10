@@ -1,8 +1,6 @@
 package net.timelegacy.tlcore.command;
 
-import net.timelegacy.tlcore.datatype.Rank;
-import net.timelegacy.tlcore.handler.RankHandler;
-import net.timelegacy.tlcore.menus.FriendsMenu;
+import net.timelegacy.tlcore.menus.profile.ProfileMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,9 +12,8 @@ public class ProfileCommand implements CommandExecutor {
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
     Player player = (Player) sender;
-    Rank rank = RankHandler.getRank(player.getUniqueId());
 
-    FriendsMenu.openMenu(player, 1);
+    ProfileMenu.openMenu(player);
     return false;
   }
 }

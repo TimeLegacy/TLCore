@@ -23,7 +23,6 @@ public class FriendHandler {
         friends.add(UUID.fromString(id));
       }
     }
-
     return friends;
   }
 
@@ -36,7 +35,7 @@ public class FriendHandler {
     List<UUID> pendingFriends = new ArrayList<>();
 
     PlayerProfile profile = new PlayerProfile(uuid);
-    if (!profile.getFriends().isEmpty()) {
+    if (!profile.getFriendsPending().isEmpty()) {
       String[] pending = profile.getFriendsPending().split(",");
       for (String id : pending) {
         pendingFriends.add(UUID.fromString(id));
@@ -53,12 +52,8 @@ public class FriendHandler {
    * @param receiver uuid of player to receive the friend request
    */
   public static void sendRequest(UUID sender, UUID receiver) {
-    if (!getFriends(sender).contains(receiver)
-        && !getPendingFriends(sender).contains(receiver)
-        && !getPendingFriends(receiver).contains(sender)) {
       PlayerProfile profile = new PlayerProfile(receiver);
       profile.setFriendsPending(profile.getFriendsPending() + sender.toString() + ",");
-    }
   }
 
   /**
@@ -68,10 +63,8 @@ public class FriendHandler {
    * @param receiver player that is being denied
    */
   public static void denyRequest(UUID sender, UUID receiver) {
-    if (!getPendingFriends(sender).contains(receiver)) {
       PlayerProfile profile = new PlayerProfile(sender);
-      profile.setFriendsPending(profile.getFriends().replace(receiver.toString() + ",", ""));
-    }
+    profile.setFriendsPending(profile.getFriendsPending().replace(receiver.toString() + ",", ""));
   }
 
   /**
@@ -81,15 +74,13 @@ public class FriendHandler {
    * @param receiver player that their request is being accepted
    */
   public static void acceptRequest(UUID sender, UUID receiver) {
-    if (!getFriends(sender).contains(receiver)
-        && getPendingFriends(sender).contains(receiver)) {
       PlayerProfile profile = new PlayerProfile(sender);
       profile.setFriendsPending(profile.getFriendsPending().replace(receiver.toString() + ",", ""));
       profile.setFriends(profile.getFriends() + receiver.toString() + ",");
       PlayerProfile profileReceiver = new PlayerProfile(receiver);
-      profile.setFriends(profile.getFriends()
+    profileReceiver
+        .setFriends(profileReceiver.getFriends()
           + sender.toString() + ",");
-    }
   }
 
   /**
@@ -99,11 +90,9 @@ public class FriendHandler {
    * @param receiver player that is being removed
    */
   public static void removeFriend(UUID sender, UUID receiver) {
-    if (!getFriends(sender).contains(receiver)) {
       PlayerProfile profile = new PlayerProfile(sender);
       profile.setFriends(profile.getFriends().replace(receiver.toString() + ",", ""));
       PlayerProfile profileReceiver = new PlayerProfile(receiver);
       profileReceiver.setFriends(profileReceiver.getFriends().replace(sender.toString() + ",", ""));
-    }
   }
 }
