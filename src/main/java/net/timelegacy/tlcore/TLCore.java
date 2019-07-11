@@ -89,6 +89,7 @@ public class TLCore extends JavaPlugin {
     getCommand("mute").setExecutor(new MuteCommand());
     getCommand("unmute").setExecutor(new UnMuteCommand());
     getCommand("profile").setExecutor(new ProfileCommand());
+    getCommand("perks").setExecutor(new ProfileCommand());
 
     PluginManager pm = getServer().getPluginManager();
 

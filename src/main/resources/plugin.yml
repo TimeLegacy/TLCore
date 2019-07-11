@@ -48,3 +48,5 @@ commands:
     description: Unmutes a muted player.
   Profile:
     description: View your player profile.
+  Perks:
+    description: Edit permissions for players.

@@ -5,6 +5,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.handler.BanHandler;
+import net.timelegacy.tlcore.handler.PermissionHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
@@ -62,6 +63,8 @@ public class PlayerEvents implements Listener {
 
     player.setScoreboard(ScoreboardUtils.getScoreboard());
 
+    PermissionHandler.attachPermissions(player);
+
     // Tab Menu
     PacketContainer pc = TLCore.protocolManager
         .createPacket(com.comphenix.protocol.PacketType.Play.Server.PLAYER_LIST_HEADER_FOOTER);
@@ -87,6 +90,8 @@ public class PlayerEvents implements Listener {
     XPBarUtils.playerLeave(player);
 
     player.getInventory().clear();
+
+    PermissionHandler.detachPermissions(player);
 
     for (PotionEffect effect : player.getActivePotionEffects()) {
       player.removePotionEffect(effect.getType());
