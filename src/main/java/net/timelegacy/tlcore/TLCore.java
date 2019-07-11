@@ -16,6 +16,7 @@ import net.timelegacy.tlcore.command.GamemodeCommand;
 import net.timelegacy.tlcore.command.ListCommand;
 import net.timelegacy.tlcore.command.MultiplierCommand;
 import net.timelegacy.tlcore.command.MuteCommand;
+import net.timelegacy.tlcore.command.PerkCommand;
 import net.timelegacy.tlcore.command.ProfileCommand;
 import net.timelegacy.tlcore.command.RankManagementCommand;
 import net.timelegacy.tlcore.command.RebootCommand;
@@ -94,6 +95,8 @@ public class TLCore extends JavaPlugin {
 
     getCommand("spawn").setExecutor(new SpawnCommand(this));
     getCommand("setspawn").setExecutor(new SetSpawnCommand(this));
+
+    getCommand("perks").setExecutor(new PerkCommand());
 
     getServer().getPluginManager().registerEvents(new FilterEvents(), plugin);
     getServer().getPluginManager().registerEvents(new PlayerEvents(), plugin);
