@@ -52,3 +52,5 @@ commands:
     description: Teleport to the world's spawn point.
   setspawn:
     description: Set the world spawn.
+  perks:
+    description: Edit permissions for players.
