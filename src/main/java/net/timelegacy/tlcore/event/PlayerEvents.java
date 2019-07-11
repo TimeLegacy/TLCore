@@ -8,6 +8,7 @@ import net.timelegacy.tlcore.handler.BanHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
+import net.timelegacy.tlcore.utils.ScoreboardUtils;
 import net.timelegacy.tlcore.utils.XPBarUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -53,9 +54,13 @@ public class PlayerEvents implements Listener {
     RankHandler.setTabColors(player);
     XPBarUtils.playerJoin(player);
 
+    RankHandler.setTabColors(player);
+
     PlayerHandler.updateIP(player);
     PlayerHandler.updateLastConnection(player.getUniqueId());
     PlayerHandler.updateOnline(player.getUniqueId(), true);
+
+    player.setScoreboard(ScoreboardUtils.getScoreboard());
 
     // Tab Menu
     PacketContainer pc = TLCore.protocolManager
@@ -78,7 +83,7 @@ public class PlayerEvents implements Listener {
   @EventHandler
   public void PlayerQuitEvent(PlayerQuitEvent event) {
     Player player = event.getPlayer();
-    RankHandler.removeTabColors(player);
+
     XPBarUtils.playerLeave(player);
 
     player.getInventory().clear();

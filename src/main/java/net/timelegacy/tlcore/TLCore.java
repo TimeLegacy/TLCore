@@ -23,6 +23,7 @@ import net.timelegacy.tlcore.command.TeleportCommand;
 import net.timelegacy.tlcore.command.TeleportHereCommand;
 import net.timelegacy.tlcore.command.UnBanCommand;
 import net.timelegacy.tlcore.command.UnMuteCommand;
+import net.timelegacy.tlcore.event.AFKEvents;
 import net.timelegacy.tlcore.event.FilterEvents;
 import net.timelegacy.tlcore.event.PlayerEvents;
 import net.timelegacy.tlcore.handler.PermissionHandler;
@@ -37,6 +38,7 @@ import net.timelegacy.tlcore.menus.profile.YourStateSettingsMenu;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class TLCore extends JavaPlugin {
@@ -88,17 +90,20 @@ public class TLCore extends JavaPlugin {
     getCommand("unmute").setExecutor(new UnMuteCommand());
     getCommand("profile").setExecutor(new ProfileCommand());
 
-    getServer().getPluginManager().registerEvents(new FilterEvents(), plugin);
-    getServer().getPluginManager().registerEvents(new PlayerEvents(), plugin);
+    PluginManager pm = getServer().getPluginManager();
 
-    getServer().getPluginManager().registerEvents(new FriendsMenu(), plugin);
-    getServer().getPluginManager().registerEvents(new FriendsPendingMenu(), plugin);
+    pm.registerEvents(new FilterEvents(), plugin);
+    pm.registerEvents(new PlayerEvents(), plugin);
+    pm.registerEvents(new AFKEvents(), plugin);
 
-    getServer().getPluginManager().registerEvents(new ProfileMenu(), plugin);
+    pm.registerEvents(new FriendsMenu(), plugin);
+    pm.registerEvents(new FriendsPendingMenu(), plugin);
 
-    getServer().getPluginManager().registerEvents(new GenderSelectorMenu(), plugin);
-    getServer().getPluginManager().registerEvents(new YourSettingsMenu(), plugin);
-    getServer().getPluginManager().registerEvents(new YourStateSettingsMenu(), plugin);
+    pm.registerEvents(new ProfileMenu(), plugin);
+
+    pm.registerEvents(new GenderSelectorMenu(), plugin);
+    pm.registerEvents(new YourSettingsMenu(), plugin);
+    pm.registerEvents(new YourStateSettingsMenu(), plugin);
 
     RankHandler.loadRanks();
   }

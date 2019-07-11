@@ -10,18 +10,18 @@ import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.datatype.Rank;
 import net.timelegacy.tlcore.mongodb.MongoDB;
+import net.timelegacy.tlcore.utils.MessageUtils;
+import net.timelegacy.tlcore.utils.ScoreboardUtils;
 import org.bson.Document;
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Team;
 
 public class RankHandler {
 
-  private static ArrayList<String> commandsToRunAfterStartUp = new ArrayList<>();
+  private static TLCore plugin = TLCore.getPlugin();
 
   public static List<Rank> rankList = new ArrayList<>();
-
-  private static TLCore plugin = TLCore.getPlugin();
 
   private static MongoCollection<Document> ranks = MongoDB.mongoDatabase.getCollection("ranks");
   private static MongoCollection<Document> players = MongoDB.mongoDatabase.getCollection("players");
@@ -44,9 +44,6 @@ public class RankHandler {
         String tab = doc.getString("tab_format");
 
         rankList.add(new Rank(name, priority, chat, primary_color, secondary_color, tab));
-        commandsToRunAfterStartUp.add("team add " + name + " \"" + name + "\"");
-        commandsToRunAfterStartUp.add("team modify " + name + " prefix " + tab);
-        //TODO setup color once database is setup that way
       }
 
       cursor.close();
@@ -54,14 +51,14 @@ public class RankHandler {
     } catch (Exception ignored) {
     }
 
-    new BukkitRunnable() {
-      @Override
-      public void run() {
-        runStartupCommands();
-        cancel();
+    for (Rank rr : rankList) {
+      if (rr.getName().equalsIgnoreCase("ADMIN")) {
+        Team tabRank = ScoreboardUtils.getScoreboard().registerNewTeam(rr.getName());
+        tabRank.setPrefix(MessageUtils.colorize(rr.getTab()));
+        tabRank.setColor(ChatColor.getByChar(rr.getPrimaryColor().replace("&", "")));
       }
-    }.runTaskTimer(TLCore.getPlugin(), 0, 1);
 
+    }
   }
 
   /**
@@ -214,20 +211,8 @@ public class RankHandler {
    */
   public static void setTabColors(Player player) {
     Rank rank = getRank(player.getUniqueId());
-    Bukkit.getServer()
-        .dispatchCommand(Bukkit.getConsoleSender(), "team leave " + player.getName());
 
-    Bukkit.getServer()
-        .dispatchCommand(Bukkit.getConsoleSender(), "team join " + rank.getName() + " " + player.getName());
-  }
-
-  public static void removeTabColors(Player player) {
-    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "team leave " + player.getName());
-  }
-
-  private static void runStartupCommands() {
-    for (String s : commandsToRunAfterStartUp) {
-      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), s);
-    }
+    Team tabRank = ScoreboardUtils.getScoreboard().getTeam(rank.getName());
+    tabRank.addEntry(player.getName());
   }
 }
