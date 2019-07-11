@@ -19,6 +19,8 @@ import net.timelegacy.tlcore.command.MuteCommand;
 import net.timelegacy.tlcore.command.ProfileCommand;
 import net.timelegacy.tlcore.command.RankManagementCommand;
 import net.timelegacy.tlcore.command.RebootCommand;
+import net.timelegacy.tlcore.command.SetSpawnCommand;
+import net.timelegacy.tlcore.command.SpawnCommand;
 import net.timelegacy.tlcore.command.TeleportCommand;
 import net.timelegacy.tlcore.command.TeleportHereCommand;
 import net.timelegacy.tlcore.command.UnBanCommand;
@@ -62,6 +64,8 @@ public class TLCore extends JavaPlugin {
     getConfig().options().copyDefaults(true);
     saveConfig();
 
+    saveResource("spawns.yml", false);
+
     logger = plugin.getLogger();
 
     Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
@@ -87,6 +91,9 @@ public class TLCore extends JavaPlugin {
     getCommand("mute").setExecutor(new MuteCommand());
     getCommand("unmute").setExecutor(new UnMuteCommand());
     getCommand("profile").setExecutor(new ProfileCommand());
+
+    getCommand("spawn").setExecutor(new SpawnCommand(this));
+    getCommand("setspawn").setExecutor(new SetSpawnCommand(this));
 
     getServer().getPluginManager().registerEvents(new FilterEvents(), plugin);
     getServer().getPluginManager().registerEvents(new PlayerEvents(), plugin);
