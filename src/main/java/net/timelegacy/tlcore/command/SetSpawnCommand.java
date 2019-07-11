@@ -3,7 +3,7 @@ package net.timelegacy.tlcore.command;
 import java.io.File;
 import java.io.IOException;
 import net.timelegacy.tlcore.TLCore;
-import net.timelegacy.tlcore.handler.PerkHandler;
+import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,10 +28,10 @@ public class SetSpawnCommand implements CommandExecutor {
 
     Player player = (Player) sender;
 
-//    if (!PerkHandler.hasPerk(player.getUniqueId(), "core.setspawn")) {
-//      MessageUtils.sendMessage(player, "&cNo Perms.", false);
-//      return true;
-//    }
+    if (RankHandler.getRank(player.getUniqueId()).getPriority() > 8) {
+      MessageUtils.sendMessage(player, "&cNo Perms.", false);
+      return true;
+    }
 
     if (args.length == 0) {
       File file = new File(plugin.getDataFolder(), "spawns.yml");
