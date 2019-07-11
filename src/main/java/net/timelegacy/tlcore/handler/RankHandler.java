@@ -52,12 +52,9 @@ public class RankHandler {
     }
 
     for (Rank rr : rankList) {
-      if (rr.getName().equalsIgnoreCase("ADMIN")) {
         Team tabRank = ScoreboardUtils.getScoreboard().registerNewTeam(rr.getName());
         tabRank.setPrefix(MessageUtils.colorize(rr.getTab()));
         tabRank.setColor(ChatColor.getByChar(rr.getPrimaryColor().replace("&", "")));
-      }
-
     }
   }
 
