@@ -25,11 +25,11 @@ public class FilterEvents implements Listener {
   public void commandPreProcessEvent(PlayerCommandPreprocessEvent event) {
     Player player = event.getPlayer();
 
-    if (event.getMessage().toLowerCase().contains("/pl")
-        || event.getMessage().toLowerCase().contains("/plugins")
-        || event.getMessage().toLowerCase().contains("/?")
-        || event.getMessage().toLowerCase().contains("/help")
-        || event.getMessage().toLowerCase().contains("/bukkit:")) {
+    if (event.getMessage().toLowerCase().equalsIgnoreCase("/pl")
+        || event.getMessage().toLowerCase().equalsIgnoreCase("/plugins")
+        || event.getMessage().toLowerCase().startsWith("/?")
+        || event.getMessage().toLowerCase().startsWith("/help")
+        || event.getMessage().toLowerCase().startsWith("/bukkit:")) {
       event.setCancelled(true);
 
       Rank rank = RankHandler.getRank(player.getUniqueId());
