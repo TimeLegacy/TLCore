@@ -72,7 +72,7 @@ public class PerkCommand implements CommandExecutor {
         perksAdded.append(" ").append(args[i]);
       }
 
-      MessageUtils.sendMessage(sender, "removed perks:" + perksAdded, false);
+      MessageUtils.sendMessage(sender, "Added perks:" + perksAdded, false);
       return;
     }
 
