@@ -11,10 +11,10 @@ public class Chat {
 
   public static HashMap<UUID, Chat> playerChatStorage = new HashMap<>();
 
-  private static String prefix;
-  private static String suffix;
-  private static String format;
-  private static String username;
+  private String prefix;
+  private String suffix;
+  private String format;
+  private String username;
 
   public Chat(UUID uuid) {
     this.prefix = "";
@@ -47,7 +47,6 @@ public class Chat {
   }
 
   public String getFormat() {
-    System.out.println(this.format);
     return this.prefix + this.format.replace("%username%", this.username + this.suffix);
   }
 

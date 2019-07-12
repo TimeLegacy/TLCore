@@ -5,7 +5,6 @@ import com.comphenix.protocol.ProtocolManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.timelegacy.tlcore.command.BanCommand;
 import net.timelegacy.tlcore.command.CoinManagementCommand;
@@ -114,9 +113,5 @@ public class TLCore extends JavaPlugin {
   public void onDisable() {
     PermissionHandler.clearPermissions();
     MongoDB.disconnect();
-  }
-
-  public void log(String msg, Level level) {
-    logger.log(level, msg);
   }
 }

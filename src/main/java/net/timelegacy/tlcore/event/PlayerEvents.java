@@ -1,7 +1,5 @@
 package net.timelegacy.tlcore.event;
 
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.datatype.Chat;
@@ -68,17 +66,8 @@ public class PlayerEvents implements Listener {
 
     Chat.addPlayer(player);
 
-    // Tab Menu
-    PacketContainer pc = TLCore.protocolManager
-        .createPacket(com.comphenix.protocol.PacketType.Play.Server.PLAYER_LIST_HEADER_FOOTER);
-
-    pc.getChatComponents().write(0, WrappedChatComponent.fromText(MessageUtils.colorize("&c&lTIME LEGACY")))
-        .write(1, WrappedChatComponent.fromText(MessageUtils.colorize("&eplay.timelegacy.net")));
-    try {
-      TLCore.protocolManager.sendServerPacket(event.getPlayer(), pc);
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
+    player.setPlayerListHeaderFooter(MessageUtils.colorize("&c&lTIME LEGACY"),
+        MessageUtils.colorize("&eplay.timelegacy.net"));
   }
 
   @EventHandler(priority = EventPriority.LOWEST)

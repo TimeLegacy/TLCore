@@ -30,7 +30,9 @@ public class FilterEvents implements Listener {
         || event.getMessage().toLowerCase().equalsIgnoreCase("/plugins")
         || event.getMessage().toLowerCase().startsWith("/?")
         || event.getMessage().toLowerCase().startsWith("/help")
-        || event.getMessage().toLowerCase().startsWith("/bukkit:")) {
+        || event.getMessage().toLowerCase().startsWith("/bukkit:")
+        || event.getMessage().toLowerCase().startsWith("/canihasbukkit")
+        || event.getMessage().toLowerCase().startsWith("/version")) {
       event.setCancelled(true);
 
       Rank rank = RankHandler.getRank(player.getUniqueId());
@@ -65,13 +67,6 @@ public class FilterEvents implements Listener {
     event.setCancelled(true);
 
     String message = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
-
-    String username = player.getName();
-    if (username.equalsIgnoreCase("Chriskadetv")) {
-      username = "Chisrkdaevt";
-    } else if (username.equalsIgnoreCase("Verade")) {
-      username = "Vredae";
-    }
 
     PlayerProfile profile = new PlayerProfile(player.getUniqueId());
 
