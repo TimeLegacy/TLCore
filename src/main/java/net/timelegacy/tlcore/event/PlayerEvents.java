@@ -4,6 +4,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.datatype.Chat;
 import net.timelegacy.tlcore.handler.BanHandler;
 import net.timelegacy.tlcore.handler.PermissionHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
@@ -64,6 +65,8 @@ public class PlayerEvents implements Listener {
     player.setScoreboard(ScoreboardUtils.getScoreboard());
 
     PermissionHandler.attachPermissions(player);
+
+    Chat.addPlayer(player);
 
     // Tab Menu
     PacketContainer pc = TLCore.protocolManager

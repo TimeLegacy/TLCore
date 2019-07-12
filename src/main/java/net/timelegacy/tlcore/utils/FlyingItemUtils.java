@@ -14,7 +14,7 @@ public class FlyingItemUtils {
   private ItemStack itemstack;
   private double height = -1.3;
 
-  FlyingItemUtils() {
+  public FlyingItemUtils() {
   }
 
   public void remove() {

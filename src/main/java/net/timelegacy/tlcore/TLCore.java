@@ -16,6 +16,7 @@ import net.timelegacy.tlcore.command.GamemodeCommand;
 import net.timelegacy.tlcore.command.ListCommand;
 import net.timelegacy.tlcore.command.MultiplierCommand;
 import net.timelegacy.tlcore.command.MuteCommand;
+import net.timelegacy.tlcore.command.PerkCommand;
 import net.timelegacy.tlcore.command.ProfileCommand;
 import net.timelegacy.tlcore.command.RankManagementCommand;
 import net.timelegacy.tlcore.command.RebootCommand;
@@ -89,7 +90,7 @@ public class TLCore extends JavaPlugin {
     getCommand("mute").setExecutor(new MuteCommand());
     getCommand("unmute").setExecutor(new UnMuteCommand());
     getCommand("profile").setExecutor(new ProfileCommand());
-    getCommand("perks").setExecutor(new ProfileCommand());
+    getCommand("perks").setExecutor(new PerkCommand());
 
     PluginManager pm = getServer().getPluginManager();
 

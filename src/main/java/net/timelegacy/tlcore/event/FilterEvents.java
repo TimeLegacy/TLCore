@@ -1,5 +1,6 @@
 package net.timelegacy.tlcore.event;
 
+import net.timelegacy.tlcore.datatype.Chat;
 import net.timelegacy.tlcore.datatype.PlayerProfile;
 import net.timelegacy.tlcore.datatype.Rank;
 import net.timelegacy.tlcore.handler.MuteHandler;
@@ -74,45 +75,14 @@ public class FilterEvents implements Listener {
 
     PlayerProfile profile = new PlayerProfile(player.getUniqueId());
 
-    String format = MessageUtils.colorize("&r" + RankHandler
-        .chatColors(player.getUniqueId())
-        .replace("%username%", profile.getNickname().isEmpty() ? username : profile.getNickname())
-        .replace("%line%", "\u2758 ")
-        .replace("%arrows%", "\u00BB")
-        + " &r");
-
     System.out.println("[CHAT] " + player.getUniqueId() + " > " + message);
 
     if (!MuteHandler.isMuted(player.getUniqueId())) {
 
       for (Player sp : Bukkit.getOnlinePlayers()) {
-        //TextComponent textComponent = new TextComponent(core.perkHandler.getPerks(sp).contains("CHAT.MATURE") ? message : cleanMessage);
-        //textComponent.setHoverEvent(new HoverEvent( HoverEvent.Action., new ComponentBuilder( "Visit the Spigot website!" ).create() ) );
-        /*msg.text(format)
-            .tooltip(
-                MessageUtils.c(
-                    MessageUtils.MAIN_COLOR
-                        + "&oCoins: "
-                        + MessageUtils.SECOND_COLOR
-                        + core.coinHandler.getBalance(player.getUniqueId())),
-                MessageUtils.c(
-                    MessageUtils.MAIN_COLOR
-                        + "&oKills: "
-                        + MessageUtils.SECOND_COLOR
-                        + core.statsHandler.getKills(player)),
-                MessageUtils.c(
-                    MessageUtils.MAIN_COLOR
-                        + "&oWins: "
-                        + MessageUtils.SECOND_COLOR
-                        + core.statsHandler.getWins(player)))
-            .then();
-        msg.send(sp);*/
+        // TODO fix the swear filter
 
-        //TODO fix the swear filter
-        /*sp.sendMessage(
-            core.perkHandler.getPerks(sp).contains("CHAT.MATURE") ? message : cleanMessage);*/
-
-        sp.sendMessage(format + message);
+        sp.sendMessage(Chat.getPlayerChat(player).getFormat() + message);
       }
     } else {
       if (!(MuteHandler.getMuteExpire(player.getUniqueId()).equalsIgnoreCase("false")
