@@ -3,7 +3,7 @@ version: 1.0
 author: Nyarrth
 main: net.timelegacy.tlcore.TLCore
 api-version: 1.13
-depend: [ProtocolLib, NametagEdit]
+depend: [ProtocolLib]
 commands:
   Coins:
     description: Check how many Coins you have!
