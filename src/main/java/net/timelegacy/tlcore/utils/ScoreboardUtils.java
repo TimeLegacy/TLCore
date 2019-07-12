@@ -20,7 +20,7 @@ public class ScoreboardUtils {
     customScoreboards.put(uuid, customScoreboard);
   }
 
-  public static CustomScoreboard getCustomScoreboard(UUID uuid, CustomScoreboard customScoreboard) {
+  public static CustomScoreboard getCustomScoreboard(UUID uuid) {
     if (customScoreboards.containsKey(uuid)) {
       return customScoreboards.get(uuid);
     } else {
