@@ -111,6 +111,8 @@ public class TLCore extends JavaPlugin {
 
   @Override
   public void onDisable() {
+    ServerHandler.setOnline(ServerHandler.getServerUUID(), false);
+
     PermissionHandler.clearPermissions();
     MongoDB.disconnect();
   }
