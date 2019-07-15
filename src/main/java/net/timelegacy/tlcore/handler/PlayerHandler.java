@@ -101,12 +101,12 @@ public class PlayerHandler {
           new Document("$set", new Document("last_ip", player.getAddress().getAddress().getHostAddress())));
 
       String previousIPs = getPreviousIPs(player.getUniqueId());
-      if (!previousIPs.contains(player.getAddress().getHostName())) {
+      if (!previousIPs.contains(player.getAddress().getAddress().getHostName())) {
         players.updateOne(
             Filters.eq("uuid", player.getUniqueId().toString()),
             new Document("$set",
                 new Document("previous_ips", getPreviousIPs(player.getUniqueId())
-                    + player.getAddress().getAddress().getHostAddress()
+                    + player.getAddress().getAddress().getHostName()
                     + ",")));
       }
     }
