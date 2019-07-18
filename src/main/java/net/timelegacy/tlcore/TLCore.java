@@ -107,6 +107,8 @@ public class TLCore extends JavaPlugin {
     pm.registerEvents(new YourStateSettingsMenu(), plugin);
 
     RankHandler.loadRanks();
+
+    ServerHandler.setOnline(ServerHandler.getServerUUID(), true);
   }
 
   @Override

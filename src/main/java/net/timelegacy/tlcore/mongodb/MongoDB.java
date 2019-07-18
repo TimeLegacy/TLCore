@@ -16,7 +16,7 @@ public class MongoDB {
    */
   public static boolean connect(String uri) {
     mongoClient = MongoClients.create(uri);
-    mongoDatabase = mongoClient.getDatabase("mineaqua");
+    mongoDatabase = mongoClient.getDatabase("timelegacy");
     return true;
   }
 
