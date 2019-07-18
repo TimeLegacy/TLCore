@@ -94,6 +94,6 @@ public class MinigameServer {
   }
 
   public enum State {
-    WAITING, STARTING, INGAME, RESTARTING;
+    WAITING, INGAME, RESTARTING;
   }
 }
