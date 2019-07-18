@@ -96,27 +96,30 @@ public class RankHandler {
     Rank rank = RankHandler.getRank(player.getUniqueId());
     String permeronies = rank.getPermissions();
 
-    HashMap<String, String> permissionsServerBased = new HashMap<>();
+    if (permeronies != null) {
 
-    String[] serverTypes = permeronies.split("-");
-    for (String server : serverTypes) {
-      String srvType = server.split(":")[0];
-      String pp = server.split(":")[1];
-      permissionsServerBased.put(srvType, pp);
-    }
+      HashMap<String, String> permissionsServerBased = new HashMap<>();
 
-    String[] permissionsSplit = permissionsServerBased.get(currentServerType).split(",");
+      String[] serverTypes = permeronies.split("-");
+      for (String server : serverTypes) {
+        String srvType = server.split(":")[0];
+        String pp = server.split(":")[1];
+        permissionsServerBased.put(srvType, pp);
+      }
 
-    for (String perm : permissionsSplit) {
-      PermissionHandler.addPermission(player, perm);
-    }
+      String[] permissionsSplit = permissionsServerBased.get(currentServerType).split(",");
 
-    for (Rank rankInherit : rankList) {
-      if (rankInherit.getPriority() < rank.getPriority()) {
-        String[] permissionsInherit = permissionsServerBased.get(currentServerType).split(",");
+      for (String perm : permissionsSplit) {
+        PermissionHandler.addPermission(player, perm);
+      }
 
-        for (String perm : permissionsInherit) {
-          PermissionHandler.addPermission(player, perm);
+      for (Rank rankInherit : rankList) {
+        if (rankInherit.getPriority() < rank.getPriority()) {
+          String[] permissionsInherit = permissionsServerBased.get(currentServerType).split(",");
+
+          for (String perm : permissionsInherit) {
+            PermissionHandler.addPermission(player, perm);
+          }
         }
       }
     }
