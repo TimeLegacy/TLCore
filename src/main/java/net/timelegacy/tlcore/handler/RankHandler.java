@@ -53,8 +53,8 @@ public class RankHandler {
     }
 
     for (Rank rr : rankList) {
-        Team tabRank = ScoreboardUtils.getScoreboard().registerNewTeam(rr.getName());
-        tabRank.setPrefix(MessageUtils.colorize(rr.getTab()));
+      Team tabRank = ScoreboardUtils.getScoreboard().registerNewTeam(rr.getName());
+      tabRank.setPrefix(MessageUtils.colorize(rr.getTab()));
       tabRank.setColor(ChatColor.getByChar(rr.getColor().replace("&", "")));
     }
   }
@@ -70,7 +70,7 @@ public class RankHandler {
       String rnk = doc.first().getString("rank");
 
       String[] ranks = rnk.split(",");
-      //list of ranks
+      // list of ranks
       for (String r : ranks) {
         String[] rr = r.split(":");
         Rank ranka = stringToRank(rr[0]);
@@ -96,38 +96,37 @@ public class RankHandler {
     Rank rank = RankHandler.getRank(player.getUniqueId());
     String permeronies = rank.getPermissions();
 
-    if (permeronies != null) {
+    HashMap<String, String> permissionsServerBased = new HashMap<>();
 
-      HashMap<String, String> permissionsServerBased = new HashMap<>();
+    String[] serverTypes = permeronies.split(",");
+    for (String server : serverTypes) {
+      String srvType = server.split(":")[0];
+      String pp = server.split(":")[1];
+      permissionsServerBased.put(srvType, pp);
+    }
+    String[] permissionsSplit;
+    if (permissionsServerBased.get(currentServerType) != null) {
 
-      String[] serverTypes = permeronies.split("-");
-      for (String server : serverTypes) {
-        String srvType = server.split(":")[0];
-        String pp = server.split(":")[1];
-        permissionsServerBased.put(srvType, pp);
-      }
-
-      String[] permissionsSplit = permissionsServerBased.get(currentServerType).split(",");
+      permissionsSplit = permissionsServerBased.get(currentServerType).split(",");
 
       for (String perm : permissionsSplit) {
         PermissionHandler.addPermission(player, perm);
       }
+    }
 
-      for (Rank rankInherit : rankList) {
-        if (rankInherit.getPriority() < rank.getPriority()) {
-          String[] permissionsInherit = permissionsServerBased.get(currentServerType).split(",");
+    for (Rank rankInherit : rankList) {
+      if (rankInherit.getPriority() < rank.getPriority()
+          && permissionsServerBased.get(currentServerType) != null) {
+        String[] permissionsInherit = permissionsServerBased.get(currentServerType).split(",");
 
-          for (String perm : permissionsInherit) {
-            PermissionHandler.addPermission(player, perm);
-          }
+        for (String perm : permissionsInherit) {
+          PermissionHandler.addPermission(player, perm);
         }
       }
     }
   }
 
-  /**
-   * Convert string to a rank if it exists
-   */
+  /** Convert string to a rank if it exists */
   public static Rank stringToRank(String rank) {
     for (Rank r : rankList) {
       if (r.getName().equalsIgnoreCase(rank)) {
@@ -168,7 +167,7 @@ public class RankHandler {
     String rnk = doc.first().getString("rank");
 
     String[] ranks = rnk.split(",");
-    //list of ranks
+    // list of ranks
     for (String r : ranks) {
       String[] rr = r.split(":");
       if (rank.getPriority() >= 6 && rr[1].equalsIgnoreCase("GLOBAL")) {
@@ -176,12 +175,20 @@ public class RankHandler {
             Filters.eq("uuid", uuid.toString()),
             new Document("$set", new Document("rank", rnk.replace(r, rank.getName() + ":GLOBAL"))));
         break;
-        //check if server is the same and override
+        // check if server is the same and override
       } else if (rr[1].equalsIgnoreCase(ServerHandler.getType(ServerHandler.getServerUUID()))) {
         if (!rank.getName().equalsIgnoreCase("DEFAULT")) {
           players.updateOne(
-              Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("rank",
-                  rnk.replace(r, rank.getName() + ":" + ServerHandler.getType(ServerHandler.getServerUUID())))));
+              Filters.eq("uuid", uuid.toString()),
+              new Document(
+                  "$set",
+                  new Document(
+                      "rank",
+                      rnk.replace(
+                          r,
+                          rank.getName()
+                              + ":"
+                              + ServerHandler.getType(ServerHandler.getServerUUID())))));
           break;
         } else {
           removeRank(uuid);
@@ -189,12 +196,19 @@ public class RankHandler {
         }
       } else if (!rnk.contains(ServerHandler.getType(ServerHandler.getServerUUID()))) {
         players.updateOne(
-            Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("rank",
-                rnk + rank.getName() + ":" + ServerHandler.getType(ServerHandler.getServerUUID()) + ",")));
+            Filters.eq("uuid", uuid.toString()),
+            new Document(
+                "$set",
+                new Document(
+                    "rank",
+                    rnk
+                        + rank.getName()
+                        + ":"
+                        + ServerHandler.getType(ServerHandler.getServerUUID())
+                        + ",")));
         break;
       }
     }
-
   }
 
   /**
@@ -211,23 +225,24 @@ public class RankHandler {
     String rnk = doc.first().getString("rank");
 
     String[] ranks = rnk.split(",");
-    //list of ranks
+    // list of ranks
     for (String r : ranks) {
       String[] rr = r.split(":");
       if (stringToRank(rr[0]).getPriority() >= 6 && rr[1].equalsIgnoreCase("GLOBAL")) {
-        //remove staff rank if they're staff
-        players.updateOne(Filters.eq("uuid", uuid.toString()),
+        // remove staff rank if they're staff
+        players.updateOne(
+            Filters.eq("uuid", uuid.toString()),
             new Document("$set", new Document("rank", rnk.replace(r, "DEFAULT:GLOBAL"))));
 
-        //check if server is the same and override
+        // check if server is the same and override
         break;
       } else if (rr[1].equalsIgnoreCase(ServerHandler.getType(ServerHandler.getServerUUID()))) {
-        players.updateOne(Filters.eq("uuid", uuid.toString()),
+        players.updateOne(
+            Filters.eq("uuid", uuid.toString()),
             new Document("$set", new Document("rank", rnk.replace(r + ",", ""))));
         break;
       }
     }
-
   }
 
   /**

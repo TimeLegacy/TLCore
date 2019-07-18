@@ -19,6 +19,8 @@ import net.timelegacy.tlcore.command.PerkCommand;
 import net.timelegacy.tlcore.command.ProfileCommand;
 import net.timelegacy.tlcore.command.RankManagementCommand;
 import net.timelegacy.tlcore.command.RebootCommand;
+import net.timelegacy.tlcore.command.SetSpawnCommand;
+import net.timelegacy.tlcore.command.SpawnCommand;
 import net.timelegacy.tlcore.command.TeleportCommand;
 import net.timelegacy.tlcore.command.TeleportHereCommand;
 import net.timelegacy.tlcore.command.UnBanCommand;
@@ -90,6 +92,8 @@ public class TLCore extends JavaPlugin {
     getCommand("unmute").setExecutor(new UnMuteCommand());
     getCommand("profile").setExecutor(new ProfileCommand());
     getCommand("perks").setExecutor(new PerkCommand());
+    getCommand("spawn").setExecutor(new SpawnCommand(this)); // Steven sends plugin to command class, not me -piajesse
+    getCommand("setspawn").setExecutor(new SetSpawnCommand(this));
 
     PluginManager pm = getServer().getPluginManager();
 

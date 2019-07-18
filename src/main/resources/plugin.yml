@@ -50,3 +50,7 @@ commands:
     description: View your player profile.
   Perks:
     description: Edit permissions for players.
+  spawn:
+    description: Go to spawn.
+  setspawn:
+    description: Set the world spawn.

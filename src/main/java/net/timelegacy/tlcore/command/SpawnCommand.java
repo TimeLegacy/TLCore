@@ -23,26 +23,39 @@ public class SpawnCommand implements CommandExecutor {
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
     if (!(sender instanceof Player)) {
-      sender.sendMessage("&cNo Perms");
+      sender.sendMessage("&cNo Perms"); // Todo replace with TAC no Command
       return true;
     }
 
     Player player = (Player) sender;
-
-    if (args.length == 0) {
-      player.teleport(doSpawn(player.getWorld().getName()));
-      MessageUtils.sendMessage(player, "Teleported to the world spawn!", false);
+    if (!player.hasPermission("tlcore.command.spawn")) {
+      player.sendMessage("&cNo Perms"); // Todo replace with TAC no Command
       return true;
     }
 
-    return false;
+    if (args.length == 0) {
+      try {
+        player.teleport(doSpawn(player.getWorld().getName()));
+      } catch (Exception e) {
+        MessageUtils.sendMessage(
+            player, "This was an issue with /spawn, poke a dev with a screen shot please", false);
+        return true;
+      }
+      MessageUtils.sendMessage(player, "Teleported to the world spawn!", false);
+      return true;
+    } else {
+      MessageUtils.sendMessage(player, "its just /spawn", false); // TODO cleanup
+      return true;
+    }
   }
 
   private Location doSpawn(String worldName) {
     File file = new File(plugin.getDataFolder(), "spawns.yml");
     YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-    World world = Bukkit.getServer().getWorld(config.getConfigurationSection("spawns." + worldName).getName());
+    World world =
+        Bukkit.getServer()
+            .getWorld(config.getConfigurationSection("spawns." + worldName).getName());
 
     if (world == null) {
       return null;

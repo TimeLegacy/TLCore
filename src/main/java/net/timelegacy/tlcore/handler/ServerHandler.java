@@ -130,6 +130,7 @@ public class ServerHandler {
     servers.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("online_players", online)));
   }
 
+
   /**
    * Get the max count of players on the server
    *
