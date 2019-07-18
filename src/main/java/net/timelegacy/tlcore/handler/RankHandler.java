@@ -44,16 +44,7 @@ public class RankHandler {
         String tab = doc.getString("tab_format");
         String perms = doc.getString("permissions");
 
-        HashMap<String, String> permissions = new HashMap<>();
-
-        String[] serverTypes = perms.split("-");
-        for (String server : serverTypes) {
-          String srvType = server.split(":")[0];
-          String pp = server.split(":")[1];
-          permissions.put(srvType, pp);
-        }
-
-        rankList.add(new Rank(name, priority, chat, color, tab, permissions));
+        rankList.add(new Rank(name, priority, chat, color, tab, perms));
       }
 
       cursor.close();
@@ -103,15 +94,26 @@ public class RankHandler {
     String currentServerType = ServerHandler.getType(ServerHandler.getServerUUID());
 
     Rank rank = RankHandler.getRank(player.getUniqueId());
-    String[] permissions = rank.getPermissions().get(currentServerType).split(",");
+    String permeronies = rank.getPermissions();
 
-    for (String perm : permissions) {
+    HashMap<String, String> permissionsServerBased = new HashMap<>();
+
+    String[] serverTypes = permeronies.split("-");
+    for (String server : serverTypes) {
+      String srvType = server.split(":")[0];
+      String pp = server.split(":")[1];
+      permissionsServerBased.put(srvType, pp);
+    }
+
+    String[] permissionsSplit = permissionsServerBased.get(currentServerType).split(",");
+
+    for (String perm : permissionsSplit) {
       PermissionHandler.addPermission(player, perm);
     }
 
     for (Rank rankInherit : rankList) {
       if (rankInherit.getPriority() < rank.getPriority()) {
-        String[] permissionsInherit = rankInherit.getPermissions().get(currentServerType).split(",");
+        String[] permissionsInherit = permissionsServerBased.get(currentServerType).split(",");
 
         for (String perm : permissionsInherit) {
           PermissionHandler.addPermission(player, perm);

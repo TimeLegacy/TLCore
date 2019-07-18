@@ -1,7 +1,5 @@
 package net.timelegacy.tlcore.datatype;
 
-import java.util.HashMap;
-
 public class Rank {
 
   private String name;
@@ -9,11 +7,11 @@ public class Rank {
   private String chat;
   private String color;
   private String tab;
-  private HashMap<String, String> permissions;
+  private String permissions;
 
   public Rank(
       String name, int priority, String chat, String color,
-      String tab, HashMap<String, String> permissions) {
+      String tab, String permissions) {
     this.name = name;
     this.priority = priority;
     this.chat = chat;
@@ -42,7 +40,7 @@ public class Rank {
     return color;
   }
 
-  public HashMap<String, String> getPermissions() {
+  public String getPermissions() {
     return permissions;
   }
 }
