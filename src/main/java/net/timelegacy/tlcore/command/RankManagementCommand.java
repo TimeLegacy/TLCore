@@ -36,7 +36,7 @@ public class RankManagementCommand implements CommandExecutor {
       if (args[0].equalsIgnoreCase("list")) {
         MessageUtils.sendMessage(sender, MessageUtils.MAIN_COLOR + "&lRanks: ", false);
         for (Rank rank : RankHandler.rankList) {
-          MessageUtils.sendMessage(sender, rank.getPrimaryColor() + rank.getName(), false);
+          MessageUtils.sendMessage(sender, rank.getColor() + rank.getName(), false);
         }
       }
 

@@ -107,10 +107,14 @@ public class TLCore extends JavaPlugin {
     pm.registerEvents(new YourStateSettingsMenu(), plugin);
 
     RankHandler.loadRanks();
+
+    ServerHandler.setOnline(ServerHandler.getServerUUID(), true);
   }
 
   @Override
   public void onDisable() {
+    ServerHandler.setOnline(ServerHandler.getServerUUID(), false);
+
     PermissionHandler.clearPermissions();
     MongoDB.disconnect();
   }

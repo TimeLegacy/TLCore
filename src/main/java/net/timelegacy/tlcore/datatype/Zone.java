@@ -4,9 +4,9 @@ public class Zone {
 
   protected String shortname;
   protected String formalname;
-  protected Polygon boundingBoxes;
+  protected Polyhedron boundingBoxes;
 
-  public Zone(String shortname, String formalname, Polygon boundingBoxes) {
+  public Zone(String shortname, String formalname, Polyhedron boundingBoxes) {
     this.shortname = shortname;
     this.formalname = formalname;
     this.boundingBoxes = boundingBoxes;
@@ -20,11 +20,11 @@ public class Zone {
     return formalname;
   }
 
-  public Polygon getBoundingBoxes() {
+  public Polyhedron getBoundingBoxes() {
     return boundingBoxes;
   }
 
-  public void setBoundingBoxes(Polygon p) {
+  public void setBoundingBoxes(Polyhedron p) {
     boundingBoxes = p;
 
   }
