@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.UUID;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bson.Document;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class PerkHandler {
 
@@ -31,14 +33,34 @@ public class PerkHandler {
         players.updateOne(
             Filters.eq("uuid", uuid.toString()),
             new Document("$set", new Document("perks", perk.toLowerCase() + ",")));
+
+        if (Bukkit.getPlayer(uuid).isOnline()) {
+          PermissionHandler.addPermission(Bukkit.getPlayer(uuid), perk);
+        }
       } else {
         players.updateOne(
             Filters.eq("uuid", uuid.toString()),
             new Document(
                 "$set", new Document("perks", perksString(uuid) + perk.toLowerCase() + ",")));
+        if (Bukkit.getPlayer(uuid).isOnline()) {
+          PermissionHandler.addPermission(Bukkit.getPlayer(uuid), perk);
+        }
       }
     }
+  }
 
+  /**
+   * Add the player's perks as permissions.
+   */
+
+  public static void addPermissions(Player player) {
+    String perksString = perksString(player.getUniqueId());
+
+    if (perksString != null) {
+      for (String perms : perksString.split(",")) {
+        PermissionHandler.addPermission(player, perms);
+      }
+    }
   }
 
   private static String perksString(UUID uuid) {
@@ -72,13 +94,7 @@ public class PerkHandler {
     return perkList;
   }
 
-  /**
-   * Check if a player has a a perk
-   *
-   * @param uuid player's uuid
-   * @param perk perk node (ex: "LOBBY.HAT.GIFT") as string
-   */
-  public static boolean hasPerk(UUID uuid, String perk) {
+  private static boolean hasPerk(UUID uuid, String perk) {
     return perksString(uuid).contains(perk.toLowerCase());
   }
 
@@ -100,7 +116,10 @@ public class PerkHandler {
     if (hasPerk(uuid, perk)) {
       players.updateOne(Filters.eq("uuid", uuid.toString()),
           new Document("$set", new Document("perks", perksString(uuid).replace(perk + ",", ""))));
-    }
 
+      if( Bukkit.getPlayer(uuid).isOnline()) {
+        PermissionHandler.removePermission(Bukkit.getPlayer(uuid), perk);
+      }
+    }
   }
 }

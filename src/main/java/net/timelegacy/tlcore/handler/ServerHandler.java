@@ -89,6 +89,28 @@ public class ServerHandler {
   }
 
   /**
+   * Set the ip of the server
+   *
+   * @param uuid server's uuid
+   * @param ip server ip
+   */
+  public static void setIP(UUID uuid, String ip) {
+    servers.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("ip", ip)));
+  }
+
+  /**
+   * Get the ip of the server
+   *
+   * @param uuid server's uuid
+   */
+  public static String getIP(UUID uuid) {
+    FindIterable<Document> doc = servers.find(Filters.eq("uuid", uuid.toString()));
+    String state = doc.first().getString("ip");
+
+    return state;
+  }
+
+  /**
    * Set the max player's of a server
    *
    * @param uuid server's uuid

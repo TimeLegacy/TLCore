@@ -4,6 +4,7 @@ import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.datatype.Chat;
 import net.timelegacy.tlcore.handler.BanHandler;
+import net.timelegacy.tlcore.handler.PerkHandler;
 import net.timelegacy.tlcore.handler.PermissionHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
@@ -65,6 +66,9 @@ public class PlayerEvents implements Listener {
     PermissionHandler.attachPermissions(player);
 
     Chat.addPlayer(player);
+
+    RankHandler.addPermissions(player);
+    PerkHandler.addPermissions(player);
 
     player.setPlayerListHeaderFooter(MessageUtils.colorize("&c&lTIME LEGACY"),
         MessageUtils.colorize("&eplay.timelegacy.net"));

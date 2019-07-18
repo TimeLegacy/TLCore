@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
@@ -39,11 +40,20 @@ public class RankHandler {
         String name = doc.getString("name");
         int priority = doc.getInteger("priority");
         String chat = doc.getString("chat_format");
-        String primary_color = doc.getString("primary_color");
-        String secondary_color = doc.getString("secondary_color");
+        String color = doc.getString("color");
         String tab = doc.getString("tab_format");
+        String perms = doc.getString("permissions");
 
-        rankList.add(new Rank(name, priority, chat, primary_color, secondary_color, tab));
+        HashMap<String, String> permissions = new HashMap<>();
+
+        String[] serverTypes = perms.split("-");
+        for (String server : serverTypes) {
+          String srvType = server.split(":")[0];
+          String pp = server.split(":")[1];
+          permissions.put(srvType, pp);
+        }
+
+        rankList.add(new Rank(name, priority, chat, color, tab, permissions));
       }
 
       cursor.close();
@@ -54,7 +64,7 @@ public class RankHandler {
     for (Rank rr : rankList) {
         Team tabRank = ScoreboardUtils.getScoreboard().registerNewTeam(rr.getName());
         tabRank.setPrefix(MessageUtils.colorize(rr.getTab()));
-        tabRank.setColor(ChatColor.getByChar(rr.getPrimaryColor().replace("&", "")));
+      tabRank.setColor(ChatColor.getByChar(rr.getColor().replace("&", "")));
     }
   }
 
@@ -82,6 +92,32 @@ public class RankHandler {
     }
 
     return stringToRank("DEFAULT");
+  }
+
+  /**
+   * Set the permissions along with inheritance for a player on the current server
+   *
+   * @param player Player
+   */
+  public static void addPermissions(Player player) {
+    String currentServerType = ServerHandler.getType(ServerHandler.getServerUUID());
+
+    Rank rank = RankHandler.getRank(player.getUniqueId());
+    String[] permissions = rank.getPermissions().get(currentServerType).split(",");
+
+    for (String perm : permissions) {
+      PermissionHandler.addPermission(player, perm);
+    }
+
+    for (Rank rankInherit : rankList) {
+      if (rankInherit.getPriority() < rank.getPriority()) {
+        String[] permissionsInherit = rankInherit.getPermissions().get(currentServerType).split(",");
+
+        for (String perm : permissionsInherit) {
+          PermissionHandler.addPermission(player, perm);
+        }
+      }
+    }
   }
 
   /**
