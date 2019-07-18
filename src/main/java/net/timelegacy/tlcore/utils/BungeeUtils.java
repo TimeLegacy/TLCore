@@ -23,4 +23,18 @@ public class BungeeUtils {
 
     player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
   }
+
+  /**
+   * Send a player to a server on bungeecord
+   *
+   * @param player player
+   */
+  public static void sendPlayer(Player player, String serverName) {
+    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+    out.writeUTF("Connect");
+    out.writeUTF(serverName);
+
+    player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+  }
+
 }
