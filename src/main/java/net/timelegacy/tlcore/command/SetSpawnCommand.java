@@ -28,7 +28,7 @@ public class SetSpawnCommand implements CommandExecutor {
 
     Player player = (Player) sender;
 
-    if (RankHandler.getRank(player.getUniqueId()).getPriority() > 8) {
+    if (RankHandler.getRank(player.getUniqueId()).getPriority() < 9) {
       MessageUtils.sendMessage(player, "&cNo Perms.", false);
       return true;
     }
