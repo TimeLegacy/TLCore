@@ -94,11 +94,12 @@ public class RankHandler {
     String currentServerType = ServerHandler.getType(ServerHandler.getServerUUID());
 
     Rank rank = RankHandler.getRank(player.getUniqueId());
-    String permeronies = rank.getPermissions();
 
+    //NORMAL RANK'S PERMISSIONS
+    String permeronies = rank.getPermissions();
     HashMap<String, String> permissionsServerBased = new HashMap<>();
 
-    String[] serverTypes = permeronies.split(",");
+    String[] serverTypes = permeronies.split("-");
     for (String server : serverTypes) {
       String srvType = server.split(":")[0];
       String pp = server.split(":")[1];
@@ -107,23 +108,57 @@ public class RankHandler {
     String[] permissionsSplit;
     if (permissionsServerBased.get(currentServerType) != null) {
 
-      permissionsSplit = permissionsServerBased.get(currentServerType).split(",");
+      permissionsSplit = permissionsServerBased.get(currentServerType.toUpperCase()).split(",");
 
       for (String perm : permissionsSplit) {
         PermissionHandler.addPermission(player, perm);
       }
     }
 
+    //INHERITANCE
     for (Rank rankInherit : rankList) {
-      if (rankInherit.getPriority() < rank.getPriority()
-          && permissionsServerBased.get(currentServerType) != null) {
-        String[] permissionsInherit = permissionsServerBased.get(currentServerType).split(",");
+      HashMap<String, String> permsSrv = new HashMap<>();
 
-        for (String perm : permissionsInherit) {
-          PermissionHandler.addPermission(player, perm);
+      String[] types = rankInherit.getPermissions().split("-");
+      for (String server : types) {
+        String srvType = server.split(":")[0];
+        String pp = server.split(":")[1];
+        permsSrv.put(srvType, pp);
+      }
+
+      if (rankInherit.getPriority() < rank.getPriority() && permsSrv.get(currentServerType.toUpperCase()) != null) {
+
+        if (isStaffRank(rank) && rankInherit.getPriority() >= 5) {
+          String[] permissionsInherit =
+              permsSrv.get(currentServerType.toUpperCase()).split(",");
+          for (String perm : permissionsInherit) {
+            PermissionHandler.addPermission(player, perm);
+          }
+        } else if (!isStaffRank(rank) && rankInherit.getPriority() >= 1) {
+          String[] permissionsInherit =
+              permsSrv.get(currentServerType.toUpperCase()).split(",");
+          for (String perm : permissionsInherit) {
+            PermissionHandler.addPermission(player, perm);
+          }
+        }
+
+        if (rankInherit.getPriority() == 0) {
+          String[] permissionsInherit =
+              permsSrv.get(currentServerType.toUpperCase()).split(",");
+          for (String perm : permissionsInherit) {
+            PermissionHandler.addPermission(player, perm);
+          }
         }
       }
     }
+  }
+
+  /**
+   * Check if a rank is a staff rank
+   */
+
+  public static boolean isStaffRank(Rank rank) {
+    return (rank.getPriority() >= 5);
   }
 
   /** Convert string to a rank if it exists */
