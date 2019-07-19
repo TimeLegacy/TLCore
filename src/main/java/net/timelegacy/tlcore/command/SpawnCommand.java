@@ -22,31 +22,36 @@ public class SpawnCommand implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    if (!(sender instanceof Player)) {
-      sender.sendMessage("&cNo Perms"); // Todo replace with TAC no Command
-      return true;
-    }
+    if (sender instanceof Player) {
 
-    Player player = (Player) sender;
-    if (!player.hasPermission("tlcore.command.spawn")) {
-      player.sendMessage("&cNo Perms"); // Todo replace with TAC no Command
-      return true;
-    }
-
-    if (args.length == 0) {
-      try {
-        player.teleport(doSpawn(player.getWorld().getName()));
-      } catch (Exception e) {
-        MessageUtils.sendMessage(
-            player, "This was an issue with /spawn, poke a dev with a screen shot please", false);
+      Player player = (Player) sender;
+      if (!player.hasPermission("tlcore.command.spawn")) {
+        MessageUtils.noPerm(player);
         return true;
       }
-      MessageUtils.sendMessage(player, "Teleported to the world spawn!", false);
-      return true;
-    } else {
-      MessageUtils.sendMessage(player, "its just /spawn", false); // TODO cleanup
-      return true;
+
+      if (args.length == 0) {
+        try {
+          player.teleport(doSpawn(player.getWorld().getName()));
+        } catch (Exception e) {
+          MessageUtils.sendMessage(
+              player,
+              MessageUtils.ERROR_COLOR
+                  + "Please submit a bug report with a screenshot on our Discord.",
+              false);
+          return true;
+        }
+        MessageUtils.sendMessage(
+            player, MessageUtils.SUCCESS_COLOR + "Teleported to the spawn!", false);
+        return true;
+      } else {
+        MessageUtils.sendMessage(
+            player, MessageUtils.ERROR_COLOR + "Usage: /spawn", false); // TODO cleanup
+        return true;
+      }
     }
+
+    return false;
   }
 
   private Location doSpawn(String worldName) {

@@ -96,57 +96,61 @@ public class RankHandler {
     Rank rank = RankHandler.getRank(player.getUniqueId());
 
     //NORMAL RANK'S PERMISSIONS
-    String permeronies = rank.getPermissions();
-    HashMap<String, String> permissionsServerBased = new HashMap<>();
+    if (!rank.getPermissions().isEmpty()) {
+      System.out.println(rank.getPermissions());
 
-    String[] serverTypes = permeronies.split("-");
-    for (String server : serverTypes) {
-      String srvType = server.split(":")[0];
-      String pp = server.split(":")[1];
-      permissionsServerBased.put(srvType, pp);
-    }
-    String[] permissionsSplit;
-    if (permissionsServerBased.get(currentServerType) != null) {
+      HashMap<String, String> permissionsServerBased = new HashMap<>();
 
-      permissionsSplit = permissionsServerBased.get(currentServerType.toUpperCase()).split(",");
-
-      for (String perm : permissionsSplit) {
-        PermissionHandler.addPermission(player, perm);
-      }
-    }
-
-    //INHERITANCE
-    for (Rank rankInherit : rankList) {
-      HashMap<String, String> permsSrv = new HashMap<>();
-
-      String[] types = rankInherit.getPermissions().split("-");
-      for (String server : types) {
+      String[] serverTypes = rank.getPermissions().split("-");
+      for (String server : serverTypes) {
         String srvType = server.split(":")[0];
         String pp = server.split(":")[1];
-        permsSrv.put(srvType, pp);
+        permissionsServerBased.put(srvType, pp);
       }
+      String[] permissionsSplit;
+      if (permissionsServerBased.get(currentServerType) != null) {
 
-      if (rankInherit.getPriority() < rank.getPriority() && permsSrv.get(currentServerType.toUpperCase()) != null) {
+        permissionsSplit = permissionsServerBased.get(currentServerType.toUpperCase()).split(",");
 
-        if (isStaffRank(rank) && rankInherit.getPriority() >= 5) {
-          String[] permissionsInherit =
-              permsSrv.get(currentServerType.toUpperCase()).split(",");
-          for (String perm : permissionsInherit) {
-            PermissionHandler.addPermission(player, perm);
-          }
-        } else if (!isStaffRank(rank) && rankInherit.getPriority() >= 1) {
-          String[] permissionsInherit =
-              permsSrv.get(currentServerType.toUpperCase()).split(",");
-          for (String perm : permissionsInherit) {
-            PermissionHandler.addPermission(player, perm);
-          }
+        for (String perm : permissionsSplit) {
+          PermissionHandler.addPermission(player, perm);
+        }
+      }
+    }
+
+    // INHERITANCE
+    for (Rank rankInherit : rankList) {
+      if (!rank.getPermissions().isEmpty()) {
+
+        HashMap<String, String> permsSrv = new HashMap<>();
+
+        String[] types = rankInherit.getPermissions().split("-");
+        for (String server : types) {
+          String srvType = server.split(":")[0];
+          String pp = server.split(":")[1];
+          permsSrv.put(srvType, pp);
         }
 
-        if (rankInherit.getPriority() == 0) {
-          String[] permissionsInherit =
-              permsSrv.get(currentServerType.toUpperCase()).split(",");
-          for (String perm : permissionsInherit) {
-            PermissionHandler.addPermission(player, perm);
+        if (rankInherit.getPriority() < rank.getPriority()
+            && permsSrv.get(currentServerType.toUpperCase()) != null) {
+
+          if (isStaffRank(rank) && rankInherit.getPriority() >= 5) {
+            String[] permissionsInherit = permsSrv.get(currentServerType.toUpperCase()).split(",");
+            for (String perm : permissionsInherit) {
+              PermissionHandler.addPermission(player, perm);
+            }
+          } else if (!isStaffRank(rank) && rankInherit.getPriority() >= 1) {
+            String[] permissionsInherit = permsSrv.get(currentServerType.toUpperCase()).split(",");
+            for (String perm : permissionsInherit) {
+              PermissionHandler.addPermission(player, perm);
+            }
+          }
+
+          if (rankInherit.getPriority() == 0) {
+            String[] permissionsInherit = permsSrv.get(currentServerType.toUpperCase()).split(",");
+            for (String perm : permissionsInherit) {
+              PermissionHandler.addPermission(player, perm);
+            }
           }
         }
       }

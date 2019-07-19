@@ -21,38 +21,36 @@ public class SetSpawnCommand implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    if (!(sender instanceof Player)) {
-      sender.sendMessage("&cNo Perms");
-      return true;
-    }
+    if (sender instanceof Player) {
 
-    Player player = (Player) sender;
+      Player player = (Player) sender;
 
-    if (RankHandler.getRank(player.getUniqueId()).getPriority() < 9) {
-      MessageUtils.sendMessage(player, "&cNo Perms.", false);
-      return true;
-    }
-
-    if (args.length == 0) {
-      File file = new File(plugin.getDataFolder(), "spawns.yml");
-      YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-
-      String worldName = player.getWorld().getName();
-
-      config.createSection("spawns." + worldName);
-
-      config.set("spawns." + worldName + ".x", player.getLocation().getX());
-      config.set("spawns." + worldName + ".y", player.getLocation().getY());
-      config.set("spawns." + worldName + ".z", player.getLocation().getZ());
-      config.set("spawns." + worldName + ".yaw", player.getLocation().getYaw());
-      config.set("spawns." + worldName + ".pitch", player.getLocation().getPitch());
-      try {
-        config.save(file);
-      } catch (IOException e) {
-        e.printStackTrace();
+      if (RankHandler.getRank(player.getUniqueId()).getPriority() < 9) {
+        MessageUtils.noPerm(player);
+        return true;
       }
 
-      MessageUtils.sendMessage(player, "&aSet world spawn to current location!", false);
+      if (args.length == 0) {
+        File file = new File(plugin.getDataFolder(), "spawns.yml");
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+        String worldName = player.getWorld().getName();
+
+        config.createSection("spawns." + worldName);
+
+        config.set("spawns." + worldName + ".x", player.getLocation().getX());
+        config.set("spawns." + worldName + ".y", player.getLocation().getY());
+        config.set("spawns." + worldName + ".z", player.getLocation().getZ());
+        config.set("spawns." + worldName + ".yaw", player.getLocation().getYaw());
+        config.set("spawns." + worldName + ".pitch", player.getLocation().getPitch());
+        try {
+          config.save(file);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
+        MessageUtils.sendMessage(player, MessageUtils.SUCCESS_COLOR + "Set spawn to current location!", false);
+      }
     }
 
     return false;
