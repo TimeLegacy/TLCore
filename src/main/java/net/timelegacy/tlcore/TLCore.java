@@ -25,6 +25,11 @@ import net.timelegacy.tlcore.command.TeleportCommand;
 import net.timelegacy.tlcore.command.TeleportHereCommand;
 import net.timelegacy.tlcore.command.UnBanCommand;
 import net.timelegacy.tlcore.command.UnMuteCommand;
+import net.timelegacy.tlcore.command.media.DiscordCommand;
+import net.timelegacy.tlcore.command.media.ForumsCommand;
+import net.timelegacy.tlcore.command.media.GimmieSomePizzaCommand;
+import net.timelegacy.tlcore.command.media.StoreCommand;
+import net.timelegacy.tlcore.command.media.WebsiteCommand;
 import net.timelegacy.tlcore.event.AFKEvents;
 import net.timelegacy.tlcore.event.FilterEvents;
 import net.timelegacy.tlcore.event.PlayerEvents;
@@ -94,6 +99,12 @@ public class TLCore extends JavaPlugin {
     getCommand("perks").setExecutor(new PerkCommand());
     getCommand("spawn").setExecutor(new SpawnCommand(this)); // Steven sends plugin to command class, not me -piajesse
     getCommand("setspawn").setExecutor(new SetSpawnCommand(this));
+
+    getCommand("discord").setExecutor(new DiscordCommand());
+    getCommand("forums").setExecutor(new ForumsCommand());
+    getCommand("gimmesomepizza").setExecutor(new GimmieSomePizzaCommand());
+    getCommand("store").setExecutor(new StoreCommand());
+    getCommand("website").setExecutor(new WebsiteCommand());
 
     PluginManager pm = getServer().getPluginManager();
 
