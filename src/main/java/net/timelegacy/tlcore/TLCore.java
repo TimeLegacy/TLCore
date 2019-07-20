@@ -2,6 +2,9 @@ package net.timelegacy.tlcore;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import de.zabuza.grawlox.Grawlox;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,6 +54,8 @@ public class TLCore extends JavaPlugin {
   public FileConfiguration config;
   public Logger logger = Bukkit.getLogger();
   public List<UUID> flySpeed = new ArrayList<>();
+
+  public static Grawlox grawlox;
 
   public static TLCore getPlugin() {
     return plugin;
@@ -113,6 +118,12 @@ public class TLCore extends JavaPlugin {
     RankHandler.loadRanks();
 
     ServerHandler.setOnline(ServerHandler.getServerUUID(), true);
+
+    try {
+      grawlox = Grawlox.createFromSwearWordsPath(new File(TLCore.getPlugin().getDataFolder(), "swearWords.txt"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override

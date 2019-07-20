@@ -3,6 +3,7 @@ package net.timelegacy.tlcore.utils;
 import java.awt.TextComponent;
 import java.util.ArrayList;
 import java.util.List;
+import net.timelegacy.tlcore.TLCore;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -74,6 +75,13 @@ public class MessageUtils {
     }
 
     sender.sendMessage(colorize(prefix + message));
+  }
+
+  /**
+   * Filter a message through Grawlox
+   */
+  public static String filterMessage(String message) {
+    return TLCore.grawlox.filter(message);
   }
 
   /**
