@@ -1,5 +1,9 @@
 package net.timelegacy.tlcore.event;
 
+import de.zabuza.grawlox.Grawlox;
+import java.io.File;
+import java.io.IOException;
+import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.datatype.Chat;
 import net.timelegacy.tlcore.datatype.PlayerProfile;
 import net.timelegacy.tlcore.datatype.Rank;
@@ -70,14 +74,27 @@ public class FilterEvents implements Listener {
 
     PlayerProfile profile = new PlayerProfile(player.getUniqueId());
 
-    System.out.println("[CHAT] " + player.getUniqueId() + " > " + message);
+    System.out.println("[CHAT] " + player.getName() + " > " + message);
 
     if (!MuteHandler.isMuted(player.getUniqueId())) {
+      try {
+        Grawlox grawlox = Grawlox
+            .createFromSwearWordsPath(new File(TLCore.getPlugin().getDataFolder(), "swearWords.txt"));
 
-      for (Player sp : Bukkit.getOnlinePlayers()) {
-        // TODO fix the swear filter
-
-        sp.sendMessage(Chat.getPlayerChat(player).getFormat() + message);
+        for (Player sp : Bukkit.getOnlinePlayers()) {
+          PlayerProfile playerProfile = new PlayerProfile(player.getUniqueId());
+          switch (playerProfile.getChatFilter()) {
+            case CHILD:
+              sp.sendMessage(Chat.getPlayerChat(player).getFormat() + grawlox.filter(message));
+              break;
+            case MATURE:
+              sp.sendMessage(Chat.getPlayerChat(player).getFormat() + message);
+              break;
+          }
+        }
+      } catch (IOException e) {
+        MessageUtils.sendMessage(player,
+            MessageUtils.ERROR_COLOR + "Please contact an administrator. Your message could not be sent.", false);
       }
     } else {
       if (!(MuteHandler.getMuteExpire(player.getUniqueId()).equalsIgnoreCase("false")
