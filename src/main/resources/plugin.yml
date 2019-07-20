@@ -54,3 +54,13 @@ commands:
     description: Go to spawn.
   setspawn:
     description: Set the world spawn.
+  discord:
+    description: Get the server discord link.
+  forums:
+    description: Get the forums link.
+  gimmesomepizza:
+    description: Get some pizza.
+  store:
+    description: Get the store link.
+  website:
+    description: Get the webstie link.
