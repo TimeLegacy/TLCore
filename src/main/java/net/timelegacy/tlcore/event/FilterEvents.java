@@ -70,15 +70,22 @@ public class FilterEvents implements Listener {
 
     PlayerProfile profile = new PlayerProfile(player.getUniqueId());
 
-    System.out.println("[CHAT] " + player.getUniqueId() + " > " + message);
+    System.out.println("[CHAT] " + player.getName() + " > " + message);
 
     if (!MuteHandler.isMuted(player.getUniqueId())) {
 
-      for (Player sp : Bukkit.getOnlinePlayers()) {
-        // TODO fix the swear filter
+        for (Player sp : Bukkit.getOnlinePlayers()) {
+          PlayerProfile playerProfile = new PlayerProfile(player.getUniqueId());
+          switch (playerProfile.getChatFilter()) {
+            case CHILD:
+              sp.sendMessage(Chat.getPlayerChat(player).getFormat() + MessageUtils.filterMessage(message));
+              break;
+            case MATURE:
+              sp.sendMessage(Chat.getPlayerChat(player).getFormat() + message);
+              break;
+          }
+        }
 
-        sp.sendMessage(Chat.getPlayerChat(player).getFormat() + message);
-      }
     } else {
       if (!(MuteHandler.getMuteExpire(player.getUniqueId()).equalsIgnoreCase("false")
           || MuteHandler.getMuteExpire(player.getUniqueId()).equalsIgnoreCase("true"))) {
