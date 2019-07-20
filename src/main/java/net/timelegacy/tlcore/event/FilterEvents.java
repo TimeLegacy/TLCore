@@ -68,14 +68,12 @@ public class FilterEvents implements Listener {
 
     String message = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
 
-    PlayerProfile profile = new PlayerProfile(player.getUniqueId());
-
     System.out.println("[CHAT] " + player.getName() + " > " + message);
 
     if (!MuteHandler.isMuted(player.getUniqueId())) {
 
         for (Player sp : Bukkit.getOnlinePlayers()) {
-          PlayerProfile playerProfile = new PlayerProfile(player.getUniqueId());
+          PlayerProfile playerProfile = new PlayerProfile(sp.getUniqueId());
           switch (playerProfile.getChatFilter()) {
             case CHILD:
               sp.sendMessage(Chat.getPlayerChat(player).getFormat() + MessageUtils.filterMessage(message));
