@@ -3,7 +3,9 @@ package net.timelegacy.tlcore.event;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.datatype.Chat;
+import net.timelegacy.tlcore.datatype.CoreSystem;
 import net.timelegacy.tlcore.handler.BanHandler;
+import net.timelegacy.tlcore.handler.CoreSystemHandler;
 import net.timelegacy.tlcore.handler.PerkHandler;
 import net.timelegacy.tlcore.handler.PermissionHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
@@ -37,10 +39,11 @@ public class PlayerEvents implements Listener {
     event.setJoinMessage(null);
 
     for (Player p : Bukkit.getOnlinePlayers()) {
-      p.sendMessage("§7§l(§a+§7§l) "
-          + RankHandler.chatColors(player.getUniqueId())
-          .replace("%username% &8%arrows%", player.getName())
-          .replace("&", "§")); // TODO Cleanup
+      p.sendMessage(
+          "§7§l(§a+§7§l) "
+              + RankHandler.chatColors(player.getUniqueId())
+                  .replace("%username% &8%arrows%", player.getName())
+                  .replace("&", "§")); // TODO Cleanup
     }
 
     plugin.flySpeed.remove(player.getUniqueId());
@@ -70,8 +73,8 @@ public class PlayerEvents implements Listener {
     RankHandler.addPermissions(player);
     PerkHandler.addPermissions(player);
 
-    player.setPlayerListHeaderFooter(MessageUtils.colorize("&c&lTIME LEGACY"),
-        MessageUtils.colorize("&eplay.timelegacy.net"));
+    player.setPlayerListHeaderFooter(
+        MessageUtils.colorize("&c&lTIME LEGACY"), MessageUtils.colorize("&eplay.timelegacy.net"));
   }
 
   @EventHandler(priority = EventPriority.LOWEST)
@@ -85,8 +88,9 @@ public class PlayerEvents implements Listener {
 
     XPBarUtils.playerLeave(player);
 
-    player.getInventory().clear();
-
+    if (CoreSystemHandler.isEnabled(CoreSystem.InventoryClearOnLeave)) {
+      player.getInventory().clear();
+    }
     PermissionHandler.detachPermissions(player);
 
     for (PotionEffect effect : player.getActivePotionEffects()) {
@@ -101,10 +105,11 @@ public class PlayerEvents implements Listener {
 
     PlayerHandler.updateOnline(player.getUniqueId(), false);
     for (Player p : Bukkit.getOnlinePlayers()) {
-      p.sendMessage("§7§l(§c-§7§l) "
-          + RankHandler.chatColors(player.getUniqueId())
-          .replace("%username% &8%arrows%", player.getName())
-          .replace("&", "§")); // TODO Cleanup
+      p.sendMessage(
+          "§7§l(§c-§7§l) "
+              + RankHandler.chatColors(player.getUniqueId())
+                  .replace("%username% &8%arrows%", player.getName())
+                  .replace("&", "§")); // TODO Cleanup
     }
   }
 
@@ -113,9 +118,11 @@ public class PlayerEvents implements Listener {
     Player player = event.getPlayer();
 
     if (event.getStatus() == PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED) {
-      MessageUtils.sendMessage(player, MessageUtils.SUCCESS_COLOR + "Successful loaded the resource pack.", false);
+      MessageUtils.sendMessage(
+          player, MessageUtils.SUCCESS_COLOR + "Successful loaded the resource pack.", false);
     } else if (event.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD) {
-      MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR + "Error. Failed download resource pack.", false);
+      MessageUtils.sendMessage(
+          player, MessageUtils.ERROR_COLOR + "Error. Failed download resource pack.", false);
     }
   }
 
@@ -132,20 +139,24 @@ public class PlayerEvents implements Listener {
     }
 
     if (BanHandler.getBanExpire(uuid).equalsIgnoreCase("false")) {
-      event.disallow(Result.KICK_BANNED, ChatColor.translateAlternateColorCodes('&',
-          MessageUtils.messagePrefix
-              + "&4You have been banned. &cReason: &f&o"
-              + BanHandler.getBanReason(uuid)
-              + " &cExpires: &f&o"
-              + BanHandler.getBanExpire(uuid)));
+      event.disallow(
+          Result.KICK_BANNED,
+          ChatColor.translateAlternateColorCodes(
+              '&',
+              MessageUtils.messagePrefix
+                  + "&4You have been banned. &cReason: &f&o"
+                  + BanHandler.getBanReason(uuid)
+                  + " &cExpires: &f&o"
+                  + BanHandler.getBanExpire(uuid)));
       return;
     }
 
-    event.disallow(Result.KICK_BANNED, ChatColor.translateAlternateColorCodes('&',
-        MessageUtils.messagePrefix
-            + "&4You have been banned. &cReason: &f&o"
-            + BanHandler.getBanReason(uuid)));
-
-
+    event.disallow(
+        Result.KICK_BANNED,
+        ChatColor.translateAlternateColorCodes(
+            '&',
+            MessageUtils.messagePrefix
+                + "&4You have been banned. &cReason: &f&o"
+                + BanHandler.getBanReason(uuid)));
   }
 }
