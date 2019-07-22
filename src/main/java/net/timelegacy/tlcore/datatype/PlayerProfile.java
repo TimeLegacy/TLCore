@@ -5,8 +5,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import java.util.UUID;
 import net.timelegacy.tlcore.handler.PlayerHandler;
+import net.timelegacy.tlcore.handler.ServerHandler;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bson.Document;
+import org.bukkit.Server;
 
 public class PlayerProfile {
 
@@ -74,6 +76,10 @@ public class PlayerProfile {
     profiles.updateOne(Filters.eq("uuid", this.uuid.toString()),
         new Document("$set", new Document("status", status.toString())));
     this.status = status;
+    // TODO Ask shaun how to manaually call hubs function from here
+//    if (ServerHandler.getType(ServerHandler.getServerUUID()).equals("HUB")) {
+//
+//    }
   }
 
   public ChatFilter getChatFilter() {
