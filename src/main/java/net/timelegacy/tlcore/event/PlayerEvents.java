@@ -10,6 +10,7 @@ import net.timelegacy.tlcore.handler.PerkHandler;
 import net.timelegacy.tlcore.handler.PermissionHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
+import net.timelegacy.tlcore.handler.ServerHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
 import net.timelegacy.tlcore.utils.ScoreboardUtils;
 import net.timelegacy.tlcore.utils.XPBarUtils;
@@ -29,6 +30,8 @@ import org.bukkit.potion.PotionEffect;
 
 @SuppressWarnings("deprecation")
 public class PlayerEvents implements Listener {
+  private static String header;
+  private static String footer;
 
   private TLCore plugin = TLCore.getPlugin();
 
@@ -44,6 +47,9 @@ public class PlayerEvents implements Listener {
               + RankHandler.chatColors(player.getUniqueId())
                   .replace("%username% &8%arrows%", player.getName())
                   .replace("&", "§")); // TODO Cleanup
+      player.setPlayerListHeaderFooter(
+          MessageUtils.colorize(header), MessageUtils.colorize(footer.replace("%{online}%", Bukkit.getOnlinePlayers().size() + "")));
+
     }
 
     plugin.flySpeed.remove(player.getUniqueId());
@@ -73,8 +79,6 @@ public class PlayerEvents implements Listener {
     RankHandler.addPermissions(player);
     PerkHandler.addPermissions(player);
 
-    player.setPlayerListHeaderFooter(
-        MessageUtils.colorize("&c&lTIME LEGACY"), MessageUtils.colorize("&eplay.timelegacy.net"));
   }
 
   @EventHandler(priority = EventPriority.LOWEST)
@@ -110,6 +114,8 @@ public class PlayerEvents implements Listener {
               + RankHandler.chatColors(player.getUniqueId())
                   .replace("%username% &8%arrows%", player.getName())
                   .replace("&", "§")); // TODO Cleanup
+      player.setPlayerListHeaderFooter(
+          MessageUtils.colorize(header), MessageUtils.colorize(footer.replace("%{online}%", Bukkit.getOnlinePlayers().size() + "")));
     }
   }
 
@@ -158,5 +164,31 @@ public class PlayerEvents implements Listener {
             MessageUtils.messagePrefix
                 + "&4You have been banned. &cReason: &f&o"
                 + BanHandler.getBanReason(uuid)));
+  }
+  public static void startUp(){
+    String server;
+    switch (ServerHandler.getType(ServerHandler.getServerUUID())){
+      case "CREATIVE":
+        server = "&6&l&nCREATIVE";
+        break;
+      case "LOBBY":
+        server = "&e&l&nLOBBY";
+        break;
+      default:
+        server = "&f&l" + ServerHandler.getType(ServerHandler.getServerUUID());
+        break;
+    }
+    server = server + "\n";
+
+    header = ("&r\n"
+        + "&c&lTIME LEGACY\n"
+        + server
+        + "&r").replace("&", "§");
+    footer = ("&r\n"
+//        + "&7Players Online: &a%{online}%\n" // TODO doesn't update players online count on leave/join
+//        + "&r\n"
+        + "&7Need info? Go to &e/Forums\n"
+        + "&7Toxicity? Report it to a &cStaff Member\n"
+        + "&7Ranks, Tags, and more &bhttps://timelegacy.net/store").replace("&", "§");
   }
 }

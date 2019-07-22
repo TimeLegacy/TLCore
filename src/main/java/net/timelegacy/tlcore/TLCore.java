@@ -130,6 +130,8 @@ public class TLCore extends JavaPlugin {
 
     ServerHandler.setOnline(ServerHandler.getServerUUID(), true);
 
+    PlayerEvents.startUp();
+
     try {
       grawlox = Grawlox.createFromSwearWordsPath(new File(TLCore.getPlugin().getDataFolder(), "swearWords.txt"));
     } catch (IOException e) {
