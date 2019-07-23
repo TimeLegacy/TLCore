@@ -6,7 +6,9 @@ import net.timelegacy.tlcore.datatype.Punishment.Type;
 import net.timelegacy.tlcore.datatype.Rank;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
+import net.timelegacy.tlcore.utils.BungeeUtils;
 import net.timelegacy.tlcore.utils.MessageUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -67,6 +69,14 @@ public class BanCommand implements CommandExecutor {
       MessageUtils.sendMessage(sender,
           MessageUtils.SECOND_COLOR + args[0] + MessageUtils.MAIN_COLOR + " is now banned.", true);
 
+      Player pl = Bukkit.getPlayer(args[0]);
+      if (pl != null) {
+        BungeeUtils.kickPlayer(pl, MessageUtils.colorize("&4You have been banned. &cReason: &f&o"
+            + punishment.getPunishmentReason(Type.BAN).toString()
+            + " &cExpire: &f&o"
+            + punishment.getPunishmentExpire(Type.BAN)));
+      }
+
     } else if (args.length == 3) {
       String username = args[0];
 
@@ -105,6 +115,14 @@ public class BanCommand implements CommandExecutor {
       punishment.punish(Type.BAN, reason, expire, player.getUniqueId());
       MessageUtils.sendMessage(sender,
           MessageUtils.SECOND_COLOR + args[0] + MessageUtils.MAIN_COLOR + " is now banned.", true);
+
+      Player pl = Bukkit.getPlayer(args[0]);
+      if (pl != null) {
+        BungeeUtils.kickPlayer(pl, MessageUtils.colorize("&4You have been banned. &cReason: &f&o"
+            + punishment.getPunishmentReason(Type.BAN).toString()
+            + " &cExpire: &f&o"
+            + punishment.getPunishmentExpire(Type.BAN)));
+      }
 
     } else {
       MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR
