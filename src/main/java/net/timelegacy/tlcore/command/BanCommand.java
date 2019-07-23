@@ -24,7 +24,7 @@ public class BanCommand implements CommandExecutor {
     Player player = (Player) sender;
     Rank rank = RankHandler.getRank(player.getUniqueId());
 
-    if (rank.getPriority() < 8) {
+    if (rank.getPriority() < 6) {
       MessageUtils.noPerm(player);
       return true;
     }
@@ -33,6 +33,12 @@ public class BanCommand implements CommandExecutor {
       MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR
           + "Usage: /ban [player] [HACKING/PROFANITY/OTHER] [time #d/#m/#y (blank for permenent)]", true);
     } else if (args.length == 2) {
+
+      if (rank.getPriority() < 7) {
+        MessageUtils.noPerm(player);
+        return true;
+      }
+
       String username = args[0];
 
       if (!PlayerHandler.playerExists(username)) {
