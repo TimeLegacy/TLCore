@@ -183,7 +183,7 @@ public class PlayerEvents implements Listener {
     header = ("&r\n"
         + "&c&lTIME LEGACY\n"
         + server
-        + "&r").replace("&", "§");
+        + "&r ").replace("&", "§");
     footer = ("&r\n"
 //        + "&7Players Online: &a%{online}%\n" // TODO doesn't update players online count on leave/join
 //        + "&r\n"
