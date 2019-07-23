@@ -2,8 +2,9 @@ package net.timelegacy.tlcore.command;
 
 import java.util.UUID;
 import net.timelegacy.tlcore.datatype.Punishment;
+import net.timelegacy.tlcore.datatype.Punishment.Reason;
+import net.timelegacy.tlcore.datatype.Punishment.Type;
 import net.timelegacy.tlcore.datatype.Rank;
-import net.timelegacy.tlcore.handler.MuteHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
@@ -46,12 +47,15 @@ public class UnMuteCommand implements CommandExecutor {
 
     UUID uuid = PlayerHandler.getUUID(args[0]);
 
-    if (!MuteHandler.isMuted(uuid)) {
+    Punishment punishment = new Punishment(uuid);
+
+    if (!punishment.isPunished(Type.MUTE)) {
       MessageUtils.sendMessage(sender, MessageUtils.ERROR_COLOR + "Player isn't muted.", true);
       return true;
     }
 
-    MuteHandler.setMuted(uuid, "false", Punishment.NULL, player.getUniqueId());
+    // MuteHandler.setMuted(uuid, "false", Punishment.NULL, player.getUniqueId());
+    punishment.punish(Type.UNMUTE, Reason.NULL, "NEVER", player.getUniqueId());
     MessageUtils.sendMessage(sender, MessageUtils.SECOND_COLOR
             + args[0]
             + MessageUtils.MAIN_COLOR

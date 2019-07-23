@@ -2,8 +2,9 @@ package net.timelegacy.tlcore.command;
 
 import java.util.UUID;
 import net.timelegacy.tlcore.datatype.Punishment;
+import net.timelegacy.tlcore.datatype.Punishment.Reason;
+import net.timelegacy.tlcore.datatype.Punishment.Type;
 import net.timelegacy.tlcore.datatype.Rank;
-import net.timelegacy.tlcore.handler.BanHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
@@ -45,13 +46,14 @@ public class UnBanCommand implements CommandExecutor {
     }
 
     UUID uuid = PlayerHandler.getUUID(args[0]);
+    Punishment punishment = new Punishment(uuid);
 
-    if (!BanHandler.isBanned(uuid)) {
+    if (!punishment.isPunished(Type.BAN)) {
       MessageUtils.sendMessage(sender, MessageUtils.ERROR_COLOR + "Player isn't banned.", true);
       return true;
     }
 
-    BanHandler.setBanned(uuid, "false", Punishment.NULL, player.getUniqueId());
+    punishment.punish(Type.UNBAN, Reason.NULL, "NEVER", player.getUniqueId());
     MessageUtils.sendMessage(sender, MessageUtils.SECOND_COLOR
             + args[0]
             + MessageUtils.MAIN_COLOR

@@ -4,7 +4,6 @@ import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.datatype.Chat;
 import net.timelegacy.tlcore.datatype.CoreSystem;
-import net.timelegacy.tlcore.handler.BanHandler;
 import net.timelegacy.tlcore.handler.CoreSystemHandler;
 import net.timelegacy.tlcore.handler.PerkHandler;
 import net.timelegacy.tlcore.handler.PermissionHandler;
@@ -15,7 +14,6 @@ import net.timelegacy.tlcore.utils.MessageUtils;
 import net.timelegacy.tlcore.utils.ScoreboardUtils;
 import net.timelegacy.tlcore.utils.XPBarUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,7 +21,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.potion.PotionEffect;
@@ -139,32 +136,8 @@ public class PlayerEvents implements Listener {
     if (!PlayerHandler.playerExists(uuid)) {
       return;
     }
-
-    if (!BanHandler.isBanned(uuid)) {
-      return;
-    }
-
-    if (BanHandler.getBanExpire(uuid).equalsIgnoreCase("false")) {
-      event.disallow(
-          Result.KICK_BANNED,
-          ChatColor.translateAlternateColorCodes(
-              '&',
-              MessageUtils.messagePrefix
-                  + "&4You have been banned. &cReason: &f&o"
-                  + BanHandler.getBanReason(uuid)
-                  + " &cExpires: &f&o"
-                  + BanHandler.getBanExpire(uuid)));
-      return;
-    }
-
-    event.disallow(
-        Result.KICK_BANNED,
-        ChatColor.translateAlternateColorCodes(
-            '&',
-            MessageUtils.messagePrefix
-                + "&4You have been banned. &cReason: &f&o"
-                + BanHandler.getBanReason(uuid)));
   }
+
   public static void startUp(){
     String server;
     switch (ServerHandler.getType(ServerHandler.getServerUUID())){

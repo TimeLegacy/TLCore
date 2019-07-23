@@ -23,10 +23,6 @@ public class PlayerHandler {
     Document doc = new Document("uuid", player.getUniqueId().toString())
         .append("username", player.getName())
         .append("rank", "DEFAULT")
-        .append("banned", "false")
-        .append("ban_reason", "")
-        .append("muted", "false")
-        .append("mute_reason", "")
         .append("coins", 0)
         .append("crate_keys", 0)
         .append("perks", "")
@@ -179,5 +175,19 @@ public class PlayerHandler {
     }
 
     return null;
+  }
+
+  /**
+   * Check if a specified player is online
+   *
+   * @param uuid player
+   */
+  public static boolean isOnline(UUID uuid) {
+    if (playerExists(uuid)) {
+      FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
+      return doc.first().getBoolean("online");
+    }
+
+    return false;
   }
 }
