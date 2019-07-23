@@ -38,6 +38,8 @@ public class MuteCommand implements CommandExecutor {
       if (!PlayerHandler.playerExists(username)) {
         MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR
             + "Player not found. Please check the username. (Case-Sensitive)", true);
+        MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR
+            + "Usage: /ban [player] [HACKING/PROFANITY/OTHER] [time #d/#m/#y (blank for permenent)]", true);
         return true;
       }
 
@@ -46,6 +48,8 @@ public class MuteCommand implements CommandExecutor {
       if (!Punishment.validReason(args[1])) {
         MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR
             + "Invalid punishment reason.", true);
+        MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR
+            + "Usage: /ban [player] [HACKING/PROFANITY/OTHER] [time #d/#m/#y (blank for permenent)]", true);
         return true;
       }
 
@@ -63,6 +67,8 @@ public class MuteCommand implements CommandExecutor {
       if (!PlayerHandler.playerExists(username)) {
         MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR
             + "Player not found. Please check the username. (Case-Sensitive)", true);
+        MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR
+            + "Usage: /ban [player] [HACKING/PROFANITY/OTHER] [time #d/#m/#y (blank for permenent)]", true);
         return true;
       }
 
@@ -71,6 +77,8 @@ public class MuteCommand implements CommandExecutor {
       if (!Punishment.validReason(args[1])) {
         MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR
             + "Invalid punishment reason.", true);
+        MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR
+            + "Usage: /ban [player] [HACKING/PROFANITY/OTHER] [time #d/#m/#y (blank for permenent)]", true);
         return true;
       }
 
@@ -83,6 +91,8 @@ public class MuteCommand implements CommandExecutor {
       if (Punishment.parseExpire(expire) == 0) {
         MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR
             + "Invalid expire time.", true);
+        MessageUtils.sendMessage(player, MessageUtils.ERROR_COLOR
+            + "Usage: /ban [player] [HACKING/PROFANITY/OTHER] [time #d/#m/#y (blank for permenent)]", true);
         return true;
       }
 
