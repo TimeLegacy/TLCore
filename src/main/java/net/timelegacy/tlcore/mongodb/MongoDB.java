@@ -3,6 +3,7 @@ package net.timelegacy.tlcore.mongodb;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import net.timelegacy.tlcore.TLCore;
 
 public class MongoDB {
 
@@ -16,7 +17,7 @@ public class MongoDB {
    */
   public static boolean connect(String uri) {
     mongoClient = MongoClients.create(uri);
-    mongoDatabase = mongoClient.getDatabase("timelegacy");
+    mongoDatabase = mongoClient.getDatabase(TLCore.getPlugin().getConfig().getString("database"));
     return true;
   }
 
