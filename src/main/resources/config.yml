@@ -1,5 +1,7 @@
 #MongoDB
 URI: ''
+#Database Name
+database: 'timelegacy'
 
 #ServerName
 UUID: ''
