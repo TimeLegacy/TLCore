@@ -162,7 +162,7 @@ public class Punishment {
 
     Document doc = new Document("punished_uuid", uuid.toString())
         .append("type", type.toString())
-        .append("punishment", reason.toString())
+        .append("reason", reason.toString())
         .append("timestamp", System.currentTimeMillis())
         .append("expire", expireTimestamp)
         .append("punisher_uuid", punisherUUID.toString());

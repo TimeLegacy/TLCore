@@ -14,6 +14,7 @@ import net.timelegacy.tlcore.command.CoinManagementCommand;
 import net.timelegacy.tlcore.command.CoinsCommand;
 import net.timelegacy.tlcore.command.CrateKeyCommand;
 import net.timelegacy.tlcore.command.FlyCommand;
+import net.timelegacy.tlcore.command.FriendCommand;
 import net.timelegacy.tlcore.command.GamemodeCommand;
 import net.timelegacy.tlcore.command.ListCommand;
 import net.timelegacy.tlcore.command.MultiplierCommand;
@@ -111,7 +112,7 @@ public class TLCore extends JavaPlugin {
     getCommand("store").setExecutor(new StoreCommand());
     getCommand("website").setExecutor(new WebsiteCommand());
 
-    getCommand("friends").setExecutor(new WebsiteCommand());
+    getCommand("friends").setExecutor(new FriendCommand());
 
     PluginManager pm = getServer().getPluginManager();
 
