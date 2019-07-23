@@ -27,4 +27,11 @@ public class ScoreboardUtils {
       return null;
     }
   }
+
+  public static void removeCustomScoreboard(UUID uuid) {
+    if (customScoreboards.containsKey(uuid)) {
+      customScoreboards.get(uuid).destroy();
+      customScoreboards.remove(uuid);
+    }
+  }
 }
