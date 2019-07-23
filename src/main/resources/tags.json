@@ -1,0 +1,272 @@
+{
+  "tags": {
+    "mother": {
+      "name": "Mother",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "aunt": {
+      "name": "Aunt",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "daughter": {
+      "name": "Daughter",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "son": {
+      "name": "Son",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "cousin": {
+      "name": "Cousin",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "uncle": {
+      "name": "Uncle",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "grandmother": {
+      "name": "Grandmother",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "grandfather": {
+      "name": "Grandfather",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "father": {
+      "name": "Father",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "relative": {
+      "name": "Relative",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "waifu": {
+      "name": "Waifu",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "husbando": {
+      "name": "Husbando",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "baby": {
+      "name": "Baby",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "elder": {
+      "name": "Elder",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "witch": {
+      "name": "Witch",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "scarecrow": {
+      "name": "Scarecrow",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "demon": {
+      "name": "Demon",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "skeleton": {
+      "name": "Skeleton",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "pirate": {
+      "name": "Pirate",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "evil": {
+      "name": "Evil",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "spooky": {
+      "name": "Spooky",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "pharaoh": {
+      "name": "Pharaoh",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "mummy": {
+      "name": "Mummy",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "ghoul": {
+      "name": "Ghoul",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "ghost": {
+      "name": "Ghost",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "joker": {
+      "name": "Joker",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "goblin": {
+      "name": "Goblin",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    },
+    "zombie": {
+      "name": "Zombie",
+      "servers": [
+        "global"
+      ],
+      "color": "default",
+      "static": false
+    }
+  },
+  "packs": {
+    "family": {
+      "name": "Family Tag Pack",
+      "tags": [
+        "mother",
+        "aunt",
+        "daughter",
+        "son",
+        "cousin",
+        "uncle",
+        "grandmother",
+        "grandfather",
+        "father",
+        "relative"
+      ],
+      "exclusive": [
+        "waifu",
+        "husbando",
+        "baby",
+        "elder"
+      ]
+    },
+    "monster": {
+      "name": "Monster Tag Pack",
+      "tags": [
+        "witch",
+        "scarecrow",
+        "demon",
+        "skeleton",
+        "pirate",
+        "evil",
+        "spooky",
+        "pharaoh",
+        "mummy",
+        "ghoul"
+      ],
+      "exclusive": [
+        "ghost",
+        "joker",
+        "goblin",
+        "zombie"
+      ]
+    }
+  }
+}
