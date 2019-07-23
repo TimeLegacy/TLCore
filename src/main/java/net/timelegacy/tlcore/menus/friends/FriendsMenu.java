@@ -86,7 +86,13 @@ public class FriendsMenu implements Listener {
 
           String friendUsername = PlayerHandler.getUsername(friends.get(current));
 
+          PlayerProfile friendProfile = new PlayerProfile(friends.get(current));
+
           ItemStack itemStack = ItemUtils.createSkullItem(friendUsername, "&b" + friendUsername, Arrays.asList(
+              "&eGender: &f" + friendProfile.getGender(),
+              "&eStatus: &f" + friendProfile.getStatus().toString(),
+              "&eNickname: &f" + (friendProfile.getNickname().isEmpty() ? "N/A" : friendProfile.getNickname()),
+              "",
               "&7Click to &c&lREMOVE",
               "&7them as a friend."));
           ItemStack is = itemStack.clone();

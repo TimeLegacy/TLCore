@@ -2,11 +2,11 @@ package net.timelegacy.tlcore.event;
 
 import net.timelegacy.tlcore.datatype.Chat;
 import net.timelegacy.tlcore.datatype.PlayerProfile;
+import net.timelegacy.tlcore.datatype.Punishment;
+import net.timelegacy.tlcore.datatype.Punishment.Type;
 import net.timelegacy.tlcore.datatype.Rank;
-import net.timelegacy.tlcore.handler.MuteHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
-import net.timelegacy.tlcore.utils.WebRequestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -70,7 +70,9 @@ public class FilterEvents implements Listener {
 
     System.out.println("[CHAT] " + player.getName() + " > " + message);
 
-    if (!MuteHandler.isMuted(player.getUniqueId())) {
+    Punishment punishment = new Punishment(player.getUniqueId());
+
+    if (!punishment.isPunished(Type.MUTE)) {
 
         for (Player sp : Bukkit.getOnlinePlayers()) {
           PlayerProfile playerProfile = new PlayerProfile(sp.getUniqueId());
@@ -85,37 +87,20 @@ public class FilterEvents implements Listener {
         }
 
     } else {
-      if (!(MuteHandler.getMuteExpire(player.getUniqueId()).equalsIgnoreCase("false")
-          || MuteHandler.getMuteExpire(player.getUniqueId()).equalsIgnoreCase("true"))) {
+      if (!(punishment.getPunishmentExpire(Type.MUTE).isEmpty())) {
 
         MessageUtils.sendMessage(player,
             "&4You have been muted. &cReason: &f&o"
-                + MuteHandler.getMuteReason(player.getUniqueId())
+                + punishment.getPunishmentReason(Type.MUTE).toString()
                 + " &cExpire: &f&o"
-                + MuteHandler.getMuteExpire(player.getUniqueId()),
+                + punishment.getPunishmentExpire(Type.MUTE),
             true);
       } else {
 
         MessageUtils.sendMessage(player,
-            "&4You have been muted. &cReason: &f&o" + MuteHandler.getMuteReason(player.getUniqueId()), true);
+            "&4You have been muted. &cReason: &f&o" + punishment.getPunishmentReason(Type.MUTE).toString(), true);
       }
     }
-  }
-
-  private String filteredChat(String message) {
-    // https://dec0de.xyz/api/swearfilter/?message=fuck
-
-    try {
-      //TODO fix
-      String response = WebRequestUtils.executePost(
-          "http://nossl.dec0de.xyz/api/swearfilter/?message=" + message.replace(" ", "%20"), "");
-      return response;
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    return message;
   }
 
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

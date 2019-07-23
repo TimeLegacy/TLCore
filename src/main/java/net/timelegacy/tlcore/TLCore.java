@@ -111,6 +111,8 @@ public class TLCore extends JavaPlugin {
     getCommand("store").setExecutor(new StoreCommand());
     getCommand("website").setExecutor(new WebsiteCommand());
 
+    getCommand("friends").setExecutor(new WebsiteCommand());
+
     PluginManager pm = getServer().getPluginManager();
 
     pm.registerEvents(new FilterEvents(), plugin);

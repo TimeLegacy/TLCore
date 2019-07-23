@@ -64,3 +64,5 @@ commands:
     description: Get the store link.
   website:
     description: Get the webstie link.
+  friends:
+    description: Friends.
