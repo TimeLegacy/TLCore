@@ -10,7 +10,7 @@ import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class PlayerAccount {
+public class PlayerData {
 
   private static MongoCollection<Document> players = MongoDB.mongoDatabase.getCollection("players");
 
@@ -28,8 +28,20 @@ public class PlayerAccount {
 
   private PlayerProfile playerProfile;
 
+  /*
+  TODO:
+  - Cache chat and make it grab information from the cache such as rank and nickname and update in realtime without
+  relogging.
+  - Cache player profile and if the player is online grab the cached version.
+  - Add method to set rank of a player in the cached thing.
+  - Keep some player handler methods such as player exists, and get player by username, but return a PlayerData type.
+  - Update tab and change tab team if they're online
+  - Implement a disguise system (after caching)
+  - Add nickname command (donators & staff, permission based + priority based)
+   */
 
-  public PlayerAccount(UUID uuid) {
+
+  public PlayerData(UUID uuid) {
     this.uuid = uuid;
 
     if (!PlayerHandler.playerExists(uuid)) {
