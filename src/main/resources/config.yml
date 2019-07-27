@@ -5,3 +5,19 @@ database: 'timelegacy'
 
 #ServerName
 UUID: ''
+
+# Configurable Stuff
+join-message: "&7&l(&a&l+&7&l)&r %displayName%"
+commands:
+  teleport: true
+  gamemode: true
+events:
+  block-form: true
+  block-ignite: true
+  block-burn: true
+  block-physics:
+    enabled: true
+    doors: true
+    trapdoors: true
+  leaf-decay: true
+  block-spread: true

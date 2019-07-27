@@ -25,29 +25,26 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.potion.PotionEffect;
 
-@SuppressWarnings("deprecation")
 public class PlayerEvents implements Listener {
+
   private static String header;
   private static String footer;
 
   private TLCore plugin = TLCore.getPlugin();
 
   @EventHandler
-  public void PlayerJoinEvent(PlayerJoinEvent event) {
+  public void onPlayerJoin(PlayerJoinEvent event) {
     Player player = event.getPlayer();
 
-    event.setJoinMessage(null);
+    String joinMessage = TLCore.getPlugin().getJoinMessage()
+        .replace("%displayName%", RankHandler.chatColors(player.getUniqueId())
+            .replace("%username% &8%arrows%", player.getName()));
 
-    for (Player p : Bukkit.getOnlinePlayers()) {
-      p.sendMessage(
-          "§7§l(§a+§7§l) "
-              + RankHandler.chatColors(player.getUniqueId())
-                  .replace("%username% &8%arrows%", player.getName())
-                  .replace("&", "§")); // TODO Cleanup
-      player.setPlayerListHeaderFooter(
-          MessageUtils.colorize(header), MessageUtils.colorize(footer.replace("%{online}%", Bukkit.getOnlinePlayers().size() + "")));
+    event.setJoinMessage(MessageUtils.colorize(joinMessage));
 
-    }
+    player.setPlayerListHeaderFooter(
+        MessageUtils.colorize(header),
+        MessageUtils.colorize(footer.replace("%{online}%", Bukkit.getOnlinePlayers().size() + "")));
 
     plugin.flySpeed.remove(player.getUniqueId());
 
@@ -75,7 +72,6 @@ public class PlayerEvents implements Listener {
 
     RankHandler.addPermissions(player);
     PerkHandler.addPermissions(player);
-
   }
 
   @EventHandler(priority = EventPriority.LOWEST)
@@ -92,6 +88,7 @@ public class PlayerEvents implements Listener {
     if (CoreSystemHandler.isEnabled(CoreSystem.InventoryClearOnLeave)) {
       player.getInventory().clear();
     }
+
     PermissionHandler.detachPermissions(player);
 
     for (PotionEffect effect : player.getActivePotionEffects()) {
@@ -106,13 +103,12 @@ public class PlayerEvents implements Listener {
 
     PlayerHandler.updateOnline(player.getUniqueId(), false);
     for (Player p : Bukkit.getOnlinePlayers()) {
-      p.sendMessage(
-          "§7§l(§c-§7§l) "
-              + RankHandler.chatColors(player.getUniqueId())
-                  .replace("%username% &8%arrows%", player.getName())
-                  .replace("&", "§")); // TODO Cleanup
+      p.sendMessage("§7§l(§c-§7§l) " + RankHandler.chatColors(player.getUniqueId())
+          .replace("%username% &8%arrows%", player.getName())
+          .replace("&", "§")); // TODO Cleanup
       player.setPlayerListHeaderFooter(
-          MessageUtils.colorize(header), MessageUtils.colorize(footer.replace("%{online}%", Bukkit.getOnlinePlayers().size() + "")));
+          MessageUtils.colorize(header),
+          MessageUtils.colorize(footer.replace("%{online}%", Bukkit.getOnlinePlayers().size() + "")));
     }
   }
 
@@ -121,15 +117,16 @@ public class PlayerEvents implements Listener {
     Player player = event.getPlayer();
 
     if (event.getStatus() == PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED) {
-      MessageUtils.sendMessage(
-          player, MessageUtils.SUCCESS_COLOR + "Successful loaded the resource pack.", false);
+      MessageUtils.sendMessage(player,
+          MessageUtils.SUCCESS_COLOR + "Successful loaded the resource pack.", false);
     } else if (event.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD) {
-      MessageUtils.sendMessage(
-          player, MessageUtils.ERROR_COLOR + "Error. Failed download resource pack.", false);
+      MessageUtils.sendMessage(player,
+          MessageUtils.ERROR_COLOR + "Error. Failed download resource pack.", false);
     }
   }
 
   @EventHandler
+  @SuppressWarnings("deprecation")
   public void onPreJoin(PlayerPreLoginEvent event) {
     UUID uuid = event.getUniqueId();
 
@@ -138,9 +135,9 @@ public class PlayerEvents implements Listener {
     }
   }
 
-  public static void startUp(){
+  public static void startUp() {
     String server;
-    switch (ServerHandler.getType(ServerHandler.getServerUUID())){
+    switch (ServerHandler.getType(ServerHandler.getServerUUID())) {
       case "CREATIVE":
         server = "&6&l&nCREATIVE";
         break;
@@ -151,6 +148,7 @@ public class PlayerEvents implements Listener {
         server = "&f&l" + ServerHandler.getType(ServerHandler.getServerUUID());
         break;
     }
+
     server = server + "\n";
 
     header = ("&r\n"

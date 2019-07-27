@@ -67,15 +67,20 @@ public class TLCore extends JavaPlugin {
     return plugin;
   }
 
+  private String joinMessage;
+
   @Override
   public void onEnable() {
     protocolManager = ProtocolLibrary.getProtocolManager();
     plugin = this;
     config = this.getConfig();
 
-    saveDefaultConfig();
-    getConfig().options().copyDefaults(true);
-    saveConfig();
+    saveResource("config.yml", false);
+//    saveDefaultConfig();
+//    getConfig().options().copyDefaults(true);
+//    saveConfig();
+
+    joinMessage = getConfig().getString("join-message");
 
     logger = plugin.getLogger();
 
@@ -148,5 +153,13 @@ public class TLCore extends JavaPlugin {
 
     PermissionHandler.clearPermissions();
     MongoDB.disconnect();
+  }
+
+  public String getJoinMessage() {
+    return joinMessage;
+  }
+
+  public void setJoinMessage(String joinMessage) {
+    this.joinMessage = joinMessage;
   }
 }
