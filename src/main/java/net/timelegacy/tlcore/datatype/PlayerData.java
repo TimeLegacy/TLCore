@@ -38,6 +38,7 @@ public class PlayerData {
   - Update tab and change tab team if they're online
   - Implement a disguise system (after caching)
   - Add nickname command (donators & staff, permission based + priority based)
+  - Add command to add permissions to ranks.
    */
 
 
