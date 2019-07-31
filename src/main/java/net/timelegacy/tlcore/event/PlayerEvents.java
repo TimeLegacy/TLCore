@@ -36,6 +36,9 @@ public class PlayerEvents implements Listener {
   public void onPlayerJoin(PlayerJoinEvent event) {
     Player player = event.getPlayer();
 
+    CacheHandler.addPlayer(player.getUniqueId());
+    CacheHandler.getPlayerData(player.getUniqueId()).updatePlayer(player);
+
     String joinMessage = TLCore.getPlugin().getJoinMessage()
         .replace("%displayName%", RankHandler.chatColors(player.getUniqueId())
             .replace("%username% &8%arrows%", player.getName()));
@@ -57,9 +60,6 @@ public class PlayerEvents implements Listener {
     player.setScoreboard(ScoreboardUtils.getScoreboard());
 
     PermissionHandler.attachPermissions(player);
-
-    CacheHandler.addPlayer(player.getUniqueId());
-    CacheHandler.getPlayerData(player.getUniqueId()).updatePlayer(player);
 
     RankHandler.addPermissions(player);
     PerkHandler.addPermissions(player);
