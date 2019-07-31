@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import net.timelegacy.tlcore.datatype.PlayerData;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bson.Document;
 import org.bukkit.Bukkit;
@@ -28,20 +29,28 @@ public class PerkHandler {
     }
 
     if (!hasPerk(uuid, perk)) {
-
       if (perksString(uuid) == null) {
-        players.updateOne(
-            Filters.eq("uuid", uuid.toString()),
-            new Document("$set", new Document("perks", perk.toLowerCase() + ",")));
-
+        if (CacheHandler.isPlayerCached(uuid)) {
+          PlayerData playerData = CacheHandler.getPlayerData(uuid);
+          playerData.setPerks(perk.toLowerCase() + ",");
+        } else {
+          players.updateOne(
+              Filters.eq("uuid", uuid.toString()),
+              new Document("$set", new Document("perks", perk.toLowerCase() + ",")));
+        }
         if (Bukkit.getPlayer(uuid).isOnline()) {
           PermissionHandler.addPermission(Bukkit.getPlayer(uuid), perk);
         }
       } else {
-        players.updateOne(
-            Filters.eq("uuid", uuid.toString()),
-            new Document(
-                "$set", new Document("perks", perksString(uuid) + perk.toLowerCase() + ",")));
+        if (CacheHandler.isPlayerCached(uuid)) {
+          PlayerData playerData = CacheHandler.getPlayerData(uuid);
+          playerData.setPerks(perksString(uuid) + perk.toLowerCase());
+        } else {
+          players.updateOne(
+              Filters.eq("uuid", uuid.toString()),
+              new Document(
+                  "$set", new Document("perks", perksString(uuid) + perk.toLowerCase() + ",")));
+        }
         if (Bukkit.getPlayer(uuid).isOnline()) {
           PermissionHandler.addPermission(Bukkit.getPlayer(uuid), perk);
         }
@@ -64,15 +73,16 @@ public class PerkHandler {
   }
 
   private static String perksString(UUID uuid) {
-    String perkList = "";
-
     if (PlayerHandler.playerExists(uuid)) {
-      FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
-
-      perkList = doc.first().getString("perks");
+      if (CacheHandler.isPlayerCached(uuid)) {
+        return CacheHandler.getPlayerData(uuid).getPerks();
+      } else {
+        FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
+        return doc.first().getString("perks");
+      }
     }
 
-    return perkList;
+    return null;
   }
 
 
@@ -85,11 +95,14 @@ public class PerkHandler {
     List<String> perkList = new ArrayList<>();
 
     if (PlayerHandler.playerExists(uuid)) {
-      FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
-
-      String[] perks = doc.first().getString("perks").split(",");
-
-      Collections.addAll(perkList, perks);
+      if (CacheHandler.isPlayerCached(uuid)) {
+        String[] perks = CacheHandler.getPlayerData(uuid).getPerks().split(",");
+        Collections.addAll(perkList, perks);
+      } else {
+        FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
+        String[] perks = doc.first().getString("perks").split(",");
+        Collections.addAll(perkList, perks);
+      }
     }
     return perkList;
   }
@@ -114,10 +127,16 @@ public class PerkHandler {
     }
 
     if (hasPerk(uuid, perk)) {
-      players.updateOne(Filters.eq("uuid", uuid.toString()),
-          new Document("$set", new Document("perks", perksString(uuid).replace(perk + ",", ""))));
+      if (CacheHandler.isPlayerCached(uuid)) {
+        PlayerData playerData = CacheHandler.getPlayerData(uuid);
+        playerData.setPerks(perksString(uuid).replace(perk + ",", ""));
+      } else {
+        players.updateOne(
+            Filters.eq("uuid", uuid.toString()),
+            new Document("$set", new Document("perks", perksString(uuid).replace(perk + ",", ""))));
+      }
 
-      if( Bukkit.getPlayer(uuid).isOnline()) {
+      if (Bukkit.getPlayer(uuid).isOnline()) {
         PermissionHandler.removePermission(Bukkit.getPlayer(uuid), perk);
       }
     }

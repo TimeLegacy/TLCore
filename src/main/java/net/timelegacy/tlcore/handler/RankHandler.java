@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import net.timelegacy.tlcore.TLCore;
 import net.timelegacy.tlcore.datatype.Rank;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import net.timelegacy.tlcore.utils.MessageUtils;
@@ -19,9 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 
 public class RankHandler {
-
-  private static TLCore plugin = TLCore.getPlugin();
-
   public static List<Rank> rankList = new ArrayList<>();
 
   private static MongoCollection<Document> ranks = MongoDB.mongoDatabase.getCollection("ranks");
@@ -66,10 +62,14 @@ public class RankHandler {
    */
   public static Rank getRank(UUID uuid) {
     if (PlayerHandler.playerExists(uuid)) {
-      FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
-      String rnk = doc.first().getString("rank");
 
-      return stringToRank(rnk);
+      if (CacheHandler.isPlayerCached(uuid)) {
+        return CacheHandler.getPlayerData(uuid).getRank();
+      } else {
+        FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
+        String rnk = doc.first().getString("rank");
+        return stringToRank(rnk);
+      }
     }
 
     return stringToRank("DEFAULT");
@@ -197,13 +197,13 @@ public class RankHandler {
       return;
     }
 
-    players.updateOne(
-        Filters.eq("uuid", uuid.toString()),
-        new Document(
-            "$set",
-            new Document(
-                "rank",
-                rank.getName())));
+    if (CacheHandler.isPlayerCached(uuid)) {
+      CacheHandler.getPlayerData(uuid).setRank(rank);
+    } else {
+      players.updateOne(
+          Filters.eq("uuid", uuid.toString()),
+          new Document("$set", new Document("rank", rank.getName())));
+    }
   }
 
   /**
@@ -216,27 +216,12 @@ public class RankHandler {
       return;
     }
 
-    FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
-    String rnk = doc.first().getString("rank");
-
-    String[] ranks = rnk.split(",");
-    // list of ranks
-    for (String r : ranks) {
-      String[] rr = r.split(":");
-      if (stringToRank(rr[0]).getPriority() >= 6 && rr[1].equalsIgnoreCase("GLOBAL")) {
-        // remove staff rank if they're staff
-        players.updateOne(
-            Filters.eq("uuid", uuid.toString()),
-            new Document("$set", new Document("rank", rnk.replace(r, "DEFAULT:GLOBAL"))));
-
-        // check if server is the same and override
-        break;
-      } else if (rr[1].equalsIgnoreCase(ServerHandler.getType(ServerHandler.getServerUUID()))) {
-        players.updateOne(
-            Filters.eq("uuid", uuid.toString()),
-            new Document("$set", new Document("rank", rnk.replace(r + ",", ""))));
-        break;
-      }
+    if (CacheHandler.isPlayerCached(uuid)) {
+      CacheHandler.getPlayerData(uuid).setRank(stringToRank("DEFAULT"));
+    } else {
+      players.updateOne(
+          Filters.eq("uuid", uuid.toString()),
+          new Document("$set", new Document("rank", "DEFAULT")));
     }
   }
 

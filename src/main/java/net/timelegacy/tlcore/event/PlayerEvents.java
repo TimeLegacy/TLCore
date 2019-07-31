@@ -2,8 +2,8 @@ package net.timelegacy.tlcore.event;
 
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
-import net.timelegacy.tlcore.datatype.Chat;
 import net.timelegacy.tlcore.datatype.CoreSystem;
+import net.timelegacy.tlcore.handler.CacheHandler;
 import net.timelegacy.tlcore.handler.CoreSystemHandler;
 import net.timelegacy.tlcore.handler.PerkHandler;
 import net.timelegacy.tlcore.handler.PermissionHandler;
@@ -52,23 +52,14 @@ public class PlayerEvents implements Listener {
     player.setFlySpeed(0.1f);
     player.setAllowFlight(false);
 
-    PlayerHandler.updateUsername(player);
-
-    PlayerHandler.createPlayer(player);
     RankHandler.setTabColors(player);
     XPBarUtils.playerJoin(player);
-
-    RankHandler.setTabColors(player);
-
-    PlayerHandler.updateIP(player);
-    PlayerHandler.updateLastConnection(player.getUniqueId());
-    PlayerHandler.updateOnline(player.getUniqueId(), true);
-
     player.setScoreboard(ScoreboardUtils.getScoreboard());
 
     PermissionHandler.attachPermissions(player);
 
-    Chat.addPlayer(player);
+    CacheHandler.addPlayer(player.getUniqueId());
+    CacheHandler.getPlayerData(player.getUniqueId()).updatePlayer(player);
 
     RankHandler.addPermissions(player);
     PerkHandler.addPermissions(player);
@@ -101,15 +92,18 @@ public class PlayerEvents implements Listener {
 
     event.setQuitMessage(null);
 
-    PlayerHandler.updateOnline(player.getUniqueId(), false);
-    for (Player p : Bukkit.getOnlinePlayers()) {
+    CacheHandler.getPlayerData(player.getUniqueId()).updatePlayer(player);
+    CacheHandler.removePlayer(player.getUniqueId());
+
+    //TODO @Steven fix this so it changed the quit message instead of a message broadcast?
+    /*for (Player p : Bukkit.getOnlinePlayers()) {
       p.sendMessage("§7§l(§c-§7§l) " + RankHandler.chatColors(player.getUniqueId())
           .replace("%username% &8%arrows%", player.getName())
           .replace("&", "§")); // TODO Cleanup
       player.setPlayerListHeaderFooter(
           MessageUtils.colorize(header),
           MessageUtils.colorize(footer.replace("%{online}%", Bukkit.getOnlinePlayers().size() + "")));
-    }
+    }*/
   }
 
   @EventHandler

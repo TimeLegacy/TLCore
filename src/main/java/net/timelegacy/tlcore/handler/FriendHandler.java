@@ -15,7 +15,12 @@ public class FriendHandler {
   public static List<UUID> getFriends(UUID uuid) {
     List<UUID> friends = new ArrayList<>();
 
-    PlayerProfile profile = new PlayerProfile(uuid);
+    PlayerProfile profile;
+    if (CacheHandler.isPlayerCached(uuid)) {
+      profile = CacheHandler.getPlayerData(uuid).getPlayerProfile();
+    } else {
+      profile = new PlayerProfile(uuid);
+    }
 
     if (!profile.getFriends().isEmpty()) {
       String[] friend = profile.getFriends().split(",");
@@ -34,7 +39,13 @@ public class FriendHandler {
   public static List<UUID> getPendingFriends(UUID uuid) {
     List<UUID> pendingFriends = new ArrayList<>();
 
-    PlayerProfile profile = new PlayerProfile(uuid);
+    PlayerProfile profile;
+    if (CacheHandler.isPlayerCached(uuid)) {
+      profile = CacheHandler.getPlayerData(uuid).getPlayerProfile();
+    } else {
+      profile = new PlayerProfile(uuid);
+    }
+
     if (!profile.getFriendsPending().isEmpty()) {
       String[] pending = profile.getFriendsPending().split(",");
       for (String id : pending) {
@@ -52,7 +63,13 @@ public class FriendHandler {
    * @param receiver uuid of player to receive the friend request
    */
   public static void sendRequest(UUID sender, UUID receiver) {
-      PlayerProfile profile = new PlayerProfile(receiver);
+    PlayerProfile profile;
+    if (CacheHandler.isPlayerCached(receiver)) {
+      profile = CacheHandler.getPlayerData(receiver).getPlayerProfile();
+    } else {
+      profile = new PlayerProfile(receiver);
+    }
+
       profile.setFriendsPending(profile.getFriendsPending() + sender.toString() + ",");
   }
 
@@ -63,7 +80,13 @@ public class FriendHandler {
    * @param receiver player that is being denied
    */
   public static void denyRequest(UUID sender, UUID receiver) {
-      PlayerProfile profile = new PlayerProfile(sender);
+    PlayerProfile profile;
+    if (CacheHandler.isPlayerCached(sender)) {
+      profile = CacheHandler.getPlayerData(sender).getPlayerProfile();
+    } else {
+      profile = new PlayerProfile(sender);
+    }
+
     profile.setFriendsPending(profile.getFriendsPending().replace(receiver.toString() + ",", ""));
   }
 
@@ -74,10 +97,23 @@ public class FriendHandler {
    * @param receiver player that their request is being accepted
    */
   public static void acceptRequest(UUID sender, UUID receiver) {
-      PlayerProfile profile = new PlayerProfile(sender);
+    PlayerProfile profile;
+    if (CacheHandler.isPlayerCached(sender)) {
+      profile = CacheHandler.getPlayerData(sender).getPlayerProfile();
+    } else {
+      profile = new PlayerProfile(sender);
+    }
+
       profile.setFriendsPending(profile.getFriendsPending().replace(receiver.toString() + ",", ""));
       profile.setFriends(profile.getFriends() + receiver.toString() + ",");
-      PlayerProfile profileReceiver = new PlayerProfile(receiver);
+
+    PlayerProfile profileReceiver;
+    if (CacheHandler.isPlayerCached(receiver)) {
+      profileReceiver = CacheHandler.getPlayerData(receiver).getPlayerProfile();
+    } else {
+      profileReceiver = new PlayerProfile(receiver);
+    }
+
     profileReceiver
         .setFriends(profileReceiver.getFriends()
           + sender.toString() + ",");
@@ -90,9 +126,21 @@ public class FriendHandler {
    * @param receiver player that is being removed
    */
   public static void removeFriend(UUID sender, UUID receiver) {
-      PlayerProfile profile = new PlayerProfile(sender);
+    PlayerProfile profile;
+    if (CacheHandler.isPlayerCached(sender)) {
+      profile = CacheHandler.getPlayerData(sender).getPlayerProfile();
+    } else {
+      profile = new PlayerProfile(sender);
+    }
       profile.setFriends(profile.getFriends().replace(receiver.toString() + ",", ""));
-      PlayerProfile profileReceiver = new PlayerProfile(receiver);
+
+    PlayerProfile profileReceiver;
+    if (CacheHandler.isPlayerCached(receiver)) {
+      profileReceiver = CacheHandler.getPlayerData(receiver).getPlayerProfile();
+    } else {
+      profileReceiver = new PlayerProfile(receiver);
+    }
+
       profileReceiver.setFriends(profileReceiver.getFriends().replace(sender.toString() + ",", ""));
   }
 }

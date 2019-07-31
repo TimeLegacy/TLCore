@@ -5,6 +5,7 @@ import net.timelegacy.tlcore.datatype.PlayerProfile;
 import net.timelegacy.tlcore.datatype.Punishment;
 import net.timelegacy.tlcore.datatype.Punishment.Type;
 import net.timelegacy.tlcore.datatype.Rank;
+import net.timelegacy.tlcore.handler.CacheHandler;
 import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
 import org.bukkit.Bukkit;
@@ -72,16 +73,18 @@ public class FilterEvents implements Listener {
 
     Punishment punishment = new Punishment(player.getUniqueId());
 
+    Chat chat = new Chat(CacheHandler.getPlayerData(player.getUniqueId()));
+
     if (!punishment.isPunished(Type.MUTE)) {
 
         for (Player sp : Bukkit.getOnlinePlayers()) {
           PlayerProfile playerProfile = new PlayerProfile(sp.getUniqueId());
           switch (playerProfile.getChatFilter()) {
             case CHILD:
-              sp.sendMessage(Chat.getPlayerChat(player).getFormat() + MessageUtils.filterMessage(message));
+              sp.sendMessage(chat.getFormat() + MessageUtils.filterMessage(message));
               break;
             case MATURE:
-              sp.sendMessage(Chat.getPlayerChat(player).getFormat() + message);
+              sp.sendMessage(chat.getFormat() + message);
               break;
           }
         }

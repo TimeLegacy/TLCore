@@ -6,14 +6,13 @@ import com.mongodb.client.model.Filters;
 import java.util.UUID;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 
 public class CrateKeyHandler {
 
   private static MongoCollection<Document> players = MongoDB.mongoDatabase.getCollection("players");
 
   /**
-   * Check if a player has enough coins
+   * Check if a player has enough keys
    *
    * @param uuid player's uuid
    * @param amount amount to check if they have enough
@@ -28,74 +27,58 @@ public class CrateKeyHandler {
    * @param uuid player's uuid
    */
   public static int getBalance(UUID uuid) {
-    int balance = 0;
-
     if (!PlayerHandler.playerExists(uuid)) {
-      PlayerHandler.createPlayer(Bukkit.getPlayer(uuid));
-      getBalance(uuid);
-      return balance;
+      return 0;
     }
 
-    FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
-
-    balance = doc.first().getInteger("crate_keys");
-
-    return balance;
+    if (CacheHandler.isPlayerCached(uuid)) {
+      return CacheHandler.getPlayerData(uuid).getCrateKeys();
+    } else {
+      FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
+      return doc.first().getInteger("crate_keys");
+    }
   }
 
   /**
-   * Add crate keys to a player
+   * Add keys to a player
    *
    * @param uuid player's uuid
-   * @param amount amount of crate keys
+   * @param amount amount of keys
    */
   public static void addKeys(UUID uuid, Integer amount) {
     int am = amount;
-
-    if (!PlayerHandler.playerExists(uuid)) {
-      PlayerHandler.createPlayer(Bukkit.getPlayer(uuid));
-      addKeys(uuid, amount);
-      return;
-    }
-
-    if (MultiplierHandler.isMultiplierEnabled()) {
-      am = MultiplierHandler.getMultiplier() * amount;
-    }
 
     setBalance(uuid, getBalance(uuid) + am);
   }
 
   /**
-   * Set the balance of a player's crate keys
+   * Set the balance of a player's coins
    *
    * @param uuid player's uuid
-   * @param amount amount of crate keys
+   * @param amount amount of coins
    */
   public static void setBalance(UUID uuid, Integer amount) {
     if (!PlayerHandler.playerExists(uuid)) {
-      PlayerHandler.createPlayer(Bukkit.getPlayer(uuid));
-      setBalance(uuid, amount);
       return;
     }
 
-    players.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("crate_keys", amount)));
+    if (CacheHandler.isPlayerCached(uuid)) {
+      CacheHandler.getPlayerData(uuid).setCrateKeys(amount);
+    } else {
+      players.updateOne(
+          Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("crate_keys", amount)));
+    }
   }
 
   /**
-   * Remove crate keys from a player
+   * Remove keys from a player
    *
    * @param uuid player's uuid
-   * @param amount amount of cratekeys
+   * @param amount amount of keys
    */
   public static void removeKeys(UUID uuid, Integer amount) {
-    if (!PlayerHandler.playerExists(uuid)) {
-      PlayerHandler.createPlayer(Bukkit.getPlayer(uuid));
-      return;
-    }
-
     if (hasEnough(uuid, amount)) {
       setBalance(uuid, getBalance(uuid) - amount);
     }
-
   }
 }

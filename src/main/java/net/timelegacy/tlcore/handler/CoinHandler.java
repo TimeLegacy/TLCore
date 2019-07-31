@@ -6,7 +6,6 @@ import com.mongodb.client.model.Filters;
 import java.util.UUID;
 import net.timelegacy.tlcore.mongodb.MongoDB;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
 public class CoinHandler implements Listener {
@@ -29,19 +28,16 @@ public class CoinHandler implements Listener {
    * @param uuid player's uuid
    */
   public static int getBalance(UUID uuid) {
-    int balance = 0;
-
     if (!PlayerHandler.playerExists(uuid)) {
-      PlayerHandler.createPlayer(Bukkit.getPlayer(uuid));
-      getBalance(uuid);
-      return balance;
+      return 0;
     }
 
-    FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
-
-    balance = doc.first().getInteger("coins");
-
-    return balance;
+    if (CacheHandler.isPlayerCached(uuid)) {
+      return CacheHandler.getPlayerData(uuid).getCoins();
+    } else {
+      FindIterable<Document> doc = players.find(Filters.eq("uuid", uuid.toString()));
+      return doc.first().getInteger("coins");
+    }
   }
 
   /**
@@ -52,12 +48,6 @@ public class CoinHandler implements Listener {
    */
   public static void addCoins(UUID uuid, Integer amount) {
     int am = amount;
-
-    if (!PlayerHandler.playerExists(uuid)) {
-      PlayerHandler.createPlayer(Bukkit.getPlayer(uuid));
-      addCoins(uuid, amount);
-      return;
-    }
 
     if (MultiplierHandler.isMultiplierEnabled()) {
       am = MultiplierHandler.getMultiplier() * amount;
@@ -74,12 +64,15 @@ public class CoinHandler implements Listener {
    */
   public static void setBalance(UUID uuid, Integer amount) {
     if (!PlayerHandler.playerExists(uuid)) {
-      PlayerHandler.createPlayer(Bukkit.getPlayer(uuid));
-      setBalance(uuid, amount);
       return;
     }
 
-    players.updateOne(Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("coins", amount)));
+    if (CacheHandler.isPlayerCached(uuid)) {
+      CacheHandler.getPlayerData(uuid).setCoins(amount);
+    } else {
+      players.updateOne(
+          Filters.eq("uuid", uuid.toString()), new Document("$set", new Document("coins", amount)));
+    }
   }
 
   /**
@@ -89,14 +82,8 @@ public class CoinHandler implements Listener {
    * @param amount amount of coins
    */
   public static void removeCoins(UUID uuid, Integer amount) {
-    if (!PlayerHandler.playerExists(uuid)) {
-      PlayerHandler.createPlayer(Bukkit.getPlayer(uuid));
-      return;
-    }
-
     if (hasEnough(uuid, amount)) {
       setBalance(uuid, getBalance(uuid) - amount);
     }
-
   }
 }
