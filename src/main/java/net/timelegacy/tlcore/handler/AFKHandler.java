@@ -55,7 +55,12 @@ public class AFKHandler {
     afk.add(uuid);
     MessageUtils.sendMessage(Bukkit.getPlayer(uuid), "&7You are now AFK.", "");
 
-    PlayerProfile playerProfile = new PlayerProfile(uuid);
+    PlayerProfile playerProfile;
+    if (CacheHandler.isPlayerCached(uuid)) {
+      playerProfile = CacheHandler.getPlayerData(uuid).getPlayerProfile();
+    } else {
+      playerProfile = new PlayerProfile(uuid);
+    }
 
     if (playerProfile.getStatus() == Status.ACTIVE) {
       playerProfile.setStatus(Status.AWAY);
@@ -67,7 +72,12 @@ public class AFKHandler {
       afk.remove(uuid);
       MessageUtils.sendMessage(Bukkit.getPlayer(uuid), "&7You are no longer AFK.", "");
 
-      PlayerProfile playerProfile = new PlayerProfile(uuid);
+      PlayerProfile playerProfile;
+      if (CacheHandler.isPlayerCached(uuid)) {
+        playerProfile = CacheHandler.getPlayerData(uuid).getPlayerProfile();
+      } else {
+        playerProfile = new PlayerProfile(uuid);
+      }
 
       if (playerProfile.getStatus() == Status.AWAY) {
         playerProfile.setStatus(Status.ACTIVE);
@@ -76,10 +86,6 @@ public class AFKHandler {
   }
 
   public static boolean isAFK(UUID uuid) {
-    if (afk.contains(uuid)) {
-      return true;
-    }
-
-    return false;
+    return afk.contains(uuid);
   }
 }

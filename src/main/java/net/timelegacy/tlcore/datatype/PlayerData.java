@@ -27,6 +27,7 @@ public class PlayerData {
   private long dateJoined;
   private long lastConnection;
 
+  private Chat chat;
   private PlayerProfile playerProfile;
 
   /*
@@ -80,6 +81,7 @@ public class PlayerData {
       this.dateJoined = doc.first().getLong("date_joined");
       this.lastConnection = doc.first().getLong("last_connection");
       this.playerProfile = new PlayerProfile(this.uuid);
+      this.chat = new Chat(this);
     }
   }
 
@@ -224,5 +226,9 @@ public class PlayerData {
                   + player.getAddress().getAddress().getHostAddress()
                   + ",")));
     }
+  }
+
+  public Chat getChat() {
+    return this.chat;
   }
 }

@@ -73,12 +73,12 @@ public class FilterEvents implements Listener {
 
     Punishment punishment = new Punishment(player.getUniqueId());
 
-    Chat chat = new Chat(CacheHandler.getPlayerData(player.getUniqueId()));
+    Chat chat = CacheHandler.getPlayerData(player.getUniqueId()).getChat();
 
     if (!punishment.isPunished(Type.MUTE)) {
 
         for (Player sp : Bukkit.getOnlinePlayers()) {
-          PlayerProfile playerProfile = new PlayerProfile(sp.getUniqueId());
+          PlayerProfile playerProfile = CacheHandler.getPlayerData(sp.getUniqueId()).getPlayerProfile();
           switch (playerProfile.getChatFilter()) {
             case CHILD:
               sp.sendMessage(chat.getFormat() + MessageUtils.filterMessage(message));

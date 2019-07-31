@@ -2,7 +2,9 @@ package net.timelegacy.tlcore.menus.profile;
 
 import java.util.Arrays;
 import java.util.Collections;
+import net.timelegacy.tlcore.datatype.PlayerData;
 import net.timelegacy.tlcore.datatype.PlayerProfile;
+import net.timelegacy.tlcore.handler.CacheHandler;
 import net.timelegacy.tlcore.utils.ItemUtils;
 import net.timelegacy.tlcore.utils.MenuUtils;
 import net.timelegacy.tlcore.utils.MessageUtils;
@@ -23,7 +25,8 @@ public class YourSettingsMenu implements Listener {
   public static void openMenu(Player player) {
     Inventory inv = Bukkit.createInventory(null, 9 * 4, guiName);
 
-    PlayerProfile playerProfile = new PlayerProfile(player.getUniqueId());
+    PlayerData playerData = CacheHandler.getPlayerData(player.getUniqueId());
+    PlayerProfile playerProfile = playerData.getPlayerProfile();
 
     // Row 2
     inv.setItem(10, ItemUtils.createItem(Material.ENDER_EYE, "&aPlayer Visibility"));

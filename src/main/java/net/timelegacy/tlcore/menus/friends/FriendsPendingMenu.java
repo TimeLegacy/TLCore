@@ -7,7 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.datatype.PlayerData;
 import net.timelegacy.tlcore.datatype.PlayerProfile;
+import net.timelegacy.tlcore.handler.CacheHandler;
 import net.timelegacy.tlcore.handler.CoinHandler;
 import net.timelegacy.tlcore.handler.FriendHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
@@ -35,9 +37,10 @@ public class FriendsPendingMenu implements Listener {
         .createInventory(player, 54, MessageUtils.colorize("&8&lPending Friends >> &8&nPage " + page));
 
     //Row 1
-    PlayerProfile playerProfile = new PlayerProfile(player.getUniqueId());
+    PlayerData playerData = CacheHandler.getPlayerData(player.getUniqueId());
+    PlayerProfile playerProfile = playerData.getPlayerProfile();
 
-    Timestamp tsJoin = new Timestamp(PlayerHandler.getDateJoined(player.getUniqueId()));
+    Timestamp tsJoin = new Timestamp(playerData.getDateJoined());
     Date dateJoin = new Date(tsJoin.getTime());
 
     menu.setItem(
@@ -163,9 +166,19 @@ public class FriendsPendingMenu implements Listener {
                   (player, reply) -> {
                     if (PlayerHandler.playerExists(reply)) {
                       UUID request = PlayerHandler.getUUID(reply);
-                      PlayerProfile profile = new PlayerProfile(request);
+                      PlayerProfile profile;
+                      if (CacheHandler.isPlayerCached(request)) {
+                        profile = CacheHandler.getPlayerData(request).getPlayerProfile();
+                      } else {
+                        profile = new PlayerProfile(request);
+                      }
 
-                      PlayerProfile pp = new PlayerProfile(p.getUniqueId());
+                      PlayerProfile pp;
+                      if (CacheHandler.isPlayerCached(p.getUniqueId())) {
+                        pp = CacheHandler.getPlayerData(p.getUniqueId()).getPlayerProfile();
+                      } else {
+                        pp = new PlayerProfile(p.getUniqueId());
+                      }
 
                       if (FriendHandler.getFriends(p.getUniqueId()).size() < 32) {
                         if (pp.getFriends().contains(request.toString())) {

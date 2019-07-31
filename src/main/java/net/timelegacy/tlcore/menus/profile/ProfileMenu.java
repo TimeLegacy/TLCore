@@ -4,10 +4,11 @@ import de.erethon.headlib.HeadLib;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
+import net.timelegacy.tlcore.datatype.PlayerData;
 import net.timelegacy.tlcore.datatype.PlayerProfile;
+import net.timelegacy.tlcore.handler.CacheHandler;
 import net.timelegacy.tlcore.handler.CoinHandler;
 import net.timelegacy.tlcore.handler.FriendHandler;
-import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.menus.friends.FriendsMenu;
 import net.timelegacy.tlcore.utils.ItemUtils;
 import net.timelegacy.tlcore.utils.MenuUtils;
@@ -29,7 +30,8 @@ public class ProfileMenu implements Listener {
   public static void openMenu(Player player) {
     Inventory inv = Bukkit.createInventory(null, 9 * 6, guiName);
 
-    PlayerProfile playerProfile = new PlayerProfile(player.getUniqueId());
+    PlayerData playerData = CacheHandler.getPlayerData(player.getUniqueId());
+    PlayerProfile playerProfile = playerData.getPlayerProfile();
 
     inv.setItem(10, ItemUtils.createItem(new ItemStack(Material.EXPERIENCE_BOTTLE), "&eYour Character",
         Arrays.asList(
@@ -46,7 +48,7 @@ public class ProfileMenu implements Listener {
             "&7multiple settings such as",
             "&bGender&7, &bStatus, &band more!")));
 
-    Timestamp tsJoin = new Timestamp(PlayerHandler.getDateJoined(player.getUniqueId()));
+    Timestamp tsJoin = new Timestamp(playerData.getDateJoined());
     Date dateJoin = new Date(tsJoin.getTime());
 
     inv.setItem(

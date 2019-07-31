@@ -3,10 +3,11 @@ package net.timelegacy.tlcore.menus.profile;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
+import net.timelegacy.tlcore.datatype.PlayerData;
 import net.timelegacy.tlcore.datatype.PlayerProfile;
 import net.timelegacy.tlcore.datatype.PlayerProfile.Gender;
+import net.timelegacy.tlcore.handler.CacheHandler;
 import net.timelegacy.tlcore.handler.CoinHandler;
-import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.utils.ItemUtils;
 import net.timelegacy.tlcore.utils.MenuUtils;
 import org.bukkit.Bukkit;
@@ -26,12 +27,13 @@ public class GenderSelectorMenu implements Listener {
   public static void openMenu(Player player) {
     Inventory inv = Bukkit.createInventory(null, 9 * 3, guiName);
 
-    PlayerProfile playerProfile = new PlayerProfile(player.getUniqueId());
+    PlayerData playerData = CacheHandler.getPlayerData(player.getUniqueId());
+    PlayerProfile playerProfile = playerData.getPlayerProfile();
 
     inv.setItem(1, ItemUtils.createItem(Material.EXPERIENCE_BOTTLE, "&eYour Character"));
     inv.setItem(6, ItemUtils.createItem(Material.EXPERIENCE_BOTTLE, "&eYour Gender"));
 
-    Timestamp tsJoin = new Timestamp(PlayerHandler.getDateJoined(player.getUniqueId()));
+    Timestamp tsJoin = new Timestamp(playerData.getDateJoined());
     Date dateJoin = new Date(tsJoin.getTime());
 
     inv.setItem(
@@ -71,7 +73,7 @@ public class GenderSelectorMenu implements Listener {
         }
 
         String name = ChatColor.stripColor(is.getItemMeta().getDisplayName());
-        PlayerProfile playerProfile = new PlayerProfile(p.getUniqueId());
+        PlayerProfile playerProfile = CacheHandler.getPlayerData(p.getUniqueId()).getPlayerProfile();
 
         if (name.equals("Male")) {
           playerProfile.setGender(Gender.MALE);

@@ -2,6 +2,7 @@ package net.timelegacy.tlcore.command;
 
 import java.util.UUID;
 import net.timelegacy.tlcore.datatype.PlayerProfile;
+import net.timelegacy.tlcore.handler.CacheHandler;
 import net.timelegacy.tlcore.handler.FriendHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
@@ -28,9 +29,19 @@ public class FriendCommand implements CommandExecutor {
         String username = args[1];
         if (PlayerHandler.playerExists(username)) {
           UUID request = PlayerHandler.getUUID(username);
-          PlayerProfile profile = new PlayerProfile(request);
+          PlayerProfile profile;
+          if (CacheHandler.isPlayerCached(request)) {
+            profile = CacheHandler.getPlayerData(request).getPlayerProfile();
+          } else {
+            profile = new PlayerProfile(request);
+          }
 
-          PlayerProfile pp = new PlayerProfile(p.getUniqueId());
+          PlayerProfile pp;
+          if (CacheHandler.isPlayerCached(p.getUniqueId())) {
+            pp = CacheHandler.getPlayerData(p.getUniqueId()).getPlayerProfile();
+          } else {
+            pp = new PlayerProfile(p.getUniqueId());
+          }
 
           if (FriendHandler.getFriends(p.getUniqueId()).size() < 32) {
             if (pp.getFriends().contains(request.toString())) {
@@ -78,9 +89,21 @@ public class FriendCommand implements CommandExecutor {
         String username = args[1];
         if (PlayerHandler.playerExists(username)) {
           UUID request = PlayerHandler.getUUID(username);
-          PlayerProfile profile = new PlayerProfile(request);
 
-          PlayerProfile pp = new PlayerProfile(p.getUniqueId());
+          PlayerProfile profile;
+          if (CacheHandler.isPlayerCached(request)) {
+            profile = CacheHandler.getPlayerData(request).getPlayerProfile();
+          } else {
+            profile = new PlayerProfile(request);
+          }
+
+          PlayerProfile pp;
+          if (CacheHandler.isPlayerCached(p.getUniqueId())) {
+            pp = CacheHandler.getPlayerData(p.getUniqueId()).getPlayerProfile();
+          } else {
+            pp = new PlayerProfile(p.getUniqueId());
+          }
+
           if (pp.getFriends().contains(request.toString())) {
             MessageUtils.sendMessage(
                 p, MessageUtils.SUCCESS_COLOR + "You removed &o" + username + "&r" + MessageUtils.SUCCESS_COLOR

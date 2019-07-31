@@ -7,7 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import net.timelegacy.tlcore.TLCore;
+import net.timelegacy.tlcore.datatype.PlayerData;
 import net.timelegacy.tlcore.datatype.PlayerProfile;
+import net.timelegacy.tlcore.handler.CacheHandler;
 import net.timelegacy.tlcore.handler.CoinHandler;
 import net.timelegacy.tlcore.handler.FriendHandler;
 import net.timelegacy.tlcore.handler.PlayerHandler;
@@ -35,9 +37,10 @@ public class FriendsMenu implements Listener {
     Inventory menu = Bukkit.createInventory(player, 54, MessageUtils.colorize("&8&lFriends >> &8&nPage " + page));
 
     //Row 1
-    PlayerProfile playerProfile = new PlayerProfile(player.getUniqueId());
+    PlayerData playerData = CacheHandler.getPlayerData(player.getUniqueId());
+    PlayerProfile playerProfile = playerData.getPlayerProfile();
 
-    Timestamp tsJoin = new Timestamp(PlayerHandler.getDateJoined(player.getUniqueId()));
+    Timestamp tsJoin = new Timestamp(playerData.getDateJoined());
     Date dateJoin = new Date(tsJoin.getTime());
 
     menu.setItem(
@@ -86,7 +89,13 @@ public class FriendsMenu implements Listener {
 
           String friendUsername = PlayerHandler.getUsername(friends.get(current));
 
-          PlayerProfile friendProfile = new PlayerProfile(friends.get(current));
+          PlayerProfile friendProfile;
+          if (CacheHandler.isPlayerCached(friends.get(current))) {
+            friendProfile = CacheHandler.getPlayerData(friends.get(current)).getPlayerProfile();
+          } else {
+            friendProfile = new PlayerProfile(friends.get(current));
+          }
+
 
           ItemStack itemStack = ItemUtils.createSkullItem(friendUsername, "&b" + friendUsername, Arrays.asList(
               "&eGender: &f" + friendProfile.getGender(),

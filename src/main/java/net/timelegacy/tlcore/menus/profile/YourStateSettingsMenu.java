@@ -2,8 +2,10 @@ package net.timelegacy.tlcore.menus.profile;
 
 import java.util.Arrays;
 import java.util.Collections;
+import net.timelegacy.tlcore.datatype.PlayerData;
 import net.timelegacy.tlcore.datatype.PlayerProfile;
 import net.timelegacy.tlcore.datatype.PlayerProfile.Status;
+import net.timelegacy.tlcore.handler.CacheHandler;
 import net.timelegacy.tlcore.utils.ItemUtils;
 import net.timelegacy.tlcore.utils.MenuUtils;
 import net.timelegacy.tlcore.utils.MessageUtils;
@@ -22,7 +24,8 @@ public class YourStateSettingsMenu implements Listener {
   public static String guiName = MenuUtils.centerTitle("&8&lYour State Settings");
 
   public static void openMenu(Player player) {
-    PlayerProfile playerProfile = new PlayerProfile(player.getUniqueId());
+    PlayerData playerData = CacheHandler.getPlayerData(player.getUniqueId());
+    PlayerProfile playerProfile = playerData.getPlayerProfile();
 
     Inventory inv = Bukkit.createInventory(null, 9 * 6, guiName);
 
