@@ -14,12 +14,15 @@ import org.bukkit.entity.Player;
 public class CoinManagementCommand implements CommandExecutor {
 
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-    Player p = (Player) sender;
-    Rank rank = RankHandler.getRank(p.getUniqueId());
 
-    if (rank.getPriority() < 9) {
-      MessageUtils.noPerm((Player) sender);
-      return true;
+    if (sender instanceof Player) {
+      Player p = (Player) sender;
+      Rank rank = RankHandler.getRank(p.getUniqueId());
+
+      if (rank.getPriority() < 9) {
+        MessageUtils.noPerm((Player) sender);
+        return true;
+      }
     }
 
     if (args.length < 2 || args.length > 3) {

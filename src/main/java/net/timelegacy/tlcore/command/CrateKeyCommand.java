@@ -13,12 +13,14 @@ import org.bukkit.entity.Player;
 public class CrateKeyCommand implements CommandExecutor {
 
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-    Player player = (Player) sender;
-    Rank rank = RankHandler.getRank(player.getUniqueId());
+    if (sender instanceof Player) {
+      Player p = (Player) sender;
+      Rank rank = RankHandler.getRank(p.getUniqueId());
 
-    if (rank.getPriority() < 9) {
-      MessageUtils.noPerm(player);
-      return true;
+      if (rank.getPriority() < 9) {
+        MessageUtils.noPerm((Player) sender);
+        return true;
+      }
     }
 
     if (args.length < 2 || args.length > 3) {

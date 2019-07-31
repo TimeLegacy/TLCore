@@ -14,18 +14,21 @@ public class RebootCommand implements CommandExecutor {
 
   @EventHandler
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-    Player player = (Player) sender;
-    Rank rank = RankHandler.getRank(player.getUniqueId());
+    if (sender instanceof Player) {
+      Player p = (Player) sender;
+      Rank rank = RankHandler.getRank(p.getUniqueId());
 
-    if (rank.getPriority() < 9) {
-      return true;
+      if (rank.getPriority() < 9) {
+        MessageUtils.noPerm((Player) sender);
+        return true;
+      }
     }
 
     for (Player on : Bukkit.getOnlinePlayers()) {
       on.kickPlayer(MessageUtils.colorize("&cRebooting server..."));
     }
 
-    MessageUtils.sendMessage(player, "&cRebooting server...", true);
+    MessageUtils.sendMessage(sender, "&cRebooting server...", true);
 
     Bukkit.shutdown();
     return false;

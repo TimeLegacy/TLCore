@@ -12,16 +12,14 @@ import org.bukkit.entity.Player;
 public class RankManagementCommand implements CommandExecutor {
 
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-    if (!(sender instanceof Player)) {
-      return true;
-    }
+    if (sender instanceof Player) {
+      Player p = (Player) sender;
+      Rank rank = RankHandler.getRank(p.getUniqueId());
 
-    Player p = (Player) sender;
-    Rank r = RankHandler.getRank(p.getUniqueId());
-
-    if (r.getPriority() < 9) {
-      MessageUtils.noPerm(p);
-      return true;
+      if (rank.getPriority() < 9) {
+        MessageUtils.noPerm((Player) sender);
+        return true;
+      }
     }
 
     if (args.length < 1 || args.length > 3) {
