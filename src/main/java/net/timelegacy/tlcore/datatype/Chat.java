@@ -1,53 +1,32 @@
 package net.timelegacy.tlcore.datatype;
 
-import java.util.HashMap;
-import java.util.UUID;
-import net.timelegacy.tlcore.handler.PlayerHandler;
-import net.timelegacy.tlcore.handler.RankHandler;
 import net.timelegacy.tlcore.utils.MessageUtils;
-import org.bukkit.entity.Player;
 
 public class Chat {
 
-  public static HashMap<UUID, Chat> playerChatStorage = new HashMap<>();
-
   private String prefix;
   private String suffix;
-  private String format;
   private String username;
+  private PlayerData playerData;
 
-  public Chat(UUID uuid) {
+  public Chat(PlayerData playerData) {
     this.prefix = "";
     this.suffix = "";
 
-    PlayerProfile profile = new PlayerProfile(uuid);
-    this.username =
-        profile.getNickname().isEmpty() ? PlayerHandler.getUsername(uuid) : profile.getNickname();
-
-    this.format = MessageUtils.colorize("&r" + RankHandler
-        .chatColors(uuid)
-        .replace("%line%", "\u2758 ")
-        .replace("%arrows%", "\u00BB")
-        + " &r");
-  }
-
-  public static void addPlayer(Player player) {
-    Chat chat = new Chat(player.getUniqueId());
-    playerChatStorage.put(player.getUniqueId(), chat);
-  }
-
-  public static void removePlayer(Player player) {
-    if (playerChatStorage.containsKey(player.getUniqueId())) {
-      playerChatStorage.remove(player.getUniqueId());
-    }
-  }
-
-  public static Chat getPlayerChat(Player player) {
-    return playerChatStorage.get(player.getUniqueId());
+    this.playerData = playerData;
   }
 
   public String getFormat() {
-    return this.prefix + this.format.replace("%username%", this.username + this.suffix);
+    PlayerProfile profile = playerData.getPlayerProfile();
+    String username =
+        profile.getNickname().isEmpty() ? playerData.getUsername() : profile.getNickname();
+
+    String format = MessageUtils.colorize("&r" + playerData.getRank().getChat()
+        .replace("%line%", "\u2758 ")
+        .replace("%arrows%", "\u00BB")
+        + " &r");
+
+    return this.prefix + format.replace("%username%", this.username + this.suffix);
   }
 
   public void setPrefix(String prefix) {
